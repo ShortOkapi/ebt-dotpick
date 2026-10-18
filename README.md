@@ -6,7 +6,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT Dot Safari](https://shortokapi.github.io/ebt-dot-safari/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dot-safari/releases)
 
-**Guide updated:** 16 October 2026. This guide includes the v2.2.1-rc4 test candidate. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 18 October 2026. This guide includes the v2.2.1-rc5 test candidate. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -98,7 +98,7 @@ Without a deliberate selection, the separate stability rule can retain the autom
 
 ## Automatic target map updates
 
-Dot Safari automatically checks the three published target datasets: the compact Euro-use map (eligibility plus recorded classifications), the worldwide land mask and its manual overrides. The compact Euro-use export keeps these classifications with its matching map revision; no full editor history is downloaded by the phone.
+Dot Safari automatically checks the three published target datasets: the compact Euro-use map (eligibility plus recorded classifications), the worldwide land mask and its manual overrides. The compact Euro-use export keeps these classifications with its matching map revision; no full editor history is downloaded by the phone. The compact Euro-use map can also include a worldwide classification background: dots without individual decisions are Foreign on land and Water Only elsewhere. Explicit decisions, including Unreviewed, take precedence. This does not add Euro-use targets or detect every inland lake. Older maps remain supported; when classifications are unavailable, the app keeps the appropriate uncertainty warning. A newer usable revision is retained if the same dataset offers an older remote revision.
 
 Checks happen:
 
