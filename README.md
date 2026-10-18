@@ -6,7 +6,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT Dot Safari](https://shortokapi.github.io/ebt-dot-safari/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dot-safari/releases)
 
-**Guide updated:** 16 October 2026. This guide includes the v2.2.1-rc2 test candidate. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 16 October 2026. This guide includes the v2.2.1-rc4 test candidate. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -98,7 +98,7 @@ Without a deliberate selection, the separate stability rule can retain the autom
 
 ## Automatic target map updates
 
-Dot Safari automatically checks the three published target datasets: the Euro-use eligibility map, the worldwide land mask and its manual overrides.
+Dot Safari automatically checks the three published target datasets: the compact Euro-use map (eligibility plus recorded classifications), the worldwide land mask and its manual overrides. The compact Euro-use export keeps these classifications with its matching map revision; no full editor history is downloaded by the phone.
 
 Checks happen:
 
@@ -180,10 +180,14 @@ In the expanded GPS panel, the **entire dot-name/ID, distance and compass row** 
 
 Every map-dot popup offers two actions:
 
-- **Places in this dot** inspects that dot, including a conquered or ineligible dot. Inspection works without Notes or GPS. The selected area filters its places, not whether the dot can be inspected. In Euro-use mode, a prominent warning appears for a dot absent from the Euro-use target map. That means it may be outside the Euro-use area or classified as unconquerable; the target map alone does not distinguish those cases. Inspection and deliberate point choice remain available.
+- **Places in this dot** inspects that dot, including a conquered or ineligible dot. Inspection works without Notes or GPS. The selected area filters its places, not whether the dot can be inspected. A dot recorded as Unconquerable Euro land has its own prominent warning in either model. A recorded Foreign-land dot shows an outside-Euro-use warning when Euro-use is selected. If no classification is available, a general target-map notice explains the uncertainty. Inspection and deliberate point choice remain available.
 - **Nearby Target Dots** searches onward from your accepted GPS position when you are in that dot. **Nearby Target Dots From This Dot** uses the exact clicked point for another dot. These lists exclude the starting dot, require your Notes and search within 150 km. Their area choice is separate from the live radar.
 
-The popup's small **Euro-use area / All land worldwide** switch changes its planning area. **NO LAND HERE** identifies an unconquered dot absent from the ready worldwide land model. Euro-use ineligibility alone does not mean there is no land. Conquered-note counts remain visible; unavailable worldwide land data is identified explicitly.
+The popup's small **Euro-use area / All land worldwide** switch changes its planning area. Recorded **Foreign land** shows **NOT IN EURO-USE AREA** when Euro-use is selected. Recorded **Unconquerable Euro land** shows **UNCONQUERABLE EURO LAND**, in either model. Conquered-note counts remain visible alongside these notices. **NO LAND HERE** uses an explicit **Water Only** classification or the worldwide mask when no land classification is recorded; Euro-use ineligibility alone never establishes water-only status. The same tag appears in the Places panel for a dot identified as no-land, in either target area and even when the place list is empty or unavailable. An empty place list by itself never establishes no land. The coastline-derived worldwide mask does not remove inland lakes, so automatic detection of every lake-only dot is not provided.
+
+The popup closes with **Esc**. Its X accepts **Enter** or **Space**, and focus returns to the map. Enter on a popup control performs that control's action; Enter on the focused map itself opens a dot inspection.
+
+Classifications come from Target Map's compact export, including eligible, excluded, foreign, sea and explicitly unreviewed cells. An absent/unreviewed cell is not guessed to be foreign or unconquerable; its Euro-use status remains unreviewed. If classification data is unavailable, the app identifies that limitation. These labels describe the recorded Euro-use classification; the worldwide radar continues to use its separate land model.
 
 Opening a dot popup temporarily collapses the controls and GPS panels to make room for both actions. Closing it restores their previous state. A prominent start box identifies the onward search origin: your GPS position if you are in that dot, or **Chosen start for onward search** with the exact clicked point shown to six decimals. A short-screen popup can scroll without putting its buttons beneath those panels. The aligned controls and GPS panels leave room beside the map layer button on narrow screens.
 

@@ -63,7 +63,7 @@ Changing the maintained destination file requires another prepared-data update b
 
 ## Prepared place data
 
-The current preparation covers **4,222 dots**: **4,167 eligible Euro-use dots**, all **54 current non-Antarctic Unconquerable naming dots**, and the original Three Forks Beach Tongue exception. The bundled eligibility map matches **Target Map revision 57**. This does not establish worldwide prepared coverage.
+The prepared place snapshot covers **4,222 dots** from earlier map revisions. The bundled eligibility map matches **Target Map revision 84**, with **4,171 eligible Euro-use dots**. Five newly eligible dots — **[259, 527]**, **[446, 490]**, **[447, 454]**, **[454, 474]** and **[471, 449]** — do not yet have prepared place lists. The newly classified Unconquerable Euro land dot **[449, 490]** also has no prepared list. Their existing manual-point option remains available; updated eligibility does not automatically rebuild place blocks. The old **[255, 527]** prepared record has no listed points or automatic name and remains harmless historical data; revision 84 removes that cell from eligibility. The optional `classifications` object (formatVersion 1) stores compact ranges for excluded, foreign, sea and explicitly unreviewed cells; top-level `ranges` contain eligible cells only. The Target Map exporter supplies both together. The visible **Water Only** label retains the `sea` JSON key. Missing classifications remain unknown, and malformed/conflicting ranges reject an update before adoption. This does not establish worldwide prepared place coverage.
 
 Euro-use means the Eurozone, other countries and territories using the euro, including Kosovo and Montenegro, plus Switzerland. Classify the full candidate pools before selecting each model's top five. Worldwide includes Euro-use places. Missing population stays unknown. The five original curated exceptions remain; Falca and Légua are ordinary results.
 
@@ -84,7 +84,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-Use a release-candidate version while testing. The current test candidate is **2.2.1-rc2**. Before merging the accepted stable release, set both to **2.2.1** / **v2.2.1** respectively. Candidate help links use README on **release-2.2.1**; stable help links use main. The dataset folder name is independent of the app version and does not need renaming for every candidate.
+Use a release-candidate version while testing. The current test candidate is **2.2.1-rc4**. Before merging the accepted stable release, set both to **2.2.1** / **v2.2.1** respectively. Candidate help links use README on **release-2.2.1**; stable help links use main. The dataset folder name is independent of the app version and does not need renaming for every candidate.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 
