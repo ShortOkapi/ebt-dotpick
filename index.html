@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<!-- EBT Dot Safari -->
+<!-- EBT DotPick -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>EBT Dot Safari</title>
+  <title>EBT DotPick</title>
   <meta name="description" content="A live GPS tracking tool and heatmap for EuroBillTracker map dot hunters." />
-  <link rel="canonical" href="https://shortokapi.github.io/ebt-dot-safari/" />
-  <meta name="application-name" content="Dot Safari" />
-  <meta name="apple-mobile-web-app-title" content="Dot Safari" />
+  <link rel="canonical" href="https://shortokapi.github.io/ebt-dotpick/" />
+  <meta name="application-name" content="DotPick" />
+  <meta name="apple-mobile-web-app-title" content="DotPick" />
 
   <!-- Open Graph / SEO -->
-  <meta property="og:title" content="EBT Dot Safari" />
+  <meta property="og:title" content="EBT DotPick" />
   <meta property="og:description" content="A live GPS tracking tool and heatmap for EuroBillTracker map dot hunters." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://shortokapi.github.io/ebt-dot-safari/" />
-  <meta property="og:site_name" content="EBT Dot Safari" />
-  <meta property="og:image" content="https://shortokapi.github.io/ebt-dot-safari/android-chrome-512x512.png" />
+  <meta property="og:url" content="https://shortokapi.github.io/ebt-dotpick/" />
+  <meta property="og:site_name" content="EBT DotPick" />
+  <meta property="og:image" content="https://shortokapi.github.io/ebt-dotpick/android-chrome-512x512.png" />
   <meta property="og:image:type" content="image/png" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
-  <meta property="og:image:alt" content="EBT Dot Safari app icon" />
+  <meta property="og:image:alt" content="EBT DotPick app icon" />
   
   <!-- PWA Manifest & Icons -->
   <link rel="manifest" href="site.webmanifest">
@@ -369,6 +369,13 @@
     .nearby-target { display: flex; align-items: center; gap: 10px; }
     .nearby-target-label { flex: 1; min-width: 0; }
     .nearby-target-detail { margin-top: 4px; }
+    .nearby-target-state { display:block; margin-top:3px; color:#9a3412; font-size:12px; font-weight:600; }
+    .nearby-dot-id { display:inline-block; white-space:nowrap; }
+    .map-data-list { margin:0; display:grid; gap:9px; font-size:12px; line-height:1.45; }
+    .map-data-list dt { font-weight:650; color:#0f172a; }
+    .map-data-list dd { margin:0; overflow-wrap:anywhere; }
+    .map-data-list small { display:block; color:#64748b; font-size:11px; }
+    .map-data-list .data-check-failed { color:#9a3412; }
     #nearby-targets-start { margin: 12px 0; padding: 10px; border: 1px solid #0284c7; border-radius: 8px; background: #f0f9ff; overflow-wrap: anywhere; }
     #nearby-targets-start strong, #nearby-targets-start span { display: block; }
     #nearby-targets-start span { margin-top: 4px; }
@@ -622,7 +629,7 @@
   <!-- Controls Panel -->
   <div id="control-panel" class="panel">
     <div class="panel-header">
-      <h1 style="font-size: 15px; color: #0f172a; margin: 0; padding: 0;">EBT Dot Safari</h1>
+      <h1 style="font-size: 15px; color: #0f172a; margin: 0; padding: 0;">EBT DotPick</h1>
       <span id="storage-indicator" style="font-size: 11px; color: #047857; font-weight: 700;">Ready</span>
       <button class="panel-toggle" type="button"
         aria-label="Collapse controls"
@@ -656,7 +663,7 @@
             </details>
           </li>
           <li>
-            <span class="csv-help-title">Return to Dot Safari and tap</span>
+            <span class="csv-help-title">Return to DotPick and tap</span>
             <button id="csv-load-btn" class="btn" type="button"
               onclick="document.getElementById('csv-input').click()">
               📁 Load EBT Notes File
@@ -774,7 +781,7 @@
   </div>
 
   <dialog id="gps-off-dialog" aria-labelledby="gps-off-title" aria-describedby="gps-off-description">
-    <h2 id="gps-off-title">Turn off GPS in Dot Safari?</h2>
+    <h2 id="gps-off-title">Turn off GPS in DotPick?</h2>
     <p id="gps-off-description">Your conquered dots will remain on the map.</p>
     <form method="dialog" class="btn-group">
       <button class="btn gps-cancel" type="submit" autofocus>Cancel</button>
@@ -798,7 +805,7 @@
     <button id="nearby-targets-retry" class="gps-retry" type="button" hidden>Retry target map</button>
     <section id="nearby-targets-start" aria-label="Chosen start" hidden></section>
     <p id="nearby-targets-status" role="status" aria-live="polite"></p>
-    <p id="nearby-targets-help" class="target-note">Ordered by geographical proximity. Dot steps include diagonals and ignore sea, roads and access. Choose a dot to see its places.</p>
+    <p id="nearby-targets-help" class="target-note">Ordered by geographical proximity. Dot steps include diagonals. The kilometre range is the approximate straight-line distance to the nearest and farthest points of the whole dot, including water. It ignores roads and access. Choose a dot to see its places.</p>
     <div id="nearby-targets-list" role="group" aria-label="Nearby eligible unconquered dots"></div>
     <button id="nearby-targets-automatic" class="text-action" type="button" hidden>Use automatic nearest target</button>
   </dialog>
@@ -894,15 +901,16 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT Dot Safari <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.2.1</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.0-rc1</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
+      <p class="target-note">Formerly EBT Dot Safari.</p>
       <div class="about-share-section">
         <button id="share-app" class="btn" type="button">Share this app</button>
         <p id="share-status" class="about-share-status" role="status" aria-live="polite" aria-atomic="true"></p>
       </div>
 
       <p style="margin: 0 0 14px 0; font-size: 13px;">
-        <a href="https://github.com/ShortOkapi/ebt-dot-safari#how-to-use" data-readme-section="how-to-use"
+        <a href="https://github.com/ShortOkapi/ebt-dotpick#how-to-use" data-readme-section="how-to-use"
           target="_blank" rel="noopener noreferrer"
           aria-label="Open help and instructions in your browser">
           Help and instructions ↗
@@ -922,24 +930,29 @@
         <section aria-labelledby="about-destinations">
           <h3 id="about-destinations" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Places and planning</h3>
           <p style="margin: 0 0 8px;">Inspect places in any dot, or find the next target from your GPS position or a point you choose on the map. Select a listed place or <b>Choose your own point on the map</b>, then open Google Maps. Distances are straight-line.</p>
-          <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dot-safari#places-dot-names-and-planning" data-readme-section="places-dot-names-and-planning" target="_blank" rel="noopener noreferrer">Places and planning guide ↗</a></p>
+          <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dotpick#places-dot-names-and-planning" data-readme-section="places-dot-names-and-planning" target="_blank" rel="noopener noreferrer">Places and planning guide ↗</a></p>
         </section>
 
         <section aria-labelledby="about-privacy">
           <h3 id="about-privacy" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Your data</h3>
-          <p style="margin: 0 0 8px;">Your Notes CSV is processed on your device and is not uploaded by Dot Safari. A compact dot profile and settings are saved locally. Online maps use external services.</p>
-          <p style="margin: 0 0 8px;">Dot Safari does not send your Notes data to Miguel, GitHub or any map provider. Importing your file does not share its contents with them.</p>
-          <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dot-safari#privacy" data-readme-section="privacy" target="_blank" rel="noopener noreferrer">Privacy details ↗</a></p>
+          <p style="margin: 0 0 8px;">Your Notes CSV is processed on your device and is not uploaded by DotPick. A compact dot profile and settings are saved locally. Online maps use external services.</p>
+          <p style="margin: 0 0 8px;">DotPick does not send your Notes data to Miguel, GitHub or any map provider. Importing your file does not share its contents with them.</p>
+          <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dotpick#privacy" data-readme-section="privacy" target="_blank" rel="noopener noreferrer">Privacy details ↗</a></p>
         </section>
 
+        <section aria-labelledby="about-map-data">
+          <h3 id="about-map-data" style="margin:0 0 8px;font-size:14px;color:#0f172a;">Map data</h3>
+          <dl id="map-data-list" class="map-data-list"></dl>
+          <p class="target-note">Check times are local. The map revision is independent of the editor version.</p>
+        </section>
         <section aria-labelledby="about-data-sources">
-          <h3 id="about-data-sources" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Place data</h3>
+          <h3 id="about-data-sources" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Data credits</h3>
           <p style="margin: 0;">Place data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · ODbL. Additional place data: <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">GeoNames</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
         </section>
 
         <section aria-labelledby="about-disclaimer">
           <h3 id="about-disclaimer" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Before you set off</h3>
-          <p style="margin: 0 0 8px;">Dot Safari cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.</p>
+          <p style="margin: 0 0 8px;">DotPick cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.</p>
           <p style="margin: 0;">No dot is worth entering a dangerous or forbidden area. And if your next conquest appears to require a submarine, please question the map before buying one.</p>
         </section>
 
@@ -1616,6 +1629,7 @@
       document.querySelectorAll('#control-panel, #hud-panel, #map').forEach(el => { el.inert = open; });
 
       if (open) {
+        renderMapData();
         shareStatus.textContent = '';
         aboutClose.focus();
       } else {
@@ -1633,8 +1647,8 @@
       shareStatus.textContent = '';
 
       const shareData = {
-        title: 'EBT Dot Safari',
-        text: 'EBT Dot Safari — a live GPS tracking tool and heatmap for EuroBillTracker map dot hunters.',
+        title: 'EBT DotPick',
+        text: 'EBT DotPick — a live GPS tracking tool and heatmap for EuroBillTracker map dot hunters.',
         url: appShareUrl
       };
 
@@ -1805,6 +1819,100 @@
 
     // Prepared destinations are public data. No Notes or GPS coordinates enter requests.
     const DESTINATION_ROOT = new URL('./data/destinations/', window.location.href);
+    // Public dataset diagnostics only: no Notes or GPS position enter these records.
+    let offlineAppVersion = null;
+    function dataTime(value) {
+      if (!Number.isFinite(value) || value <= 0) return 'Not checked online yet';
+      return new Date(value).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    }
+    function recordDataset(holder, data, checkedAt = 0, origin = 'bundled') {
+      const signature = JSON.stringify(data), changed = holder.dataSignature !== signature;
+      holder.dataSignature = signature; holder.dataCheckedAt = Number.isFinite(checkedAt) && checkedAt > 0 ? checkedAt : 0; holder.dataOrigin = origin;
+      if (data?.base) holder.dataBaseDate = data.base.generatedAt || null;
+      if (changed || !holder.dataId) {
+        holder.dataId = null;
+        Promise.resolve().then(async () => {
+          const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(signature));
+          const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+          if (holder.dataSignature === signature) { holder.dataId = hash; renderMapData(); }
+        }).catch(() => {});
+      }
+      renderMapData();
+    }
+    function publicDatasetRows() {
+      const euro = targetModels['euro-use'], world = targetModels.worldwide;
+      const baseDate = world.dataBaseDate && Number.isFinite(Date.parse(world.dataBaseDate))
+        ? new Date(world.dataBaseDate).toLocaleDateString(undefined, { dateStyle: 'medium', timeZone: 'UTC' }) : 'date not recorded';
+      return [
+        { label: 'Euro-use map', value: euro.state === 'ready' ? 'Revision ' + euro.mapRevision : 'Not loaded', holder: euro, available: euro.state === 'ready', failed: euro.updateFailed, checking: euro.refreshing },
+        { label: 'Worldwide land', value: world.state === 'ready' ? 'Base: ' + baseDate : 'Not loaded', holder: world, available: world.state === 'ready', failed: world.updateFailed, checking: world.refreshing },
+        { label: 'Places', value: destinationData.manifest ? destinationData.manifest.version : 'Not loaded', holder: destinationData, available: !!destinationData.manifest, failed: destinationData.failed, checking: !!destinationData.inFlight },
+        { label: 'Preferred dot names', value: dotNameData.dataSignature ? 'Loaded' : 'Not loaded', holder: dotNameData, available: !!dotNameData.dataSignature, failed: dotNameData.failed, checking: !!dotNameData.inFlight }
+      ];
+    }
+    function renderMapData() {
+      const list = document.getElementById('map-data-list');
+      if (!list) return;
+      list.replaceChildren();
+      for (const row of publicDatasetRows()) {
+        const group = document.createElement('div'), term = document.createElement('dt'), detail = document.createElement('dd'), checked = document.createElement('small');
+        term.textContent = row.label; detail.textContent = row.value;
+        const origin = ({ bundled: 'Bundled copy', saved: 'Saved copy', network: 'Downloaded copy' })[row.holder.dataOrigin];
+        checked.textContent = (origin ? origin + ' · ' : '') + (row.holder.dataCheckedAt ? 'Last successful check: ' + dataTime(row.holder.dataCheckedAt) : 'Not checked online yet');
+        detail.append(checked);
+        if (row.holder.dataId && (row.label === 'Worldwide land' || row.label === 'Preferred dot names')) {
+          const identity = document.createElement('small'); identity.textContent = 'Data ID: ' + row.holder.dataId.slice(0, 12); detail.append(identity);
+        }
+        if (row.checking || row.failed) {
+          const state = document.createElement('small'); state.className = row.failed ? 'data-check-failed' : '';
+          state.textContent = row.checking ? 'Checking for updates…' : 'Update unavailable' + (row.available ? '; using available data.' : '.');
+          if (row.failed && !row.checking && row.holder.lastAttemptAt) state.textContent += ' Last attempt: ' + dataTime(row.holder.lastAttemptAt);
+          detail.append(state);
+        }
+        if (row.holder.dataId) detail.title = 'Dataset SHA-256: ' + row.holder.dataId;
+        group.append(term, detail); list.append(group);
+      }
+    }
+    function feedbackDatasetDetails() {
+      const lines = ['Public dataset details:'];
+      if (offlineAppVersion) lines.push('Offline app cache: v' + offlineAppVersion);
+      for (const row of publicDatasetRows()) {
+        let text = row.label + ': ' + row.value;
+        if (row.holder.dataId) text += '; data ID ' + row.holder.dataId.slice(0, 12);
+        text += '; last successful check: ' + (row.holder.dataCheckedAt ? new Date(row.holder.dataCheckedAt).toISOString() : 'not recorded');
+        if (row.failed) text += '; latest update unavailable';
+        if (row.checking) text += '; update check in progress';
+        lines.push(text);
+      }
+      if (destinationData.manifest?.reviewRevision) lines.push('Places review: ' + destinationData.manifest.reviewRevision);
+      return lines;
+    }
+    async function migrateLegacyDataCaches() {
+      if (!window.location.pathname.startsWith('/ebt-dotpick/')) return;
+      const oldRoot = new URL('/ebt-dot-safari/', window.location.origin), newRoot = new URL('/ebt-dotpick/', window.location.origin);
+      for (const name of [TARGET_DATA_CACHE, DESTINATION_DATA_CACHE]) {
+        try {
+          const cache = await caches.open(name);
+          for (const request of await cache.keys()) {
+            if (!request.url.startsWith(oldRoot.href)) continue;
+            const relative = request.url.slice(oldRoot.href.length);
+            if (!relative.startsWith('.target-data/') && !relative.startsWith('.destination-data/')) continue;
+            const next = new URL(relative, newRoot);
+            if (!await cache.match(next)) { const response = await cache.match(request); if (response) await cache.put(next, response); }
+          }
+        } catch { /* Public bundled files remain available; personal storage is untouched. */ }
+      }
+    }
+    function adoptDestinationManifest(data, checkedAt = 0, origin = 'bundled') {
+      const manifest = validateDestinationManifest(data);
+      destinationData.manifest = manifest; recordDataset(destinationData, manifest, checkedAt, origin);
+      return manifest;
+    }
+    function adoptPreferredNames(data, checkedAt = 0, origin = 'bundled') {
+      const checked = validateDotNameOverrides(data);
+      dotNameData.overrides = checked.names; dotNameData.excluded = checked.excluded;
+      recordDataset(dotNameData, data, checkedAt, origin);
+    }
     const DESTINATION_DATA_CACHE = 'ebt-dot-safari-destination-data-v1';
     const DESTINATION_REFRESH_MS = 60 * 60 * 1000;
     const DESTINATION_EDGE_EPS = 1e-8;
@@ -1952,23 +2060,23 @@
         if (!destinationData.manifest) {
           try {
             const saved = await (await caches.open(DESTINATION_DATA_CACHE)).match(destinationCacheKey('manifest'));
-            if (saved) destinationData.manifest = validateDestinationManifest(await saved.json());
+            if (saved) { const entry = await saved.json(); adoptDestinationManifest(entry.schema === 1 ? entry.manifest : entry, entry.schema === 1 ? entry.checkedAt || 0 : 0, 'saved'); }
           } catch {}
           if (!destinationData.manifest) {
-            try { destinationData.manifest = validateDestinationManifest(JSON.parse(await fetchDestinationText(new URL('manifest.json', DESTINATION_ROOT)))); }
+            try { adoptDestinationManifest(JSON.parse(await fetchDestinationText(new URL('manifest.json', DESTINATION_ROOT)))); }
             catch {}
           }
         }
         try {
           if (!navigator.onLine) throw new Error('Offline');
           const next = validateDestinationManifest(JSON.parse(await fetchDestinationText(new URL('manifest.json', DESTINATION_ROOT), true)));
-          destinationData.manifest = next;
+          const checkedAt = Date.now(); adoptDestinationManifest(next, checkedAt, 'network');
           destinationData.failed = false;
-          try { await (await caches.open(DESTINATION_DATA_CACHE)).put(destinationCacheKey('manifest'), new Response(JSON.stringify(next))); destinationData.saveFailed = false; }
+          try { await (await caches.open(DESTINATION_DATA_CACHE)).put(destinationCacheKey('manifest'), new Response(JSON.stringify({ schema: 1, checkedAt, manifest: next }))); destinationData.saveFailed = false; }
           catch { destinationData.saveFailed = true; }
         } catch { destinationData.failed = true; }
         return destinationData.manifest;
-      })().finally(() => { destinationData.inFlight = null; });
+      })().finally(() => { destinationData.inFlight = null; renderMapData(); });
       return destinationData.inFlight;
     }
     function destinationBlockCacheManifest(manifest, blockKey) {
@@ -2039,10 +2147,10 @@
       document.getElementById('feedback-title').textContent = 'Feedback about ' + destinationDotLabel(dot, model);
       const version = document.getElementById('app-version').textContent.trim();
       document.getElementById('feedback-text').value = [
-        'EBT Dot Safari ' + version + ' feedback',
+        'EBT DotPick ' + version + ' feedback',
         'Dot: ' + destinationDotLabel(dot, model),
         'Target area: ' + (model === 'euro-use' ? 'Euro-use area' : 'All land worldwide'),
-        '', 'What needs checking:', '', 'Suggested correction / reason:', '', 'Source (optional):'
+        '', 'What needs checking:', '', 'Suggested correction / reason:', '', 'Source (optional):', '', ...feedbackDatasetDetails()
       ].join('\n');
       document.getElementById('feedback-status').textContent = '';
       if (!feedbackDialog.open) feedbackDialog.showModal();
@@ -2099,10 +2207,10 @@
       if (!force && Date.now() - dotNameData.lastAttemptAt < DESTINATION_REFRESH_MS) return;
       dotNameData.lastAttemptAt = Date.now();
       dotNameData.inFlight = (async () => {
-        const adopt = data => { const checked = validateDotNameOverrides(data); dotNameData.overrides = checked.names; dotNameData.excluded = checked.excluded; };
+        const adopt = (data, checkedAt = 0, origin = 'bundled') => adoptPreferredNames(data, checkedAt, origin);
         if (!dotNameData.loaded) {
           let restored = false;
-          try { const saved = await (await caches.open(DESTINATION_DATA_CACHE)).match(destinationCacheKey('dot-name-overrides')); if (saved) { adopt(await saved.json()); restored = true; } }
+          try { const saved = await (await caches.open(DESTINATION_DATA_CACHE)).match(destinationCacheKey('dot-name-overrides')); if (saved) { const entry = await saved.json(); adopt(entry.schema === 1 ? entry.data : entry, entry.schema === 1 ? entry.checkedAt || 0 : 0, 'saved'); restored = true; } }
           catch {}
           try { if (!restored) adopt(JSON.parse(await fetchDestinationText(new URL('./dot-name-overrides.json', window.location.href)))); }
           catch {}
@@ -2110,10 +2218,10 @@
         }
         try {
           const body = await fetchDestinationText(new URL('./dot-name-overrides.json', window.location.href), true), data = JSON.parse(body);
-          adopt(data); dotNameData.failed = false;
-          try { await (await caches.open(DESTINATION_DATA_CACHE)).put(destinationCacheKey('dot-name-overrides'), new Response(body)); } catch {}
+          const checkedAt = Date.now(); adopt(data, checkedAt, 'network'); dotNameData.failed = false;
+          try { await (await caches.open(DESTINATION_DATA_CACHE)).put(destinationCacheKey('dot-name-overrides'), new Response(JSON.stringify({ schema: 1, checkedAt, data }))); } catch {}
         } catch { dotNameData.failed = true; }
-      })().finally(() => { dotNameData.inFlight = null; refreshDestinationUI(); });
+      })().finally(() => { dotNameData.inFlight = null; refreshDestinationUI(); renderMapData(); });
       return dotNameData.inFlight;
     }
     function rememberDotNames(dot, names) {
@@ -2903,7 +3011,7 @@
       return new URL(`./.target-data/${id}`, window.location.href).href;
     }
 
-    function adoptTargetData(id, data, checkedAt = 0) {
+    function adoptTargetData(id, data, checkedAt = 0, origin = 'bundled') {
       const compiled = compileTargetData(id, data); // Validate fully before adoption.
       const model = targetModels[id];
       if(id==='euro-use'&&model.mapDatasetId===data.eligibility.datasetId&&Number.isSafeInteger(model.mapRevision)&&data.eligibility.revision<model.mapRevision)throw new Error('The remote map revision is older than the usable map');
@@ -2919,6 +3027,7 @@
       model.signature = signature;
       model.checkedAt = checkedAt;
       model.state = 'ready';
+      recordDataset(model, data, checkedAt, origin);
       if (id === targetArea) {
         if (changed) {
           if (currentPos) updateHUD(currentPos[0], currentPos[1]);
@@ -2939,7 +3048,7 @@
           if (saved.schema !== 1 || !Number.isFinite(saved.checkedAt) || saved.checkedAt < 0) {
             throw new Error('Invalid saved target map');
           }
-          adoptTargetData(id, saved.data, saved.checkedAt);
+          adoptTargetData(id, saved.data, saved.checkedAt, 'saved');
           if (id === 'euro-use') {
             try {
               const bundled = await readTargetJSON('./euro-use-eligibility.json');
@@ -2996,7 +3105,7 @@
                 .then(([base, overrides]) => ({ base, overrides }))
             : { eligibility: await readTargetJSON(sources.eligibility, true) };
           const checkedAt = Date.now();
-          adoptTargetData(id, data, checkedAt);
+          adoptTargetData(id, data, checkedAt, 'network');
           model.updateFailed = false;
           model.saveFailed = false;
           try {
@@ -3024,6 +3133,7 @@
           model.refreshing = false;
           model.inFlight = null;
           if (id === targetArea) refreshTargetAreaControl();
+          renderMapData();
         }
       });
       if (id === targetArea) refreshTargetAreaControl();
@@ -3139,6 +3249,15 @@
         ? { has: key => key === originKey || dotMap.has(key) } : dotMap;
       return { ...findEligibleTargets(origin.lat, origin.lon, conquered, targetModels[session.intent.model], TARGET_SEARCH_KM, true), origin, originDot };
     }
+    function targetDotDistanceLimits(candidate, origin) {
+      // Same local distance approximation as the existing radar. The new
+      // far endpoint is display-only and never changes eligibility or sorting.
+      const south = Math.max(-90, minLat + candidate.i * dotH), north = Math.min(90, minLat + (candidate.i + 1) * dotH);
+      const west = Math.max(-180, minLon + candidate.j * dotW), east = Math.min(180, minLon + (candidate.j + 1) * dotW);
+      const dy = Math.max(Math.abs(south - origin.lat), Math.abs(north - origin.lat)) * 111.139;
+      const dx = Math.max(Math.abs(west - origin.lon), Math.abs(east - origin.lon)) * 111.139 * Math.cos(origin.lat * Math.PI / 180);
+      return { minimum: candidate.distance, maximum: Math.max(candidate.distance, Math.hypot(dx, dy)) };
+    }
     function createTargetCompass(angle, isHere = false) {
       const compass = document.createElement('span'), north = document.createElement('span'), arrow = document.createElement('span');
       compass.className = 'target-compass'; compass.setAttribute('aria-hidden', 'true');
@@ -3204,7 +3323,7 @@
       const activeKey = gpsRadar ? lastRadarTarget && `${lastRadarTarget.i}_${lastRadarTarget.j}` : session.selectedKey;
       const options = nearbyRadarOptions(result, activeKey), area = intent.model === 'euro-use' ? 'Euro-use area' : 'All land worldwide';
       const from = destinationNeedsGPS(intent) ? 'From your GPS position' : 'From chosen start';
-      status.textContent = `${area} · ${from}${intent.kind === 'other' ? ' · Start dot excluded' : ''} · Within ${TARGET_SEARCH_KM} km. Showing ${options.length} nearby dots, including ties and any chosen target.`;
+      status.textContent = `${area} · ${from}${intent.kind === 'other' ? ' · Start dot excluded' : ''} · Nearest point within ${TARGET_SEARCH_KM} km. Showing ${options.length} nearby dots, including ties and any chosen target.`;
       for (const candidate of options) {
         const dot = [candidate.i, candidate.j], key = destinationDotKey(dot);
         const button = document.createElement('button'), label = document.createElement('span'), name = document.createElement('span'), detail = document.createElement('span');
@@ -3214,12 +3333,19 @@
         button.setAttribute('aria-pressed', String(selected));
         const dotName = destinationDotName(dot, intent.model);
         if (dotName) { const strong = document.createElement('strong'); strong.textContent = dotName; name.append(strong, ' '); }
-        name.append(`Dot [${dot.join(', ')}]`);
+        const dotId = document.createElement('span'); dotId.className = 'nearby-dot-id'; dotId.textContent = `Dot [${dot.join(', ')}]`; name.append(dotId);
         label.className = 'nearby-target-label'; detail.className = 'nearby-target-detail';
         const tag = selected ? gpsRadar ? ' · Active target' : ' · Chosen target' : '';
-        detail.textContent = `${steps} dot ${steps === 1 ? 'step' : 'steps'}${candidate.isHere ? ' · You are here' : ''}${tag}`;
-        label.append(name, detail); button.append(label, createTargetCompass(angle, candidate.isHere));
-        button.setAttribute('aria-label', `${destinationDotLabel(dot, intent.model)}, ${steps} dot ${steps === 1 ? 'step' : 'steps'}${candidate.isHere ? ', you are here' : `, bearing ${Math.round(angle) % 360} degrees`}${tag ? ', ' + tag.slice(3) : ''}`);
+        const limits = targetDotDistanceLimits(candidate, result.origin);
+        const range = `${limits.minimum.toFixed(1)}–${limits.maximum.toFixed(1)} km`;
+        detail.textContent = `${steps} dot ${steps === 1 ? 'step' : 'steps'} · ${range}`;
+        label.append(name, detail);
+        if (candidate.isHere || selected) {
+          const state = document.createElement('span'); state.className = 'nearby-target-state';
+          state.textContent = (candidate.isHere ? 'You are here' : '') + (tag ? (candidate.isHere ? tag : tag.slice(3)) : ''); label.append(state);
+        }
+        button.append(label, createTargetCompass(angle, candidate.isHere));
+        button.setAttribute('aria-label', `${destinationDotLabel(dot, intent.model)}, ${steps} dot ${steps === 1 ? 'step' : 'steps'}, approximate straight-line range ${limits.minimum.toFixed(1)} to ${limits.maximum.toFixed(1)} kilometres${candidate.isHere ? ', you are here' : `, bearing ${Math.round(angle) % 360} degrees`}${tag ? ', ' + tag.slice(3) : ''}`);
         button.addEventListener('click', () => chooseNearbyTarget(session, key));
         list.append(button);
         if (focused === key) button.focus({ preventScroll: true });
@@ -3625,7 +3751,7 @@
 
               setGPSState(
                 'unavailable',
-                'Location access was not granted. Reopen Dot Safari to try again, or enable it in your browser or app settings.'
+                'Location access was not granted. Reopen DotPick to try again, or enable it in your browser or app settings.'
               );
 
               showLocationMessage(
@@ -3772,8 +3898,7 @@
 
     // Boot
     refreshTargetAreaControl();
-    refreshTargetModels(true);
-    checkDestinationUpdates(true);
+    migrateLegacyDataCaches().finally(() => { refreshTargetModels(true); checkDestinationUpdates(true); });
     setInterval(() => {
       if (!document.hidden) { refreshTargetModels(); checkDestinationUpdates(); }
     }, TARGET_REFRESH_MS);
@@ -3786,6 +3911,7 @@
 
     // PWA Service Worker Registration
 function updateVersionTooltips(workerVersion = null) {
+  if (typeof workerVersion === 'string') offlineAppVersion = workerVersion;
   const element = document.getElementById('app-version'), version = element.textContent.trim();
   let detail = 'About / Credits — ' + version;
   if (typeof workerVersion === 'string') {
@@ -3810,8 +3936,8 @@ function showAppVersion(worker) {
 }
 
 const readmeBase = document.getElementById('app-version').textContent.includes('-rc')
-  ? 'https://github.com/ShortOkapi/ebt-dot-safari/blob/release-2.2.1/README.md'
-  : 'https://github.com/ShortOkapi/ebt-dot-safari';
+  ? 'https://github.com/ShortOkapi/ebt-dotpick/blob/release-2.3.0/README.md'
+  : 'https://github.com/ShortOkapi/ebt-dotpick';
 for (const link of document.querySelectorAll('[data-readme-section]')) link.href = readmeBase + '#' + link.dataset.readmeSection;
 
 if ('serviceWorker' in navigator) {
