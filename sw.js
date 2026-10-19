@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.0-rc1';
+const APP_VERSION = '2.3.0';
 const CACHE_PREFIX = 'ebt-dotpick-v';
 const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}`;
 const ASSETS_TO_CACHE = [
