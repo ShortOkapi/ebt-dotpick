@@ -1,32 +1,32 @@
-# EBT Dot Safari 🌍🧭
+# EBT DotPick 🌍🧭
 
 **Your personal dot hunting assistant.**
 
 A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the nearest eligible unconquered dot, inspect places and plan onward from a point you choose.
 
-[Open EBT Dot Safari](https://shortokapi.github.io/ebt-dot-safari/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dot-safari/releases)
+[Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 18 October 2026. This guide covers v2.2.1. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 18 October 2026. This guide covers v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
-Installation is optional: you can use Dot Safari in your browser or add it to your home screen.
+Installation is optional: you can use DotPick in your browser or add it to your home screen.
 
-1. Open EBT Dot Safari on your phone. Allow location access if you want the live radar; the request may appear as soon as the app opens.
-2. Tap **Download from EBT**. Sign in to EBT only if asked. If signing in shows a confirmation but no download begins, return to Dot Safari and tap **Download from EBT** again. Accept **Download again** if your browser offers it.
+1. Open EBT DotPick on your phone. Allow location access if you want the live radar; the request may appear as soon as the app opens.
+2. Tap **Download from EBT**. Sign in to EBT only if asked. If signing in shows a confirmation but no download begins, return to DotPick and tap **Download from EBT** again. Accept **Download again** if your browser offers it.
 3. Finish the download, or save the file if your browser shows an unsaved preview. See the phone-specific guidance below.
-4. Return to Dot Safari. Tap **Load EBT Notes File**, then **Choose File** if offered, and select the newest Notes CSV from **Downloads** or the folder you saved to.
+4. Return to DotPick. Tap **Load EBT Notes File**, then **Choose File** if offered, and select the newest Notes CSV from **Downloads** or the folder you saved to.
 5. After the import, expand the radar panel to choose your **Target area**. With a usable GPS position, the radar shows your current dot and an eligible unconquered target.
 
 *Already have a fresh Notes CSV? Skip the download and load that file directly.*
 
 ### Finding the downloaded file
 
-**Android:** look in **Downloads**. If the new file is not there yet, check your browser’s Downloads list for progress. A completed download does not need to be saved again; dismiss **Download complete** and return to Dot Safari. You do not need **Open in app**.
+**Android:** look in **Downloads**. If the new file is not there yet, check your browser’s Downloads list for progress. A completed download does not need to be saved again; dismiss **Download complete** and return to DotPick. You do not need **Open in app**.
 
-**iPhone:** the download and saving steps depend on your browser. If offered **Save…**, choose **Files**, a folder and **Save**. If you are looking at an unsaved preview, use its **More…** or **Share** menu, choose **Save to Files**, select a folder and confirm **Save**. Going back from an unsaved preview does not save it. A completed download does not need another save: return to Dot Safari and choose the saved file.
+**iPhone:** the download and saving steps depend on your browser. If offered **Save…**, choose **Files**, a folder and **Save**. If you are looking at an unsaved preview, use its **More…** or **Share** menu, choose **Save to Files**, select a folder and confirm **Save**. Going back from an unsaved preview does not save it. A completed download does not need another save: return to DotPick and choose the saved file.
 
-Safari and Chrome on iPhone can show different menus. If you cannot find the file, open **Help if the file is missing** in Dot Safari’s download instructions. Choose the most recent file if older downloads have the same or similar names.
+Safari and Chrome on iPhone can show different menus. If you cannot find the file, open **Help if the file is missing** in DotPick’s download instructions. Choose the most recent file if older downloads have the same or similar names.
 
 ## Updating your conquered-dot map
 
@@ -36,7 +36,7 @@ Safari and Chrome on iPhone can show different menus. If you cannot find the fil
 
 A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** If an import fails, the previous map is retained and the app explains the problem.
 
-Dot Safari stores the derived dot counts and user reference locally; it does not retain a permanent connection to your CSV file or automatically download new EBT notes. Load a fresh export whenever you want your latest conquests included. Automatic target map updates, described below, are separate from your personal map.
+DotPick stores the derived dot counts and user reference locally; it does not retain a permanent connection to your CSV file or automatically download new EBT notes. Load a fresh export whenever you want your latest conquests included. Automatic target map updates, described below, are separate from your personal map.
 
 The **Clear conquered dots** button (☒) removes your saved personal dot map after confirmation. It does not delete the CSV file on your phone.
 
@@ -45,7 +45,7 @@ The **Clear conquered dots** button (☒) removes your saved personal dot map af
 - Tap the **GPS status button** on the right of the radar header to turn GPS off or on. Turning it off asks for confirmation and leaves your conquered dots visible.
 - If permission is denied, allow location access in your browser or installed app settings, then return and retry GPS. Your phone’s location services also need to be enabled. A waiting message means the app has not yet accepted a usable position.
 - Use **Locate me** (the crosshair button) to centre the map on your position. Moving the map to inspect another area does not change the GPS position used by the radar.
-- For live tracking, keep Dot Safari visible with the screen awake. Tracking resumes when you return to it; wait for an active GPS status before relying on a new reading. While GPS is waiting after a usable fix, the retained reading is labelled **Last known target** and the expanded panel explains that it uses the last position. The target halo is dimmed. A fresh accepted fix restores the live reading.
+- For live tracking, keep DotPick visible with the screen awake. Tracking resumes when you return to it; wait for an active GPS status before relying on a new reading. While GPS is waiting after a usable fix, the retained reading is labelled **Last known target** and the expanded panel explains that it uses the last position. The target halo is dimmed. A fresh accepted fix restores the live reading.
 
 The radar gives an approximate straight-line distance and a bearing from north. Distance is measured to the nearest point of the target grid cell, usually its boundary, rather than to its centre or a particular town. These are not road distances or turn-by-turn directions.
 
@@ -98,7 +98,7 @@ Without a deliberate selection, the separate stability rule can retain the autom
 
 ## Automatic target map updates
 
-Dot Safari automatically checks the three published target datasets: the compact Euro-use map (eligibility plus recorded classifications), the worldwide land mask and its manual overrides. The compact Euro-use export keeps these classifications with its matching map revision; no full editor history is downloaded by the phone. The compact Euro-use map can also include a worldwide classification background: dots without individual decisions are Foreign on land and Water Only elsewhere. Explicit decisions, including Unreviewed, take precedence. This does not add Euro-use targets or detect every inland lake. Older maps remain supported; when classifications are unavailable, the app keeps the appropriate uncertainty warning. A newer usable revision is retained if the same dataset offers an older remote revision.
+DotPick automatically checks the three published target datasets: the compact Euro-use map (eligibility plus recorded classifications), the worldwide land mask and its manual overrides. The compact Euro-use export keeps these classifications with its matching map revision; no full editor history is downloaded by the phone. The compact Euro-use map can also include a worldwide classification background: dots without individual decisions are Foreign on land and Water Only elsewhere. Explicit decisions, including Unreviewed, take precedence. This does not add Euro-use targets or detect every inland lake. Older maps remain supported; when classifications are unavailable, the app keeps the appropriate uncertainty warning. A newer usable revision is retained if the same dataset offers an older remote revision.
 
 Checks happen:
 
@@ -107,7 +107,7 @@ Checks happen:
 - When you return to the app, if the hourly check is due.
 - Immediately when connectivity returns.
 
-Valid changes are adopted and the radar recalculates using the current accepted GPS position. A published map correction can therefore reach Dot Safari without a new app release. A closed app checks when it is next opened; it does not run these checks continuously in the background.
+Valid changes are adopted and the radar recalculates using the current accepted GPS position. A published map correction can therefore reach DotPick without a new app release. A closed app checks when it is next opened; it does not run these checks continuously in the background.
 
 If an update fails or contains invalid data, the app retains its last valid map. The target area status shows update or availability information and offers a retry when appropriate. If the device cannot save the newest map for offline use, the panel tells you.
 
@@ -121,11 +121,11 @@ Watch for **Saved Offline** or **Not saved** when importing your personal map. C
 
 ## Install on your home screen
 
-Installation is optional. It gives Dot Safari a home-screen icon and lets it open like an app; it does not change how your Notes file is imported.
+Installation is optional. It gives DotPick a home-screen icon and lets it open like an app; it does not change how your Notes file is imported.
 
 ### iPhone — Safari
 
-1. Open Dot Safari in Safari.
+1. Open DotPick in Safari.
 2. Open **Share**. Depending on your Safari layout, this may be inside **More** or the page menu.
 3. Choose **Add to Home Screen**. If it is missing from the sharing actions, look under **Edit Actions**.
 4. Turn on **Open as Web App** if offered, then tap **Add**.
@@ -134,9 +134,9 @@ These are Safari instructions; Chrome’s download and installation menus can di
 
 ### Android — Chrome
 
-1. Open Dot Safari in Chrome.
+1. Open DotPick in Chrome.
 2. Open Chrome’s three-dot menu and choose **Install app**, or **Install and create shortcut → Install**. Older versions may show **Add to Home screen**.
-3. Follow the installation prompts, then open Dot Safari from its icon.
+3. Follow the installation prompts, then open DotPick from its icon.
 
 You can also use an installation invitation if Chrome shows one. There is no need to wait for an invitation to use the app. See [Chrome’s web app instructions](https://support.google.com/chrome/answer/9658361?co=GENIE.Platform%3DAndroid&hl=en) for the current steps.
 
@@ -144,17 +144,17 @@ If your personal map is not present when you first open the installed app, load 
 
 ## Notes files
 
-**Download from EBT** requests the smaller file that EBT calls its **censored Notes CSV**. It omits note comments while retaining the coordinates Dot Safari needs. The full Notes CSV is also supported. Use a complete export of your notes to represent your conquered-dot map.
+**Download from EBT** requests the smaller file that EBT calls its **censored Notes CSV**. It omits note comments while retaining the coordinates DotPick needs. The full Notes CSV is also supported. Use a complete export of your notes to represent your conquered-dot map.
 
 ## Privacy
 
 ### Notes and saved data
 
-Your Notes CSV is read and processed on your device. Dot Safari does not upload it, your note serial numbers or your comments. It has no user accounts, analytics or advertising trackers.
+Your Notes CSV is read and processed on your device. DotPick does not upload it, your note serial numbers or your comments. It has no user accounts, analytics or advertising trackers.
 
-Dot Safari does not send your Notes data to Miguel, GitHub or any map provider. Importing your file does not share its contents with them.
+DotPick does not send your Notes data to Miguel, GitHub or any map provider. Importing your file does not share its contents with them.
 
-To restore your map later, Dot Safari saves a compact profile in this browser: your user reference and the count of notes in each conquered dot. It also remembers settings such as GPS on/off and target area, and caches app files and downloaded public map/place data for offline use. It does not retain the complete CSV or a history of your GPS fixes.
+To restore your map later, DotPick saves a compact profile in this browser: your user reference and the count of notes in each conquered dot. It also remembers settings such as GPS on/off and target area, and caches app files and downloaded public map/place data for offline use. It does not retain the complete CSV or a history of your GPS fixes.
 
 **Clear conquered dots** removes the saved personal profile after confirmation. The CSV on your device remains yours. Other settings and public caches can remain until you clear this site's browser data. Private browsing, browser storage limits or clearing data can remove saved information; keep your original Notes CSV.
 
@@ -164,13 +164,13 @@ GPS positions are used on the device for the live marker, distances and radar. B
 
 Online use makes normal requests to GitHub/GitHub Pages for app and public data files, unpkg for Leaflet, and the selected background-map provider (OpenStreetMap or Esri). These services receive ordinary connection information such as your IP address and requested resources. Tile requests and grid-block filenames can reveal the area being viewed or inspected. Public place-data requests do not contain your Notes or exact GPS coordinates.
 
-Opening Google Maps sends the selected destination coordinates. An onward plan from another dot also sends its chosen start; otherwise Google Maps may use your location under its own permissions and policies. Dot Safari adds no analytics parameters to those links. EBT handles sign-in and Notes downloads on its own site; Dot Safari does not receive or store your EBT password.
+Opening Google Maps sends the selected destination coordinates. An onward plan from another dot also sends its chosen start; otherwise Google Maps may use your location under its own permissions and policies. DotPick adds no analytics parameters to those links. EBT handles sign-in and Notes downloads on its own site; DotPick does not receive or store your EBT password.
 
 ### Feedback
 
 The Feedback action in a dot popup or **Places in this dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review the message before copying it. Its draft is not saved to browser storage and is cleared when the panel closes.
 
-Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. Dot Safari does not send it automatically. Forum messages are handled by the forum under its own policies.
+Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. DotPick does not send it automatically. Forum messages are handled by the forum under its own policies.
 
 ## Places, dot names and planning
 
@@ -199,7 +199,7 @@ An onward plan from another dot shows a prominent **Chosen start** box with the 
 
 The places heading identifies the whole dot: **Places in Torres Vedras Dot** on the top row, with `[460, 403]` on a separate, normal-weight row. Dot names are convenient display labels, not official EBT identifiers or automatic arrival selections. When the first worldwide representative is foreign, a mixed dot can show the Euro-use and foreign representatives, for example **Lemos / Pustec Dot [466, 475]**; Euro-use mode shows **Lemos Dot [466, 475]**. If its first worldwide representative is Euro-use, the worldwide name has one place. Preferred names can override these generated labels. Default representatives are selected from the full classified pools before taking each model's top five places. Names use English when supplied by OSM, otherwise the local name. Unnamed or unavailable data falls back to **Dot [row, column]**. The IDs, grid bounds and eligibility remain unchanged.
 
-Choose a suggested place or the final **Choose your own point on the map** card, then check the prominent **Selected destination** box before opening Maps. That card uses the same layout when a list is empty or unavailable. It gains the selected border only after you confirm a manual point; cancelling map choice with **Cancel** or **Esc** retains the previous destination and returns focus to that choice. A blue dashed keyboard-focus outline is distinct from the orange selected border. The list shows an English second line beneath a local name when OSM supplies one. Each available distance explicitly says **from you** or **from chosen start**. Target-dot distance is measured to the cell; place distance is measured to the arrival point. Neither is a road distance. Fixed onward plans send both origin and destination at six decimals. GPS routes send the selected destination and let Maps use your location. Inspection without GPS sends a coordinate search. Dot labels are never used as Maps destinations. Google Maps can display its own address or nearby-place label for the coordinate you sent; that wording may differ from the selected place's name in Dot Safari. A coordinate handoff does not supply a custom Google Maps label. Equally near targets can be selected in the places panel. A map choice does not change the live radar's chosen dot.
+Choose a suggested place or the final **Choose your own point on the map** card, then check the prominent **Selected destination** box before opening Maps. That card uses the same layout when a list is empty or unavailable. It gains the selected border only after you confirm a manual point; cancelling map choice with **Cancel** or **Esc** retains the previous destination and returns focus to that choice. A blue dashed keyboard-focus outline is distinct from the orange selected border. The list shows an English second line beneath a local name when OSM supplies one. Each available distance explicitly says **from you** or **from chosen start**. Target-dot distance is measured to the cell; place distance is measured to the arrival point. Neither is a road distance. Fixed onward plans send both origin and destination at six decimals. GPS routes send the selected destination and let Maps use your location. Inspection without GPS sends a coordinate search. Dot labels are never used as Maps destinations. Google Maps can display its own address or nearby-place label for the coordinate you sent; that wording may differ from the selected place's name in DotPick. A coordinate handoff does not supply a custom Google Maps label. Equally near targets can be selected in the places panel. A map choice does not change the live radar's chosen dot.
 
 A chosen destination survives an area change when it remains in the same inspected/target dot and qualifies for that model, including a listed point outside the new top five. An uncertain manual point chosen worldwide stays selected on switching to Euro-use, with its uncertainty warning and kept coordinates. Use it anyway or choose another point, beginning at those coordinates; Maps is withheld until review. A point known to be outside Euro-use is cleared on that switch. It can still be chosen deliberately in Euro-use after reviewing the warning.
 
@@ -231,7 +231,7 @@ Prepared place and country-boundary data is © [OpenStreetMap contributors](http
 
 ## Before you set off
 
-Dot Safari cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.
+DotPick cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.
 
 No dot is worth entering a dangerous or forbidden area. And if your next conquest appears to require a submarine, please question the map before buying one.
 
@@ -239,15 +239,15 @@ No dot is worth entering a dangerous or forbidden area. And if your next conques
 
 Use the small **Feedback** action in any dot popup or **Places in this dot** to report an unsuitable dot name, a missing/incorrect place, conquerability or Euro-use classification. Feedback is omitted from nearest-target and onward-planning panels. To report one of those target dots, click that dot on the map and use its popup or **Places in this dot**.
 
-Write a short correction and, if possible, a supporting link. Use **Copy message**, then **Message Miguel** to open [a private message to **Miguel / lmviterbo** on the EBT forum](https://forum.eurobilltracker.com/ucp.php?i=pm&mode=compose&u=448). Sign in, paste your copied text into the message and send it. A forum account is required. There is no separate public email form or automatic submission from Dot Safari.
+Write a short correction and, if possible, a supporting link. Use **Copy message**, then **Message Miguel** to open [a private message to **Miguel / lmviterbo** on the EBT forum](https://forum.eurobilltracker.com/ucp.php?i=pm&mode=compose&u=448). Sign in, paste your copied text into the message and send it. A forum account is required. There is no separate public email form or automatic submission from DotPick.
 
-For Euro-use conquerability changes, open [EBT Target Map](https://shortokapi.github.io/ebt-target-map/), select a dot, choose its classification and explain your reasoning. Your edits stay in your working copy. Use **Review Changes** to save/share a **Change Report** and send it to Miguel. Proposed corrections are reviewed before accepted changes are published. Target Map does not yet edit Dot Safari names or place lists; report those through Feedback.
+For Euro-use conquerability changes, open [EBT Target Map](https://shortokapi.github.io/ebt-target-map/), select a dot, choose its classification and explain your reasoning. Your edits stay in your working copy. Use **Review Changes** to save/share a **Change Report** and send it to Miguel. Proposed corrections are reviewed before accepted changes are published. Target Map does not yet edit DotPick names or place lists; report those through Feedback.
 
 One dot is enough to help. Include its **[i, j]** reference, the proposed change and your reason. Local knowledge is welcome.
 
 ## Grid references
 
-Dot Safari grid references are written as `[south-to-north index, west-to-east index]` — latitude first, longitude second. The first number increases northward and the second increases eastward. These are Dot Safari references, not official EBT dot numbers.
+DotPick grid references are written as `[south-to-north index, west-to-east index]` — latitude first, longitude second. The first number increases northward and the second increases eastward. These are DotPick references, not official EBT dot numbers.
 
 Tap a dot on the map to inspect its reference, note count and coordinate bounds. An unconquered label describes your imported map; use the selected target area and radar for eligibility.
 
@@ -264,10 +264,15 @@ Tap a dot on the map to inspect its reference, note count and coordinate bounds.
 - **Worldwide land mask and manual corrections:** [EBT World Land Map](https://github.com/ShortOkapi/ebt-world-land-map).
 - **Additional place data:** [GeoNames](https://www.geonames.org/), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). These destinations were selected and reviewed by Miguel.
 
-Manual reviews have also used Google Maps for reference and Apple Maps satellite imagery to check geography. These review references are separate from the prepared OSM/GeoNames data feeds and the background maps displayed by Dot Safari. Source notes are retained with curated exceptions; external content retains its applicable terms.
+Manual reviews have also used Google Maps for reference and Apple Maps satellite imagery to check geography. These review references are separate from the prepared OSM/GeoNames data feeds and the background maps displayed by DotPick. Source notes are retained with curated exceptions; external content retains its applicable terms.
 
 The application code is available under the [MIT licence](LICENSE). The worldwide land mask derives from [OpenStreetMap land polygons](https://osmdata.openstreetmap.de/data/land-polygons.html), © OpenStreetMap contributors, under [ODbL 1.0](https://opendatacommons.org/licenses/odbl/1-0/). External datasets and map imagery retain their own applicable licences and terms; the application’s MIT licence does not replace them. See the source repositories for dataset provenance.
 
 ## For maintainers
 
 The separate [maintainer guide](MAINTAINING.md) explains how to edit dot names, curate or exclude places, update prepared data and set release versions. The user instructions above do not require editing repository files.
+## Map data and nearby-dot distance ranges
+
+About → Map data identifies the datasets actually loaded by this browser: the Euro-use map revision, worldwide base date, prepared places and preferred dot names. Last successful online checks are separate from failed/latest attempts; bundled or saved data remain usable offline. Target Map's release number identifies the editor software, independently of map-data revisions. Feedback messages include concise public data identifiers and check times so Miguel can reproduce a report. They include no Notes contents or live GPS position.
+
+Nearby Target Dots shows dot steps and an approximate kilometre range to the nearest and farthest points of each whole dot. The range includes water inside the cell and describes straight-line proximity, ignoring roads and access. For onward planning it starts at the displayed Chosen start; for the radar it starts at the accepted GPS position. The existing nearest-point approximation, target order, ties and 150 km minimum-distance limit remain unchanged. The far end of a dot can lie beyond that limit.

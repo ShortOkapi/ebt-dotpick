@@ -1,4 +1,4 @@
-# EBT Dot Safari — maintainer guide
+# EBT DotPick — maintainer guide
 
 Updated: **16 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
 
@@ -10,7 +10,7 @@ Keep legacy grid constants, anchors, index order and antimeridian/polar behaviou
 
 ## Preferred dot names
 
-Edit **dot-name-overrides.json** at the **ebt-dot-safari** repository root. Keep the `include` and `exclude` arrays, even when empty. Use each dot only once in `include`. Keep one complete entry per line, with its `[row, column]` together, as in the supplied file. Preserve other entries, optional model-specific names, reasons, `exclude` and metadata. This is the same JSON format; only its layout has changed.
+Edit **dot-name-overrides.json** at the **ebt-dotpick** repository root. Keep the `include` and `exclude` arrays, even when empty. Use each dot only once in `include`. Keep one complete entry per line, with its `[row, column]` together, as in the supplied file. Preserve other entries, optional model-specific names, reasons, `exclude` and metadata. This is the same JSON format; only its layout has changed.
 
 ```json
 {
@@ -84,7 +84,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.2.1**. For a future candidate, update both version literals together and use an appropriate `-rc` version. Before merging its accepted stable release, set the service-worker literal to the final version and the visible HTML label to that version with a `v` prefix. README links automatically use the release branch for this candidate series and main for the stable version. The dataset folder name is independent of the app version and does not need renaming for every candidate.
+The current stable release is **2.3.0**. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 
@@ -93,3 +93,11 @@ Test the supplied complete candidate, then download/test the actual release bran
 Prepared settlements and boundaries derive from OSM under ODbL. Selected additional place data derives from GeoNames under CC BY 4.0. Keep source notes and explicit overrides with curated exceptions. Manual Google Maps/Apple Maps review references retain their applicable terms. The MIT application licence does not replace dataset or imagery terms.
 
 Preparation scripts, notebooks and source audits stay outside the app and world-land repositories. The shipped app remains index.html with its existing PWA resources, JSON and documentation.
+
+## Rename and compatibility
+
+Public branding and links use EBT DotPick and ebt-dotpick. Keep the manifest identity `/ebt-dot-safari/`, the legacy grid ID, personal-storage keys and persistent target/destination cache names. The new app-shell cache uses the ebt-dotpick-v prefix, so opening the new app does not evict the old shell before the forwarding page is deployed. On the new production path, public data-cache entries under the old path are copied to equivalent new-path keys; normal validation still applies when they are read. No Notes upload or server storage is introduced.
+
+The former address needs its supplied small forwarding page and replacement service worker. Renaming a GitHub repository alone does not redirect its Pages site. Keep Android/iPhone installed-app migration checks separate from ordinary browser checks: retaining the manifest ID supports continuity, but phone-specific shortcut/update behaviour still needs confirmation. Keep the old installation until the new address and its conquered dots have been checked.
+
+About data diagnostics use SHA-256 of the validated JSON values to identify snapshots without adding manual revision numbers to every source. Map revisions and prepared-place versions remain authoritative where supplied. Hashes cover the loaded worldwide base/overrides pair and preferred names as well. A missing fingerprint never blocks an otherwise usable dataset. Cached manifest/preferred-name entries now retain successful-check timestamps; older raw entries remain readable.

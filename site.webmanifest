@@ -1,7 +1,7 @@
 {
   "id": "/ebt-dot-safari/",
-  "name": "EBT Dot Safari",
-  "short_name": "Dot Safari",
+  "name": "EBT DotPick",
+  "short_name": "DotPick",
   "description": "A live GPS tracking tool and heatmap for EuroBillTracker map dot hunters.",
   "lang": "en",
   "start_url": "./",
