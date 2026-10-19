@@ -84,7 +84,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-Use a release-candidate version while testing. The current test candidate is **2.2.1-rc5**. Before merging the accepted stable release, set both to **2.2.1** / **v2.2.1** respectively. Candidate help links use README on **release-2.2.1**; stable help links use main. The dataset folder name is independent of the app version and does not need renaming for every candidate.
+The current stable release is **2.2.1**. For a future candidate, update both version literals together and use an appropriate `-rc` version. Before merging its accepted stable release, set the service-worker literal to the final version and the visible HTML label to that version with a `v` prefix. README links automatically use the release branch for this candidate series and main for the stable version. The dataset folder name is independent of the app version and does not need renaming for every candidate.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 
