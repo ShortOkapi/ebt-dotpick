@@ -1,6 +1,7 @@
 const APP_VERSION = '2.3.0';
 const CACHE_PREFIX = 'ebt-dotpick-v';
-const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}`;
+// Refresh the installed shell after final polish, keeping the pending release version.
+const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}-shell2`;
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -27,7 +28,7 @@ self.addEventListener('message', event => {
 });
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE)));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS_TO_CACHE.map(asset => new Request(asset, { cache: 'reload' })))));
   self.skipWaiting();
 });
 

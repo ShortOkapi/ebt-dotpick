@@ -2,11 +2,13 @@
 
 **Your personal dot hunting assistant.**
 
+Formerly **EBT Dot Safari**.
+
 A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the nearest eligible unconquered dot, inspect places and plan onward from a point you choose.
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 18 October 2026. This guide covers v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 19 October 2026. This guide covers v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -168,7 +170,7 @@ Opening Google Maps sends the selected destination coordinates. An onward plan f
 
 ### Feedback
 
-The Feedback action in a dot popup or **Places in this dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review the message before copying it. Its draft is not saved to browser storage and is cleared when the panel closes.
+The Feedback action in a dot popup or **Places in this dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review your message before copying it. Public dataset details are shown separately in a read-only section and included automatically by **Copy message**, with a request to keep them. If automatic copying is unavailable, a complete message is selected for manual copying. Its draft is not saved to browser storage and is cleared when the panel closes.
 
 Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. DotPick does not send it automatically. Forum messages are handled by the forum under its own policies.
 

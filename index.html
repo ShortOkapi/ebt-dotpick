@@ -187,6 +187,9 @@
     #feedback-dialog h2 { margin: 4px 0 12px; font-size: 18px; }
     #feedback-dialog label { display: block; margin: 10px 0 6px; font-weight: 700; }
     #feedback-text { box-sizing: border-box; width: 100%; min-height: 190px; padding: 10px; border: 1px solid #94a3b8; border-radius: 6px; color: #0f172a; background: white; font: 16px/1.4 system-ui, sans-serif; resize: vertical; }
+    #feedback-datasets, #feedback-manual-text { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; color: #334155; background: #f8fafc; font: 16px/1.4 system-ui, sans-serif; resize: vertical; }
+    #feedback-datasets { min-height: 100px; }
+    #feedback-manual-text { min-height: 190px; }
     #feedback-dialog .btn { min-height: 44px; }
     #feedback-close { flex: 0 0 auto; width: auto; }
     #feedback-dialog .btn-group { gap: 8px; flex-wrap: wrap; }
@@ -887,12 +890,22 @@
     <p>Suggest a dot name, a listed place, or a correction to conquerability or Euro-use. A short explanation and a source link are useful.</p>
     <label for="feedback-text">Your message</label>
     <textarea id="feedback-text" spellcheck="true" maxlength="12000"></textarea>
+    <details id="feedback-dataset-details">
+      <summary>Dataset details — included when copied</summary>
+      <p id="feedback-dataset-note" class="target-note">Please keep these details in your forum message. They identify the map and place data used.</p>
+      <label for="feedback-datasets">Public dataset details (read-only)</label>
+      <textarea id="feedback-datasets" rows="4" readonly spellcheck="false" aria-describedby="feedback-dataset-note"></textarea>
+    </details>
     <p>Use the two buttons below in order: <b>Copy message</b>, then <b>Message Miguel</b>. In the EBT forum, paste the copied text into your private message and send it. Forum sign-in is required.</p>
     <div class="btn-group">
       <button id="feedback-copy" class="btn" type="button">Copy message</button>
       <a id="feedback-forum" class="btn" href="https://forum.eurobilltracker.com/ucp.php?i=pm&amp;mode=compose&amp;u=448" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Message Miguel ↗</a>
     </div>
     <p id="feedback-status" role="status" aria-live="polite"></p>
+    <div id="feedback-manual-copy" hidden>
+      <label for="feedback-manual-text">Complete message for manual copying</label>
+      <textarea id="feedback-manual-text" rows="7" readonly spellcheck="false"></textarea>
+    </div>
     <p class="target-note">Nothing is sent by this panel. Review what you include before sending your forum message.</p>
     <p class="target-note">For Euro-use dot classifications, you can also send a Change Report from <a href="https://shortokapi.github.io/ebt-target-map/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">EBT Target Map ↗</a>.</p>
   </dialog>
@@ -933,6 +946,12 @@
           <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dotpick#places-dot-names-and-planning" data-readme-section="places-dot-names-and-planning" target="_blank" rel="noopener noreferrer">Places and planning guide ↗</a></p>
         </section>
 
+        <section aria-labelledby="about-disclaimer">
+          <h3 id="about-disclaimer" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Before you set off</h3>
+          <p style="margin: 0 0 8px;">DotPick cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.</p>
+          <p style="margin: 0;">No dot is worth entering a dangerous or forbidden area. And if your next conquest appears to require a submarine, please question the map before buying one.</p>
+        </section>
+
         <section aria-labelledby="about-privacy">
           <h3 id="about-privacy" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Your data</h3>
           <p style="margin: 0 0 8px;">Your Notes CSV is processed on your device and is not uploaded by DotPick. A compact dot profile and settings are saved locally. Online maps use external services.</p>
@@ -944,16 +963,6 @@
           <h3 id="about-map-data" style="margin:0 0 8px;font-size:14px;color:#0f172a;">Map data</h3>
           <dl id="map-data-list" class="map-data-list"></dl>
           <p class="target-note">Check times are local. The map revision is independent of the editor version.</p>
-        </section>
-        <section aria-labelledby="about-data-sources">
-          <h3 id="about-data-sources" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Data credits</h3>
-          <p style="margin: 0;">Place data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · ODbL. Additional place data: <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">GeoNames</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
-        </section>
-
-        <section aria-labelledby="about-disclaimer">
-          <h3 id="about-disclaimer" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Before you set off</h3>
-          <p style="margin: 0 0 8px;">DotPick cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.</p>
-          <p style="margin: 0;">No dot is worth entering a dangerous or forbidden area. And if your next conquest appears to require a submarine, please question the map before buying one.</p>
         </section>
 
         <section aria-labelledby="about-contribute">
@@ -970,6 +979,11 @@
             <div>Peter Zagler (<b>elpeza</b>, from Linz 🇦🇹) helped audit, optimize and field-test earlier versions, with analysis assistance from <b>Claude</b>.</div>
             <div>Several dot hunters have provided valuable feedback. Manfred Wolfensberger (<b>Laurentina</b>, from Zürich 🇨🇭) played a key role in improving iPhone use.</div>
           </div>
+        </section>
+
+        <section aria-labelledby="about-data-sources">
+          <h3 id="about-data-sources" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Data credits</h3>
+          <p style="margin: 0;">Place data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · ODbL. Additional place data: <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">GeoNames</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
         </section>
       </div>
     </div>
@@ -2148,10 +2162,14 @@
       const version = document.getElementById('app-version').textContent.trim();
       document.getElementById('feedback-text').value = [
         'EBT DotPick ' + version + ' feedback',
-        'Dot: ' + destinationDotLabel(dot, model),
+        destinationDotLabel(dot, model),
         'Target area: ' + (model === 'euro-use' ? 'Euro-use area' : 'All land worldwide'),
-        '', 'What needs checking:', '', 'Suggested correction / reason:', '', 'Source (optional):', '', ...feedbackDatasetDetails()
+        '', 'What needs checking:', '', 'Suggested correction / reason:', '', 'Source (optional):', ''
       ].join('\n');
+      document.getElementById('feedback-datasets').value = feedbackDatasetDetails().join('\n');
+      document.getElementById('feedback-dataset-details').open = false;
+      document.getElementById('feedback-manual-copy').hidden = true;
+      document.getElementById('feedback-manual-text').value = '';
       document.getElementById('feedback-status').textContent = '';
       if (!feedbackDialog.open) feedbackDialog.showModal();
       feedbackDialog.scrollTop = 0;
@@ -2160,19 +2178,40 @@
     document.getElementById('feedback-close').addEventListener('click', () => feedbackDialog.close());
     feedbackDialog.addEventListener('close', () => {
       document.getElementById('feedback-text').value = '';
+      document.getElementById('feedback-datasets').value = '';
+      document.getElementById('feedback-dataset-details').open = false;
+      document.getElementById('feedback-manual-copy').hidden = true;
+      document.getElementById('feedback-manual-text').value = '';
       document.getElementById('feedback-status').textContent = '';
       const trigger = feedbackReturnFocus; feedbackReturnFocus = null;
       if (trigger?.isConnected) trigger.focus({ preventScroll: true });
     });
+    function completeFeedbackMessage() {
+      return [
+        document.getElementById('feedback-text').value.trimEnd(),
+        '', 'Please keep the dataset details below; they identify the map and place data used.',
+        document.getElementById('feedback-datasets').value
+      ].join('\n');
+    }
+    document.getElementById('feedback-text').addEventListener('input', () => {
+      document.getElementById('feedback-manual-copy').hidden = true;
+      document.getElementById('feedback-manual-text').value = '';
+      document.getElementById('feedback-status').textContent = '';
+    });
     document.getElementById('feedback-copy').addEventListener('click', async () => {
-      const field = document.getElementById('feedback-text'), status = document.getElementById('feedback-status');
+      const status = document.getElementById('feedback-status'), message = completeFeedbackMessage();
+      document.getElementById('feedback-manual-copy').hidden = true;
+      document.getElementById('feedback-manual-text').value = '';
       try {
-        await navigator.clipboard.writeText(field.value);
-        status.textContent = 'Copied. Open your forum message and paste it there.';
+        await navigator.clipboard.writeText(message);
+        status.textContent = 'Copied, including dataset details. Open your forum message and paste it there.';
         document.getElementById('feedback-forum').focus({ preventScroll: true });
       } catch {
-        field.focus(); field.select();
-        status.textContent = 'Copy was unavailable. Select the text and use Copy, then open your forum message.';
+        const manual = document.getElementById('feedback-manual-text');
+        manual.value = message;
+        document.getElementById('feedback-manual-copy').hidden = false;
+        manual.focus(); manual.select();
+        status.textContent = 'Automatic copying was unavailable. The complete message is selected below. Use Copy, then open your forum message.';
       }
     });
     document.getElementById('destination-feedback').addEventListener('click', event => {
