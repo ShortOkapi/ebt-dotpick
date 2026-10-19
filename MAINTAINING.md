@@ -1,6 +1,6 @@
 # EBT Dot Safari — maintainer guide
 
-Updated: **15 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
+Updated: **16 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
 
 ## Dot names and destinations are separate
 
@@ -10,7 +10,7 @@ Keep legacy grid constants, anchors, index order and antimeridian/polar behaviou
 
 ## Preferred dot names
 
-Edit **dot-name-overrides.json** at the **ebt-dot-safari** repository root. Keep the `include` and `exclude` arrays, even when empty. Use each dot only once in `include`.
+Edit **dot-name-overrides.json** at the **ebt-dot-safari** repository root. Keep the `include` and `exclude` arrays, even when empty. Use each dot only once in `include`. Keep one complete entry per line, with its `[row, column]` together, as in the supplied file. Preserve other entries, optional model-specific names, reasons, `exclude` and metadata. This is the same JSON format; only its layout has changed.
 
 ```json
 {
@@ -63,7 +63,7 @@ Changing the maintained destination file requires another prepared-data update b
 
 ## Prepared place data
 
-The current preparation covers **4,222 dots**: **4,167 eligible Euro-use dots**, all **54 current non-Antarctic Unconquerable naming dots**, and the original Three Forks Beach Tongue exception. The bundled eligibility map matches **Target Map revision 57**. This does not establish worldwide prepared coverage.
+The prepared place snapshot covers **4,222 dots** from earlier map revisions. The bundled eligibility map matches **Target Map revision 104**, with **4,171 eligible Euro-use dots**. Five newly eligible dots — **[259, 527]**, **[446, 490]**, **[447, 454]**, **[454, 474]** and **[471, 449]** — do not yet have prepared place lists. The newly classified Unconquerable Euro land dot **[449, 490]** also has no prepared list. Their existing manual-point option remains available; updated eligibility does not automatically rebuild place blocks. The old **[255, 527]** prepared record has no listed points or automatic name and remains harmless historical data; revision 84 removes that cell from eligibility. The optional `classifications` object (formatVersion 1) stores compact ranges for excluded, foreign, sea and explicitly unreviewed cells; top-level `ranges` contain eligible cells only. The Target Map exporter supplies both together. The visible **Water Only** label retains the `sea` JSON key. The optional `classifications.background` stores validated worldwide land ranges and pinned source hashes; unrecorded land defaults to Foreign and other unrecorded dots to Water Only. Explicit decisions, including Unreviewed, override that background. Revision 104 preserves the revision-84 eligible ranges, records the 19 reviewed Unreviewed remnants as Foreign/Water Only, and adds the compact background. Older maps without it retain their unknown defaults. Malformed/conflicting ranges reject an update before adoption; the app keeps its usable cached or bundled map. Background lookup uses intervals, not a per-dot global Map. This does not establish worldwide prepared place coverage.
 
 Euro-use means the Eurozone, other countries and territories using the euro, including Kosovo and Montenegro, plus Switzerland. Classify the full candidate pools before selecting each model's top five. Worldwide includes Euro-use places. Missing population stays unknown. The five original curated exceptions remain; Falca and Légua are ordinary results.
 
@@ -84,7 +84,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-Use a release-candidate version while testing. Before merging the accepted stable release, set both to **2.2.0** / **v2.2.0** respectively. Candidate help links use README on **release-2.2.0**; stable help links use main. The dataset folder name is independent of the app version and does not need renaming for every candidate.
+The current stable release is **2.2.1**. For a future candidate, update both version literals together and use an appropriate `-rc` version. Before merging its accepted stable release, set the service-worker literal to the final version and the visible HTML label to that version with a `v` prefix. README links automatically use the release branch for this candidate series and main for the stable version. The dataset folder name is independent of the app version and does not need renaming for every candidate.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 

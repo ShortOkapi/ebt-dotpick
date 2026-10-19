@@ -175,14 +175,9 @@
     }
 
     .target-compass[hidden] { display: none; }
-    button.target-compass { padding: 0; color: inherit; font: inherit; }
-    #hud-panel:not(.collapsed) button.target-compass { flex-basis: 44px; width: 44px; height: 44px; border: 0; background: transparent; }
-    #hud-panel:not(.collapsed) button.target-compass::before { content: ''; position: absolute; inset: 10px; border: 2px solid #cbd5e1; border-radius: 50%; background: #f8fafc; }
-    #hud-panel:not(.collapsed) button.target-compass .target-north { top: 5px; }
-    #hud-panel:not(.collapsed) button.target-compass .target-arrow { position: relative; }
-    #hud-panel:not(.collapsed) button.target-compass:not(:disabled) { cursor: pointer; }
-    #hud-panel:not(.collapsed) button.target-compass:focus-visible { outline: 3px solid #c2410c; outline-offset: 3px; }
-    #hud-panel.collapsed button.target-compass { pointer-events: none; }
+    .text-action { display: inline-block; min-height: 32px; padding: 6px 0; border: 0; background: none; color: #075985; font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+    .text-action:focus-visible { outline: 2px dashed #0284c7; outline-offset: 3px; }
+    .text-action[hidden] { display: none; }
     .feedback-link { display: inline-block; min-height: 32px; padding: 6px 0; border: 0; background: none; color: #075985; font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
     .feedback-link:focus-visible { outline: 2px solid #075985; outline-offset: 3px; }
     .feedback-link[hidden] { display: none; }
@@ -323,7 +318,7 @@
 
     /* Destination picker and deliberate map-point choice. */
     .panel[hidden], #destination-crosshair[hidden], #destination-selection[hidden], #destination-map-area[hidden] { display: none; }
-    #destination-dialog, #destination-area-dialog {
+    #destination-dialog, #destination-area-dialog, #nearby-targets-dialog {
       width: 400px;
       max-width: calc(100% - 24px);
       max-height: calc(var(--app-height, 100dvh) - 24px);
@@ -350,18 +345,39 @@
     .dot-popup-start { color: #0f172a; font-size: 13px; line-height: 1.45; }
     .dot-popup-start span[hidden] { display: none; }
     #destination-close { flex: 0 0 44px; min-height: 44px; }
-    #destination-list { display: grid; gap: 6px; margin: 10px 0; }
-    .destination-place {
-      min-height: 52px; width: 100%; padding: 9px;
+    .destination-choices, #destination-list, #nearby-targets-list { display: grid; gap: 6px; }
+    .destination-choices, #nearby-targets-list { margin: 10px 0; }
+    #destination-list:empty { display: none; }
+    .destination-place, .nearby-target {
+      box-sizing: border-box; min-height: 52px; width: 100%; padding: 9px;
       border: 1px solid #cbd5e1; border-radius: 8px;
       color: #0f172a; background: #f8fafc; font: inherit;
       text-align: left; cursor: pointer; overflow-wrap: anywhere;
     }
-    .destination-place[aria-pressed="true"] { border: 2px solid #c2410c; padding: 8px; }
-    .destination-place span { display: block; color: #475569; font-size: 12px; }
+    .destination-place[aria-pressed="true"], .nearby-target[aria-pressed="true"] { border: 2px solid #c2410c; padding: 8px; }
+    .destination-place span, .nearby-target-detail { display: block; color: #475569; font-size: 12px; }
     .destination-place .destination-english { color: #334155; font-size: 13px; }
-    .destination-place:focus-visible { outline: 2px solid #c2410c; outline-offset: 2px; }
-    #destination-dialog .btn, #destination-area-dialog .btn, #destination-map-panel .btn, .destination-popup-button, #destination-hud-button { min-height: 44px; }
+    .destination-place:focus-visible, .nearby-target:focus-visible { outline: 2px dashed #0284c7; outline-offset: 3px; }
+    .destination-place:disabled, .nearby-target:disabled { color: #64748b; background: #f1f5f9; cursor: not-allowed; }
+    #destination-choose-map strong { display: block; font-weight: 600; }
+    #nearby-targets-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+    #nearby-targets-dialog .destination-heading h2 { margin-bottom: 0; }
+    #nearby-targets-close { flex: 0 0 44px; min-height: 44px; }
+    #nearby-targets-open { width: 100%; min-height: 44px; margin-top: 8px; white-space: normal; }
+    #nearby-targets-automatic { display: block; width: 100%; min-height: 44px; white-space: normal; }
+    #nearby-targets-automatic[hidden] { display: none; }
+    .nearby-target { display: flex; align-items: center; gap: 10px; }
+    .nearby-target-label { flex: 1; min-width: 0; }
+    .nearby-target-detail { margin-top: 4px; }
+    #nearby-targets-start { margin: 12px 0; padding: 10px; border: 1px solid #0284c7; border-radius: 8px; background: #f0f9ff; overflow-wrap: anywhere; }
+    #nearby-targets-start strong, #nearby-targets-start span { display: block; }
+    #nearby-targets-start span { margin-top: 4px; }
+    #nearby-targets-start[hidden], #destination-dot-area-warning[hidden] { display: none; }
+    #destination-dot-area-warning { padding: 8px; margin: 8px 0; border: 2px solid #b91c1c; border-radius: 8px; color: #991b1b; background: #fef2f2; }
+    #destination-dot-area-warning[data-state="unknown"] { color: #78350f; background: #fffbeb; border-color: #92400e; }
+    #destination-dot-area-warning strong, #destination-dot-area-warning span { display: block; }
+    #destination-dot-area-warning span { margin-top: 4px; }
+    #destination-dialog .btn, #destination-area-dialog .btn, #destination-map-panel .btn, .destination-popup-button { min-height: 44px; }
     #destination-dialog p { margin: 8px 0; }
     #destination-selection {
       margin: 12px 0 8px; padding: 12px;
@@ -371,7 +387,6 @@
     #destination-selection strong { display: block; font-size: 16px; }
     #destination-selection span { display: block; margin-top: 4px; }
     .destination-selection-label { color: #9a3412; font-size: 12px; font-weight: 700; }
-    #destination-hud-button { width: 100%; margin-top: 8px; font-size: 12px; min-height: 44px; white-space: normal; }
     .destination-popup-button { width: 100%; margin-top: 8px; white-space: normal; }
     .dot-popup-heading { display: block; font-size: 15px; overflow-wrap: anywhere; }
     .dot-popup-badge { margin: 6px 0; }
@@ -408,7 +423,17 @@
     }
     #destination-crosshair svg { display: block; fill: none; stroke: #c2410c; stroke-width: 2; }
 
-    .hud-target-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+    .hud-target-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; min-height: 44px; margin: 0 0 10px; padding: 3px 0; border-radius: 6px; color: inherit; text-decoration: none; }
+    .hud-target-row[href] { cursor: pointer; }
+    .hud-target-row[href]:hover .hud-dot-id { text-decoration: underline; }
+    .hud-target-row:focus-visible { outline: 2px dashed #0284c7; outline-offset: 3px; }
+    .dot-popup-model-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+    .dot-popup-area-toggle { min-height: 32px; padding: 3px 7px; border: 1px solid #94a3b8; border-radius: 5px; background: #f1f5f9; color: #075985; font: inherit; font-size: 11px; cursor: pointer; }
+    .dot-popup-area-toggle:focus-visible { outline: 2px dashed #0284c7; outline-offset: 2px; }
+    .no-land { background: #f1f5f9; color: #475569; border: 1px solid #94a3b8; }
+    .excluded-land { background: #e2e8f0; color: #334155; border: 1px solid #64748b; }
+    .foreign-land { background: #fef2f2; color: #991b1b; border: 1px solid #b91c1c; }
+    .dot-popup-badge .stat-badge { margin: 2px 3px 2px 0; }
     .hud-dot-reference { flex: 1 1 120px; min-width: 0; line-height: 1.5; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
     .hud-target-row[hidden], .hud-dot-reference[hidden] { display: none; }
     .hud-dot-id { white-space: nowrap; }
@@ -692,10 +717,10 @@
           <span id="target-label-short" class="target-label-short">Target Dot:</span>
           <span id="target-reading" class="target-reading">
             <span id="target-value" class="target-value" aria-hidden="true">—</span>
-            <button id="target-compass" class="target-compass" type="button" aria-label="Places in nearest target" tabindex="-1" disabled hidden>
+            <span id="target-compass" class="target-compass" aria-hidden="true" hidden>
               <span class="target-north" aria-hidden="true">N</span>
               <span id="target-arrow" class="target-arrow" aria-hidden="true">↑</span>
-            </button>
+            </span>
           </span>
         </span>
         <span id="target-accessible-text" class="visually-hidden">Nearest target unavailable</span>
@@ -718,9 +743,9 @@
     </div>
 
     <div id="hud-content" class="panel-content">
-      <div id="hud-target-row" class="hud-target-row" hidden>
-        <div id="hud-dot-reference" class="hud-dot-reference" hidden></div>
-      </div>
+      <a id="hud-target-row" class="hud-target-row" href="#destination-dialog" aria-haspopup="dialog" aria-controls="destination-dialog" hidden>
+        <span id="hud-dot-reference" class="hud-dot-reference" hidden></span>
+      </a>
       <div class="target-area-control">
         <label for="target-area">Target area:</label>
         <select id="target-area" aria-describedby="target-area-message">
@@ -736,7 +761,8 @@
         Allow location access when prompted...
       </div>
       <p id="radar-last-fix-note" class="target-note" role="status" hidden>Based on the last usable GPS position. Waiting for a new fix.</p>
-      <button id="destination-hud-button" class="btn" type="button" aria-describedby="hud-dot-reference hud-details gps-message" disabled>Places in nearest target</button>
+      <button id="nearby-targets-open" class="btn" type="button" aria-haspopup="dialog" disabled>Nearby Target Dots</button>
+      <button id="radar-automatic" class="text-action" type="button" hidden>Use automatic nearest target</button>
 
       <div id="gps-status" class="gps-status">
         <span id="gps-message">Requesting GPS...</span>
@@ -756,7 +782,29 @@
     </form>
   </dialog>
 
+  <dialog id="nearby-targets-dialog" aria-labelledby="nearby-targets-title" aria-describedby="nearby-targets-help">
+    <div class="destination-heading">
+      <h2 id="nearby-targets-title">Nearby Target Dots</h2>
+      <button id="nearby-targets-close" class="btn btn-about" type="button" aria-label="Close nearby target dots">✖</button>
+    </div>
+    <div class="target-area-control">
+      <label for="nearby-targets-area">Target area:</label>
+      <select id="nearby-targets-area" aria-describedby="nearby-targets-model-message">
+        <option value="worldwide">All land worldwide</option>
+        <option value="euro-use">Euro-use area</option>
+      </select>
+    </div>
+    <p id="nearby-targets-model-message" class="target-note"></p>
+    <button id="nearby-targets-retry" class="gps-retry" type="button" hidden>Retry target map</button>
+    <section id="nearby-targets-start" aria-label="Chosen start" hidden></section>
+    <p id="nearby-targets-status" role="status" aria-live="polite"></p>
+    <p id="nearby-targets-help" class="target-note">Ordered by geographical proximity. Dot steps include diagonals and ignore sea, roads and access. Choose a dot to see its places.</p>
+    <div id="nearby-targets-list" role="group" aria-label="Nearby eligible unconquered dots"></div>
+    <button id="nearby-targets-automatic" class="text-action" type="button" hidden>Use automatic nearest target</button>
+  </dialog>
+
   <dialog id="destination-dialog" aria-labelledby="destination-title">
+    <button id="destination-back" class="text-action" type="button" hidden>← Back to Nearby Target Dots</button>
     <div class="destination-heading">
       <h2 id="destination-title">Places in this dot</h2>
       <button id="destination-close" class="btn btn-about" type="button" aria-label="Close destinations">✖</button>
@@ -771,15 +819,25 @@
     <p id="destination-model-message" class="target-note">This also changes the radar's target area.</p>
     <button id="destination-target-retry" class="gps-retry" type="button" hidden>Retry target map</button>
     <p id="destination-context"></p>
+    <p id="destination-land-status" role="status" aria-live="polite" hidden><span class="stat-badge no-land">NO LAND HERE</span></p>
+    <div id="destination-dot-area-warning" role="status" aria-live="polite" hidden>
+      <strong id="destination-dot-area-title"></strong>
+      <span id="destination-dot-area-detail"></span>
+    </div>
     <section id="destination-start" aria-label="Chosen start" hidden></section>
     <p id="destination-name-message" class="target-note" hidden></p>
     <div id="destination-ties" role="group" aria-label="Target dots at equal distance"></div>
     <p id="destination-status" role="status" aria-live="polite"></p>
     <p id="destination-distance-label">Straight-line distances from you (GPS).</p>
-    <div id="destination-list" role="group" aria-label="Suggested destinations"></div>
+    <div class="destination-choices" role="group" aria-label="Destination choices">
+      <div id="destination-list"></div>
+      <button id="destination-choose-map" class="destination-place" type="button" aria-pressed="false">
+        <strong>Choose your own point on the map</strong>
+        <span>Pick a destination inside this dot.</span>
+      </button>
+    </div>
     <button id="destination-retry" class="gps-retry" type="button" hidden>Retry place data</button>
-    <button id="destination-choose-map" class="btn" type="button">Choose on the map</button>
-    <section id="destination-selection" aria-label="Selected destination" aria-live="polite" hidden></section>
+    <section id="destination-selection" aria-label="Selected destination" aria-live="polite" tabindex="-1" hidden></section>
     <a id="destination-maps" class="btn" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" hidden>Open in Google Maps ↗</a>
     <p class="feedback-row"><button id="destination-feedback" class="feedback-link" type="button" hidden>Feedback</button></p>
     <p class="target-note">Check access and safety. These are suggested points, not verified arrival places.</p>
@@ -836,7 +894,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT Dot Safari <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.2.0</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT Dot Safari <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.2.1</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <div class="about-share-section">
         <button id="share-app" class="btn" type="button">Share this app</button>
@@ -863,7 +921,7 @@
 
         <section aria-labelledby="about-destinations">
           <h3 id="about-destinations" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Places and planning</h3>
-          <p style="margin: 0 0 8px;">Inspect places in any dot, or find the next target from your GPS position or a point you choose on the map. Select a listed place or <b>Choose on the map</b>, then open Google Maps. Distances are straight-line.</p>
+          <p style="margin: 0 0 8px;">Inspect places in any dot, or find the next target from your GPS position or a point you choose on the map. Select a listed place or <b>Choose your own point on the map</b>, then open Google Maps. Distances are straight-line.</p>
           <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dot-safari#places-dot-names-and-planning" data-readme-section="places-dot-names-and-planning" target="_blank" rel="noopener noreferrer">Places and planning guide ↗</a></p>
         </section>
 
@@ -953,6 +1011,8 @@
     let targetChoiceSaved = true;
     let lastRadarTarget = null;
     let lastRadarResult = null;
+    let manualRadarTarget = null;
+    let radarChoiceMessage = '';
     try {
       const saved = localStorage.getItem(TARGET_AREA_KEY);
       if (Object.hasOwn(targetModels, saved)) targetArea = saved;
@@ -1009,7 +1069,7 @@
 
     // Keyboard Map Inspection
     map.getContainer().addEventListener('keydown', event => {
-      if (event.key !== 'Enter') return;
+      if (event.target !== map.getContainer() || event.key !== 'Enter') return;
       event.preventDefault();
       map.fire('click', { latlng: map.getCenter() });
     });
@@ -1204,6 +1264,8 @@
     }
 
     function refreshUIState() {
+      if (manualRadarTarget?.profile !== dotMap || dotMap.size === 0) manualRadarTarget = null;
+      radarChoiceMessage = '';
       resetRadarTarget();
       updateMaxCount();
       buildRenderRows();
@@ -1617,9 +1679,44 @@
       focusable[nextIndex].focus();
     });
 
-    function createBadge(count) {
-      if (count > 0) return `<span class="stat-badge conquered">${formatNumber(count)} notes</span>`;
-      return `<span class="stat-badge unconquered">UNCONQUERED</span>`;
+    function euroDotClassification(dot) {
+      const model = targetModels['euro-use'];
+      if (model.state !== 'ready') return null;
+      if (isEligibleDot(dot[0], dot[1], model)) return 'eligible';
+      if(!model.classifications)return null;
+      const explicit=model.classifications.get(destinationDotKey(dot));
+      if(explicit)return explicit;
+      const background=model.classifications.background;
+      if(!background||!validDestinationDot(dot))return 'unreviewed';
+      const intervals=background.get(dot[0])||[];let low=0,high=intervals.length-1;
+      while(low<=high){const mid=(low+high)>>1,[first,last]=intervals[mid];if(dot[1]<first)high=mid-1;else if(dot[1]>last)low=mid+1;else return 'foreign';}
+      return 'sea';
+    }
+    function dotLandStatus(dot) {
+      if (!dot) return 'unknown';
+      const classification = euroDotClassification(dot);
+      if (classification === 'sea') return 'no-land';
+      if (classification === 'eligible' || classification === 'excluded' || classification === 'foreign') return 'land';
+      if (targetModels.worldwide.state !== 'ready') return 'unknown';
+      return isEligibleDot(dot[0], dot[1], targetModels.worldwide) ? 'land' : 'no-land';
+    }
+    function createBadge(count, dot = null, model = planningTargetArea()) {
+      const progress = count > 0 ? `<span class="stat-badge conquered">${formatNumber(count)} notes</span>` : '';
+      const classification = dot && euroDotClassification(dot);
+      const review = model==='euro-use'&&classification==='unreviewed'&&targetModels['euro-use'].classifications?.background ? '<span class="stat-badge no-land">EURO-USE STATUS UNREVIEWED</span>' : '';
+      if (classification === 'excluded') return progress + '<span class="stat-badge excluded-land">UNCONQUERABLE EURO LAND</span>';
+      if (model === 'euro-use' && classification === 'foreign') return progress + '<span class="stat-badge foreign-land">NOT IN EURO-USE AREA</span>';
+      if (classification === 'sea') return progress + '<span class="stat-badge no-land">NO LAND HERE</span>';
+      if (progress) return progress + review;
+      if (dot && dotLandStatus(dot) === 'unknown') return '<span class="stat-badge no-land">LAND DATA UNAVAILABLE</span>' + review;
+      if (dot && dotLandStatus(dot) === 'no-land') return '<span class="stat-badge no-land">NO LAND HERE</span>' + review;
+      const unknown = model === 'euro-use' && dot && classification !== 'eligible'
+        ? `<span class="stat-badge no-land">EURO-USE STATUS ${classification === 'unreviewed' ? 'UNREVIEWED' : 'UNAVAILABLE'}</span>` : '';
+      return '<span class="stat-badge unconquered">UNCONQUERED</span>' + unknown;
+    }
+    function closeDotPopup() {
+      if (!destinationPopup) return;
+      map.closePopup(); map.getContainer().focus({ preventScroll: true });
     }
 
     function sizeDotPopup(popup) {
@@ -1654,10 +1751,18 @@
       content.append(coordinates, reference);
       const action = document.createElement('div'), button = document.createElement('button'), other = document.createElement('button'), hint = document.createElement('p');
       button.type = 'button'; button.className = 'btn destination-popup-button'; button.textContent = 'Places in this dot';
-      other.type = 'button'; other.className = 'btn destination-popup-button'; other.textContent = 'Places in nearest target from this dot';
-      hint.className = 'target-note';
-      const start = kind => () => openMapDestinationPicker({ lat, lon }, kind);
-      button.addEventListener('click', start('this')); other.addEventListener('click', start('other'));
+      other.type = 'button'; other.className = 'btn destination-popup-button'; other.textContent = 'Nearby Target Dots From This Dot';
+      hint.className = 'target-note dot-popup-model-row';
+      const areaToggle = document.createElement('button'), startNote = document.createElement('span');
+      areaToggle.type = 'button'; areaToggle.className = 'dot-popup-area-toggle'; areaToggle.setAttribute('role', 'switch');
+      startNote.textContent = 'Start dot excluded'; hint.append(areaToggle, startNote);
+      button.addEventListener('click', () => openMapDestinationPicker({ lat, lon }, 'this'));
+      other.addEventListener('click', () => openMapNearbyTargetPicker({ lat, lon }));
+      areaToggle.addEventListener('click', event => {
+        event.stopPropagation(); planningArea = planningTargetArea() === 'euro-use' ? 'worldwide' : 'euro-use';
+        refreshDestinationUI();
+        loadDestinationCell(dot, planningTargetArea()).then(result => { rememberDotNames(dot, result.names); if (destinationPopup?.popup === popup) { refreshDestinationPopup(); popup.update(); } }).catch(() => {});
+      });
       action.append(button, other, hint); content.append(action);
       const feedbackRow = document.createElement('p'), feedback = document.createElement('button');
       feedbackRow.className = 'feedback-row'; feedback.className = 'feedback-link'; feedback.type = 'button'; feedback.textContent = 'Feedback';
@@ -1666,7 +1771,7 @@
       const popupWidth = Math.max(120, Math.min(320, map.getSize().x - 48));
       const popup = L.popup({ minWidth: popupWidth, maxWidth: popupWidth, className: 'dot-inspection-popup' }).setLatLng(latlng).setContent(content);
       sizeDotPopup(popup);
-      const state = { popup, dot, origin: { lat, lon }, heading, badge, action, button, other, hint, reference, referenceTitle, referenceCoordinates };
+      const state = { popup, dot, origin: { lat, lon }, heading, badge, action, button, other, hint, areaToggle, startNote, reference, referenceTitle, referenceCoordinates };
       destinationPopup = state;
       popup.on('remove', () => {
         if (destinationPopup === state) destinationPopup = null;
@@ -1675,12 +1780,23 @@
         fitPanels();
       });
       popup.openOn(map); refreshDestinationUI();
+      const close = popup.getElement().querySelector('.leaflet-popup-close-button');
+      close.setAttribute('aria-label', 'Close dot popup');
+      close.addEventListener('keydown', event => {
+        if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') return;
+        event.preventDefault(); event.stopPropagation(); closeDotPopup();
+      });
       loadDestinationCell(dot, planningTargetArea()).then(result => {
         rememberDotNames(dot, result.names);
         if (destinationPopup === state) { refreshDestinationPopup(); popup.update(); }
       }).catch(() => {});
     }
     map.on('click', event => openDotPopup(event.latlng));
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !destinationPopup || destinationMapChoice ||
+          document.querySelector('dialog[open]') || document.getElementById('about-modal').getAttribute('aria-hidden') === 'false') return;
+      event.preventDefault(); event.stopPropagation(); closeDotPopup();
+    }, true);
     map.on('resize', () => {
       if (!destinationPopup) return;
       const popup = destinationPopup.popup;
@@ -2034,6 +2150,7 @@
         dotNameData.radarAttempts.set(`${destinationData.manifest?.version || 'pending'}:${dotKey}`, now);
         while (dotNameData.radarAttempts.size > 128) dotNameData.radarAttempts.delete(dotNameData.radarAttempts.keys().next().value);
         renderRadarDotReference();
+        renderNearbyTargetList();
       }).catch(() => {});
     }
     function destinationGPSReady() {
@@ -2059,13 +2176,15 @@
       // Only an onward popup search excludes its start; the GPS action follows the radar.
       const originKey = destinationDotKey(originDot), conquered = intent.kind === 'other'
         ? { has: key => key === originKey || dotMap.has(key) } : dotMap;
-      const result = findEligibleTargets(origin.lat, origin.lon, conquered, model);
+      const usesRadarChoice = intent.kind === 'radar' && intent.model === targetArea;
+      const pinnedPlan = intent.kind === 'other' && !!intent.targetKey;
+      const result = findEligibleTargets(origin.lat, origin.lon, conquered, model, TARGET_SEARCH_KM, usesRadarChoice || pinnedPlan);
       if (result.status !== 'target') return { status: result.status, result };
-      const tied = result.candidates.find(point => `${point.i}_${point.j}` === intent.targetKey);
+      const tied = (pinnedPlan ? result.nearby : result.candidates).find(point => `${point.i}_${point.j}` === intent.targetKey);
       const followsRadar = intent.model === targetArea && (intent.kind === 'radar' || destinationNeedsGPS(intent) && !lastRadarTarget?.isHere);
       const radar = followsRadar
-        ? chooseRadarTarget(result, lastRadarTarget).primary : null;
-      const target = tied || radar || result.candidates[0];
+        ? (usesRadarChoice ? resolveRadarChoice(result, lastRadarTarget) : chooseRadarTarget(result, lastRadarTarget)).primary : null;
+      const target = usesRadarChoice ? radar : tied || radar || result.candidates[0];
       return { status: 'target', context: { ...base, dot: [target.i, target.j], target }, result };
     }
     function activeDestinationContext() {
@@ -2165,11 +2284,12 @@
     }
     function renderDestinationPlaces() {
       const session = destinationSession;
-      if (!session || session.invalid || !session.result || !destinationContextMatches()) return;
+      if (!session || session.invalid || !destinationContextMatches()) return;
+      document.getElementById('destination-choose-map').setAttribute('aria-pressed', String(!!session.selected?.manual));
       const list = document.getElementById('destination-list'), selectedId = session.selected?.id;
       const focusedId = list.contains(document.activeElement) ? document.activeElement.dataset.destinationId : null;
       list.replaceChildren();
-      for (const row of session.result.points) {
+      for (const row of session.result?.points || []) {
         const point = destinationPointFromRow(row), button = document.createElement('button'), detail = document.createElement('span');
         button.type = 'button'; button.className = 'destination-place'; button.dataset.destinationId = point.id;
         button.setAttribute('aria-pressed', String(point.id === selectedId)); button.textContent = point.name;
@@ -2203,7 +2323,9 @@
         session.selected = retainedDestination(choice, session.context, result);
         session.retainedChoice = null;
       }
-      let message = result.status === 'not-covered' ? 'This dot has no prepared place data yet. This does not mean it has no places. You can choose a point on the map.'
+      let message = result.status === 'not-covered' ? dotLandStatus(session.context.dot) === 'no-land'
+        ? 'This dot has no prepared place data. You can still inspect it or choose a point on the map.'
+        : 'This dot has no prepared place data yet. This does not mean it has no places. You can choose a point on the map.'
         : result.status === 'unavailable' ? 'Place data could not be downloaded or read from saved data. Connect and retry, or choose a point on the map.'
         : result.status === 'empty' ? 'No listed destinations in this dot for this target area.'
         : result.status === 'partial' ? 'Some place data is unclassified. The suggestions may be incomplete.' : 'Choose a suggested place or a point on the map.';
@@ -2244,12 +2366,13 @@
       document.getElementById('destination-maps').removeAttribute('href');
       document.getElementById('destination-retry').hidden = true;
       document.getElementById('destination-choose-map').disabled = true;
+      document.getElementById('destination-choose-map').setAttribute('aria-pressed', 'false');
       document.getElementById('destination-ties').replaceChildren();
     }
-    function beginDestinationIntent(intent, retainedChoice = null) {
+    function beginDestinationIntent(intent, retainedChoice = null, nearby = null) {
       stopDestinationMapChoice();
       destinationSession = { intent: { ...intent }, context: { model: intent.model, profile: destinationUsesProfile(intent) ? dotMap : null },
-        request: 0, selected: null, result: null, invalid: true, retainedChoice, pendingModel: false };
+        request: 0, selected: null, result: null, invalid: true, retainedChoice, pendingModel: false, nearby };
       clearDestinationActions(); refreshDestinationModelControl(); renderDestinationHeadings(); refreshDestinationOutline();
       if (!destinationDialog.open) destinationDialog.showModal();
       destinationDialog.scrollTop = 0;
@@ -2283,6 +2406,13 @@
       const session = destinationSession;
       if (!session) return;
       const { context, intent } = session, origin = destinationOrigin(intent);
+      document.getElementById('destination-back').hidden = !session.nearby;
+      if (session.nearby) {
+        session.nearby.intent = { ...intent };
+        if (context.dot) session.nearby.selectedKey = destinationDotKey(context.dot);
+      }
+      renderDestinationAreaNotice();
+      document.getElementById('destination-land-status').hidden = !context.dot || dotLandStatus(context.dot) !== 'no-land';
       const inspectingThisDot = intent.kind === 'this' || (intent.kind === 'radar' && context.target?.isHere);
       document.getElementById('destination-feedback').hidden = !context.dot || !inspectingThisDot;
       const title = document.getElementById('destination-title');
@@ -2313,6 +2443,29 @@
       document.getElementById('destination-name-message').hidden = !dotNameData.failed;
       if (destinationMapChoice && context.dot) renderDestinationTitle(document.getElementById('destination-map-title'), 'Choose a point in ', context.dot, intent.model);
     }
+    function renderDestinationAreaNotice() {
+      const session = destinationSession, warning = document.getElementById('destination-dot-area-warning');
+      const dot = session?.context.dot, model = targetModels['euro-use'];
+      const classification = dot && euroDotClassification(dot);
+      warning.hidden = !dot || classification !== 'excluded' && (session.intent.model !== 'euro-use' || classification === 'eligible');
+      if (warning.hidden) return;
+      const title = document.getElementById('destination-dot-area-title'), detail = document.getElementById('destination-dot-area-detail');
+      warning.dataset.state = model.state === 'ready' ? 'outside' : 'unknown';
+      if (classification === 'excluded') {
+        title.textContent = '⚠ Unconquerable Euro land';
+        detail.textContent = 'The Euro-use land in this dot is classified as unconquerable in Target Map. You can still inspect its places and choose a point.';
+      } else if (classification === 'foreign') {
+        title.textContent = '⚠ Outside the Euro-use area';
+        detail.textContent = 'Target Map classifies this dot as Foreign land. The Euro-use filter is active; you can inspect the dot or change Target area.';
+      } else if (model.state !== 'ready') {
+        title.textContent = '⚠ Euro-use target check unavailable';
+        detail.textContent = 'The Euro-use target map is not ready, so this dot’s status could not be checked. You can still inspect it and choose a point.';
+      } else {
+        title.textContent = '⚠ Not in the Euro-use target map';
+        detail.textContent = classification === 'sea' ? 'Target Map classifies this dot as Water Only, so it is not a Euro-use land target.'
+          : 'This dot has no eligible Euro-use classification in the available map. Its classification is unreviewed or unavailable; absence alone does not establish foreign land or unconquerability.';
+      }
+    }
     function renderDestinationTargets() {
       const session = destinationSession, box = document.getElementById('destination-ties');
       const focusedKey = box.contains(document.activeElement) ? document.activeElement.dataset.destinationTarget : null;
@@ -2324,7 +2477,7 @@
       const from = destinationNeedsGPS(session.intent) ? 'you' : 'chosen start';
       summary.textContent = `Target dot: ${chosen.distance.toFixed(1)} km · ${bearing}° from ${from}. Place distances below use each arrival point.`;
       box.append(summary);
-      if (session.searchResult.candidates.length < 2) return;
+      if (session.nearby || session.searchResult.candidates.length < 2) return;
       const heading = document.createElement('p'); heading.textContent = `${session.searchResult.candidates.length} equally near target dots — choose one:`; box.append(heading);
       for (const candidate of session.searchResult.candidates) {
         const button = document.createElement('button'), dot = [candidate.i, candidate.j], key = destinationDotKey(dot);
@@ -2336,9 +2489,9 @@
           if (destinationSession !== session || !destinationContextMatches() || !inspectDestinationIntent(session.intent).result?.candidates.some(point => `${point.i}_${point.j}` === key)) return;
           const choice = destinationChoiceToRetain();
           if (session.intent.source === 'gps' && lastRadarResult?.candidates.some(point => `${point.i}_${point.j}` === key) && !lastRadarTarget?.isHere) {
-            lastRadarTarget = candidate; updateHUD(currentPos[0], currentPos[1]);
+            selectManualRadarTarget(key);
           }
-          beginDestinationIntent({ ...session.intent, targetKey: key }, choice);
+          beginDestinationIntent({ ...session.intent, targetKey: key }, choice, session.nearby);
         });
         box.append(button);
         if (key === focusedKey) button.focus({ preventScroll: true });
@@ -2361,7 +2514,7 @@
       const intent = { ...session.intent, model, targetKey: null };
       if (intent.source === 'gps') changeTargetArea(model);
       else planningArea = model;
-      beginDestinationIntent(intent, retainedChoice);
+      beginDestinationIntent(intent, retainedChoice, session.nearby);
     }
     function closeDestinationPicker() {
       stopDestinationMapChoice(); destinationSession = null; destinationDialog.close(); refreshDestinationOutline();
@@ -2404,37 +2557,39 @@
       const popup = destinationPopup;
       if (!popup) return;
       const model = planningTargetArea(), intent = mapDestinationIntent(popup.origin, 'other', model), result = inspectDestinationIntent(intent);
-      const startIsTarget = isEligibleDot(popup.dot[0], popup.dot[1], targetModels[model]) && !dotMap.has(destinationDotKey(popup.dot));
       popup.heading.textContent = destinationDotLabel(popup.dot, model);
-      popup.badge.innerHTML = createBadge(dotMap.get(destinationDotKey(popup.dot)) || 0);
+      popup.badge.innerHTML = createBadge(dotMap.get(destinationDotKey(popup.dot)) || 0, popup.dot, model);
       const fromGPS = destinationNeedsGPS(intent);
       popup.referenceTitle.textContent = fromGPS ? 'Onward search starts at your GPS position.' : 'Chosen start for onward search:';
       popup.referenceCoordinates.hidden = fromGPS;
       popup.referenceCoordinates.textContent = fromGPS ? '' : `${popup.origin.lat.toFixed(6)}, ${popup.origin.lon.toFixed(6)}`;
       popup.button.disabled = !validDestinationDot(popup.dot);
       popup.other.disabled = !result.context;
-      popup.other.textContent = startIsTarget ? 'Places in next target from this dot'
-        : destinationNeedsGPS(intent) ? 'Places in nearest target' : 'Places in nearest target from this dot';
-      popup.hint.textContent = result.context ? `${model === 'euro-use' ? 'Euro-use area' : 'All land worldwide'} · Start dot excluded` : destinationReason(result.status, intent);
+      popup.other.textContent = fromGPS ? 'Nearby Target Dots' : 'Nearby Target Dots From This Dot';
+      popup.areaToggle.textContent = (model === 'euro-use' ? 'Euro-use area' : 'All land worldwide') + ' ↔';
+      popup.areaToggle.setAttribute('aria-checked', String(model === 'euro-use'));
+      popup.areaToggle.setAttribute('aria-label', 'Euro-use area');
+      popup.areaToggle.title = `Switch to ${model === 'euro-use' ? 'All land worldwide' : 'Euro-use area'}`;
+      popup.startNote.textContent = result.context ? 'Start dot excluded' : destinationReason(result.status, intent);
     }
     function refreshDestinationUI() {
       refreshDestinationModelControl(); refreshRadarPresentation(); refreshDestinationPopup();
       const ready = !!destinationGPSReady(), radar = inspectDestinationIntent({ source: 'gps', kind: 'radar', model: targetArea });
-      const button = document.getElementById('destination-hud-button');
-      button.disabled = !radar.context;
-      button.textContent = lastRadarTarget?.isHere ? 'Places in this dot' : 'Places in nearest target';
+      document.getElementById('radar-automatic').hidden = !manualRadarTarget;
+      document.getElementById('nearby-targets-open').disabled = !ready || totalNotesCount === 0 || targetModels[targetArea].state !== 'ready' || !radar.context;
+      renderNearbyTargetList();
       const session = destinationSession;
       if (!session) return;
       if (destinationUsesProfile(session.intent) && session.context.profile !== dotMap) { invalidateDestinationPicker(); return; }
       if (destinationNeedsGPS(session.intent)) {
         if (session.intent.source === 'gps' && session.intent.model !== targetArea || !gpsEnabled || gpsPermissionDenied) { invalidateDestinationPicker(); return; }
         if (!ready) { pauseDestinationPicker(); return; }
-        if (session.waitingForGPS) { beginDestinationIntent(session.intent, session.resumeChoice); return; }
+        if (session.waitingForGPS) { beginDestinationIntent(session.intent, session.resumeChoice, session.nearby); return; }
       }
       if (document.hidden || session.pendingModel || session.invalid) return;
       const checked = inspectDestinationIntent(session.intent);
       if (!checked.context || destinationDotKey(checked.context.dot) !== destinationDotKey(session.context.dot)) {
-        beginDestinationIntent(session.intent, destinationChoiceToRetain()); return;
+        beginDestinationIntent(session.intent, destinationChoiceToRetain(), session.nearby); return;
       }
       session.context = checked.context; session.searchResult = checked.result;
       if (session.foregroundPaused) {
@@ -2554,7 +2709,12 @@
         document.getElementById('destination-selection').scrollIntoView({ block: 'nearest' });
         document.getElementById('destination-maps').focus();
       } else if (destinationSession.selected?.areaReview) reviewRetainedDestinationArea();
-      else document.getElementById('destination-choose-map').focus({ preventScroll: true });
+      else {
+        const selected = destinationSession.selected;
+        const listed = [...document.querySelectorAll('#destination-list [data-destination-id]')].find(button => button.dataset.destinationId === selected?.id);
+        const focus = listed || (selected && !selected.manual ? document.getElementById('destination-selection') : document.getElementById('destination-choose-map'));
+        focus.focus({ preventScroll: true });
+      }
     }
     document.getElementById('destination-close').addEventListener('click', closeDestinationPicker);
     destinationDialog.addEventListener('cancel', event => { event.preventDefault(); closeDestinationPicker(); });
@@ -2562,10 +2722,9 @@
     document.getElementById('destination-choose-map').addEventListener('click', startDestinationMapChoice);
     document.getElementById('destination-map-cancel').addEventListener('click', () => finishDestinationMapChoice(false));
     document.getElementById('destination-map-use').addEventListener('click', () => finishDestinationMapChoice(true));
-    document.getElementById('destination-hud-button').addEventListener('click', openDestinationPicker);
-    document.getElementById('target-compass').addEventListener('click', event => {
-      event.stopPropagation();
-      if (document.getElementById('hud-panel').classList.contains('collapsed') || !destinationGPSReady()) return;
+    document.getElementById('hud-target-row').addEventListener('click', event => {
+      event.preventDefault(); event.stopPropagation();
+      if (document.getElementById('hud-panel').classList.contains('collapsed') || !destinationGPSReady() || !lastRadarTarget) return;
       openDestinationPicker();
     });
     destinationTargetAreaSelect.addEventListener('change', changeDestinationTargetArea);
@@ -2650,6 +2809,40 @@
       return rows;
     }
 
+    function parseEuroClassifications(data, eligibleRows) {
+      if (!Object.hasOwn(data, 'classifications')) return null;
+      const input = data.classifications;
+      if (!input || input.formatVersion !== 1) throw new Error('Unsupported Euro-use classifications');
+      if (typeof data.datasetId !== 'string' || !data.datasetId || !Number.isSafeInteger(data.revision) || data.revision < 0) throw new Error('Invalid classification dataset identity');
+      const classes = new Map();
+      for (const kind of ['excluded', 'foreign', 'sea', 'unreviewed']) {
+        const ranges = input[kind];
+        if (!Array.isArray(ranges)) throw new Error('Missing Euro-use classification ranges');
+        let count = 0;
+        for (const range of ranges) {
+          if (!Array.isArray(range) || range.length !== 3 || !range.every(Number.isSafeInteger)) throw new Error('Invalid classification range');
+          count += range[2] - range[1] + 1;
+        }
+        const rows = parseTargetRanges({ ...data, ranges, eligibleCount: count }, 'ebt-target-ranges');
+        for (const [i, intervals] of rows) for (const [first, last] of intervals) for (let j = first; j <= last; j++) {
+          const key = `${i}_${j}`;
+          if (classes.has(key) || (eligibleRows.get(i) || []).some(([a, b]) => j >= a && j <= b)) throw new Error('Conflicting Euro-use classifications');
+          classes.set(key, kind);
+        }
+      }
+      if(Object.hasOwn(input,'background')){
+        const background=input.background,source=background?.source;
+        if(!background||background.formatVersion!==1||!Array.isArray(background.landRanges)||!Number.isSafeInteger(background.landCount)||background.landCount<0||!source||source.repository!=='ShortOkapi/ebt-world-land-map'||!/^([a-f0-9]{40})$/.test(source.commit)||!/^([a-f0-9]{64})$/.test(source.baseSha256)||!/^([a-f0-9]{64})$/.test(source.overridesSha256))throw new Error('Invalid classification background');
+        let previousRow=-1,previousEnd=-4;
+        for(const range of background.landRanges){
+          if(!Array.isArray(range)||range.length!==3||!range.every(Number.isSafeInteger)||range[0]<previousRow||range[0]===previousRow&&range[1]<=previousEnd)throw new Error('Unordered classification background');
+          previousRow=range[0];previousEnd=range[2];
+        }
+        classes.background=parseTargetRanges({...data,ranges:background.landRanges,eligibleCount:background.landCount},'ebt-target-ranges');
+      }
+      return classes;
+    }
+
     function applyWorldOverrides(rows, overrides) {
       const excluded = new Set();
       for (const kind of ['include', 'exclude']) {
@@ -2702,7 +2895,8 @@
         const rows = parseTargetRanges(data?.base, 'ebt-worldwide-ranges');
         return { rows, excluded: applyWorldOverrides(rows, data?.overrides) };
       }
-      return { rows: parseTargetRanges(data?.eligibility, 'ebt-target-ranges'), excluded: new Set() };
+      const rows = parseTargetRanges(data?.eligibility, 'ebt-target-ranges');
+      return { rows, excluded: new Set(), classifications: parseEuroClassifications(data.eligibility, rows) };
     }
 
     function targetDataCacheKey(id) {
@@ -2712,10 +2906,16 @@
     function adoptTargetData(id, data, checkedAt = 0) {
       const compiled = compileTargetData(id, data); // Validate fully before adoption.
       const model = targetModels[id];
+      if(id==='euro-use'&&model.mapDatasetId===data.eligibility.datasetId&&Number.isSafeInteger(model.mapRevision)&&data.eligibility.revision<model.mapRevision)throw new Error('The remote map revision is older than the usable map');
       const signature = JSON.stringify(data);
       const changed = model.signature !== signature;
+      const classificationSource = id === 'euro-use' ? `${data.eligibility.datasetId}:${data.eligibility.revision}` : null;
+      if (compiled.classifications === null && model.classificationSource === classificationSource) compiled.classifications = model.classifications;
       model.rows = compiled.rows;
       model.excluded = compiled.excluded;
+      model.classifications = compiled.classifications || null;
+      model.classificationSource = classificationSource;
+      if(id==='euro-use'){model.mapDatasetId=data.eligibility.datasetId;model.mapRevision=data.eligibility.revision;}
       model.signature = signature;
       model.checkedAt = checkedAt;
       model.state = 'ready';
@@ -2726,6 +2926,7 @@
         }
         refreshTargetAreaControl();
       }
+      refreshDestinationUI();
     }
 
     async function restoreTargetData(id) {
@@ -2739,6 +2940,12 @@
             throw new Error('Invalid saved target map');
           }
           adoptTargetData(id, saved.data, saved.checkedAt);
+          if (id === 'euro-use') {
+            try {
+              const bundled = await readTargetJSON('./euro-use-eligibility.json');
+              if (bundled.datasetId === saved.data.eligibility.datasetId && (bundled.revision > saved.data.eligibility.revision || bundled.revision === saved.data.eligibility.revision && !targetModels[id].classifications)) adoptTargetData(id, { eligibility: bundled });
+            } catch { /* Keep the already validated saved map. */ }
+          }
           return;
         }
       } catch (error) { console.warn('Saved target map unavailable:', id, error); }
@@ -2835,14 +3042,13 @@
     // Side-effect-free search shared with the future planning popup.
     // Distance and bearing use the original rectangle-clamping formula.
     // Bounds are the supplied legacy strip; columns are never reduced modulo 856.
-    function findEligibleTargets(lat, lon, conquered, model, radiusKM = TARGET_SEARCH_KM) {
+    function findEligibleTargets(lat, lon, conquered, model, radiusKM = TARGET_SEARCH_KM, collectNearby = false) {
       if (model.state !== 'ready') return { status: model.state };
       const currentI = Math.floor((lat - minLat) / dotH);
       const currentJ = Math.floor((lon - minLon) / dotW);
-      if (isEligibleDot(currentI, currentJ, model) && !conquered.has(`${currentI}_${currentJ}`)) {
-        const here = { isHere: true, i: currentI, j: currentJ, distance: 0, angle: 0 };
-        return { status: 'target', minimumDistance: 0, candidates: [here], nearby: [here] };
-      }
+      const here = isEligibleDot(currentI, currentJ, model) && !conquered.has(`${currentI}_${currentJ}`)
+        ? { isHere: true, i: currentI, j: currentJ, distance: 0, angle: 0 } : null;
+      if (here && !collectNearby) return { status: 'target', minimumDistance: 0, candidates: [here], nearby: [here] };
 
       const lonScale = 111.139 * Math.cos(lat * Math.PI / 180);
       const latReach = radiusKM / 111.139;
@@ -2869,14 +3075,15 @@
             eligibleNearby = true;
             if (conquered.has(`${i}_${j}`)) continue;
             minimumDistance = Math.min(minimumDistance, distance);
-            nearby.push({ isHere: false, i, j, distance, angle: Math.atan2(dx, dy) * (180 / Math.PI) });
+            nearby.push(here && i === currentI && j === currentJ ? here
+              : { isHere: false, i, j, distance, angle: Math.atan2(dx, dy) * (180 / Math.PI) });
           }
         }
       }
       if (!nearby.length) {
         return { status: model.id === 'euro-use' && !eligibleNearby ? 'outside' : 'no-target' };
       }
-      const candidates = nearby.filter(candidate => candidate.distance - minimumDistance <= TARGET_TIE_KM)
+      const candidates = here ? [here] : nearby.filter(candidate => candidate.distance - minimumDistance <= TARGET_TIE_KM)
         .sort((a, b) => a.i - b.i || a.j - b.j);
       return { status: 'target', minimumDistance, candidates, nearby };
     }
@@ -2890,6 +3097,180 @@
           ? retained : result.candidates[0];
       return { ...result, primary, stabilityHeld: primary.distance - result.minimumDistance > TARGET_TIE_KM };
     }
+
+    function resolveRadarChoice(result, previous) {
+      const automatic = chooseRadarTarget(result, previous);
+      const selected = manualRadarTarget && result.nearby?.find(candidate => `${candidate.i}_${candidate.j}` === manualRadarTarget.key);
+      return selected ? { ...result, primary: selected, stabilityHeld: false, manualChoice: true } : automatic;
+    }
+    function radarSearch() {
+      return currentPos && totalNotesCount > 0
+        ? findEligibleTargets(currentPos[0], currentPos[1], dotMap, targetModels[targetArea], TARGET_SEARCH_KM, true)
+        : { status: 'no-profile' };
+    }
+    function selectManualRadarTarget(key) {
+      if (!destinationGPSReady()) return false;
+      const candidate = radarSearch().nearby?.find(point => `${point.i}_${point.j}` === key);
+      if (!candidate) return false;
+      manualRadarTarget = { key, profile: dotMap };
+      radarChoiceMessage = '';
+      updateHUD(currentPos[0], currentPos[1]);
+      return true;
+    }
+    function nearbyRadarOptions(result, activeKey = lastRadarTarget ? `${lastRadarTarget.i}_${lastRadarTarget.j}` : null) {
+      const ordered = (result.nearby || []).slice().sort((a, b) => a.distance - b.distance || a.i - b.i || a.j - b.j);
+      const cutoff = ordered[Math.min(4, ordered.length - 1)]?.distance;
+      return ordered.filter((candidate, index) => index < 5 || candidate.distance - cutoff <= TARGET_TIE_KM ||
+        `${candidate.i}_${candidate.j}` === activeKey);
+    }
+    const nearbyTargetDialog = document.getElementById('nearby-targets-dialog');
+    const nearbyTargetAreaSelect = document.getElementById('nearby-targets-area');
+    let nearbyTargetSession = null;
+    let nearbyPendingPlaces = null;
+    function nearbyTargetQuery(session = nearbyTargetSession) {
+      if (!session) return { status: 'no-profile' };
+      if (session.profile !== dotMap) return { status: 'profile-changed' };
+      const origin = destinationOrigin(session.intent);
+      if (!origin) return { status: 'gps' };
+      const originDot = destinationDot(origin.lat, origin.lon);
+      if (!validDestinationDot(originDot)) return { status: 'invalid-origin' };
+      if (totalNotesCount === 0) return { status: 'no-profile' };
+      const originKey = destinationDotKey(originDot), conquered = session.intent.kind === 'other'
+        ? { has: key => key === originKey || dotMap.has(key) } : dotMap;
+      return { ...findEligibleTargets(origin.lat, origin.lon, conquered, targetModels[session.intent.model], TARGET_SEARCH_KM, true), origin, originDot };
+    }
+    function createTargetCompass(angle, isHere = false) {
+      const compass = document.createElement('span'), north = document.createElement('span'), arrow = document.createElement('span');
+      compass.className = 'target-compass'; compass.setAttribute('aria-hidden', 'true');
+      north.className = 'target-north'; north.textContent = 'N';
+      arrow.className = 'target-arrow'; arrow.textContent = isHere ? '●' : '↑';
+      arrow.style.transform = `rotate(${angle}deg)`; compass.append(north, arrow);
+      return compass;
+    }
+    function openNearbyTargetPicker() {
+      if (!destinationGPSReady() || totalNotesCount === 0) return;
+      showNearbyTargetPicker({ intent: { source: 'gps', kind: 'radar', model: targetArea }, profile: dotMap,
+        returnFocus: document.activeElement, selectedKey: null, placeChoice: null, scrollTop: 0 });
+    }
+    function openMapNearbyTargetPicker(origin) {
+      const intent = mapDestinationIntent(origin, 'other');
+      const session = { intent, profile: dotMap, returnFocus: map.getContainer(), selectedKey: null, placeChoice: null, scrollTop: 0 };
+      map.closePopup(); showNearbyTargetPicker(session);
+    }
+    function showNearbyTargetPicker(session, returning = false) {
+      nearbyTargetSession = session;
+      renderNearbyTargetList(true);
+      if (!nearbyTargetDialog.open) nearbyTargetDialog.showModal();
+      nearbyTargetDialog.scrollTop = returning ? session.scrollTop : 0;
+      if (returning && session.selectedKey) document.querySelector(`[data-nearby-target="${session.selectedKey}"]`)?.focus({ preventScroll: true });
+      if (targetModels[session.intent.model].state !== 'ready') prepareNearbyTargetMap(session);
+    }
+    async function prepareNearbyTargetMap(session, force = false) {
+      if (session.loadingMap) return;
+      session.loadingMap = true;
+      await loadTargetModel(session.intent.model, force);
+      session.loadingMap = false;
+      if (nearbyTargetSession === session) renderNearbyTargetList();
+    }
+    function renderNearbyTargetList(opening = false) {
+      if ((!opening && !nearbyTargetDialog.open) || !nearbyTargetSession) return;
+      const session = nearbyTargetSession, intent = session.intent, gpsRadar = intent.source === 'gps';
+      const list = document.getElementById('nearby-targets-list');
+      const focused = list.contains(document.activeElement) ? document.activeElement.dataset.nearbyTarget : null;
+      list.replaceChildren(); nearbyTargetAreaSelect.value = intent.model;
+      document.getElementById('nearby-targets-title').textContent = !destinationNeedsGPS(intent) ? 'Nearby Target Dots From This Dot' : 'Nearby Target Dots';
+      document.getElementById('nearby-targets-model-message').textContent = gpsRadar
+        ? 'This also changes the live GPS radar’s target area.' : 'This planning area is independent of the live GPS radar.';
+      const result = nearbyTargetQuery(session), model = targetModels[intent.model];
+      document.getElementById('nearby-targets-retry').hidden = model.state !== 'error' && !model.updateFailed;
+      const automatic = document.getElementById('nearby-targets-automatic');
+      automatic.hidden = !gpsRadar || !manualRadarTarget;
+      automatic.disabled = result.status !== 'target' || !destinationGPSReady();
+      const start = document.getElementById('nearby-targets-start');
+      start.hidden = destinationNeedsGPS(intent) || !result.origin;
+      start.replaceChildren();
+      if (!start.hidden) {
+        const heading = document.createElement('strong'), name = document.createElement('span'), coordinates = document.createElement('span');
+        heading.textContent = 'Chosen start'; name.textContent = destinationDotLabel(result.originDot, intent.model);
+        coordinates.textContent = `${result.origin.lat.toFixed(6)}, ${result.origin.lon.toFixed(6)}`; start.append(heading, name, coordinates);
+      }
+      const status = document.getElementById('nearby-targets-status');
+      if (result.status !== 'target') {
+        status.textContent = result.status === 'profile-changed' ? 'Your Notes changed. Close this panel and start a new nearby-dot search.' : destinationReason(result.status, intent);
+        if (focused) document.getElementById('nearby-targets-close').focus({ preventScroll: true });
+        return;
+      }
+      if (!gpsRadar && session.selectedKey && !result.nearby.some(point => `${point.i}_${point.j}` === session.selectedKey)) session.selectedKey = null;
+      const activeKey = gpsRadar ? lastRadarTarget && `${lastRadarTarget.i}_${lastRadarTarget.j}` : session.selectedKey;
+      const options = nearbyRadarOptions(result, activeKey), area = intent.model === 'euro-use' ? 'Euro-use area' : 'All land worldwide';
+      const from = destinationNeedsGPS(intent) ? 'From your GPS position' : 'From chosen start';
+      status.textContent = `${area} · ${from}${intent.kind === 'other' ? ' · Start dot excluded' : ''} · Within ${TARGET_SEARCH_KM} km. Showing ${options.length} nearby dots, including ties and any chosen target.`;
+      for (const candidate of options) {
+        const dot = [candidate.i, candidate.j], key = destinationDotKey(dot);
+        const button = document.createElement('button'), label = document.createElement('span'), name = document.createElement('span'), detail = document.createElement('span');
+        const selected = key === activeKey, steps = Math.max(Math.abs(candidate.i - result.originDot[0]), Math.abs(candidate.j - result.originDot[1]));
+        const angle = ((candidate.angle % 360) + 360) % 360;
+        button.type = 'button'; button.className = 'nearby-target'; button.dataset.nearbyTarget = key;
+        button.setAttribute('aria-pressed', String(selected));
+        const dotName = destinationDotName(dot, intent.model);
+        if (dotName) { const strong = document.createElement('strong'); strong.textContent = dotName; name.append(strong, ' '); }
+        name.append(`Dot [${dot.join(', ')}]`);
+        label.className = 'nearby-target-label'; detail.className = 'nearby-target-detail';
+        const tag = selected ? gpsRadar ? ' · Active target' : ' · Chosen target' : '';
+        detail.textContent = `${steps} dot ${steps === 1 ? 'step' : 'steps'}${candidate.isHere ? ' · You are here' : ''}${tag}`;
+        label.append(name, detail); button.append(label, createTargetCompass(angle, candidate.isHere));
+        button.setAttribute('aria-label', `${destinationDotLabel(dot, intent.model)}, ${steps} dot ${steps === 1 ? 'step' : 'steps'}${candidate.isHere ? ', you are here' : `, bearing ${Math.round(angle) % 360} degrees`}${tag ? ', ' + tag.slice(3) : ''}`);
+        button.addEventListener('click', () => chooseNearbyTarget(session, key));
+        list.append(button);
+        if (focused === key) button.focus({ preventScroll: true });
+        requestRadarDotNames(dot, intent.model);
+      }
+      if (focused && !list.querySelector(`[data-nearby-target="${focused}"]`)) document.getElementById('nearby-targets-close').focus({ preventScroll: true });
+    }
+    function chooseNearbyTarget(session, key) {
+      if (nearbyTargetSession !== session || !nearbyTargetDialog.open) return;
+      const candidate = nearbyTargetQuery(session).nearby?.find(point => `${point.i}_${point.j}` === key);
+      if (!candidate) { renderNearbyTargetList(); return; }
+      if (session.intent.source === 'gps' && !selectManualRadarTarget(key)) return;
+      session.selectedKey = key; session.scrollTop = nearbyTargetDialog.scrollTop;
+      const choice = session.placeChoice?.context.dot && destinationDotKey(session.placeChoice.context.dot) === key ? session.placeChoice : null;
+      nearbyPendingPlaces = { intent: { ...session.intent, targetKey: key }, choice, nearby: session };
+      nearbyTargetDialog.close();
+    }
+    function returnToNearbyTargets() {
+      const session = destinationSession, nearby = session?.nearby;
+      if (!nearby || destinationMapChoice) return;
+      nearby.intent = { ...session.intent }; nearby.placeChoice = destinationChoiceToRetain(session);
+      nearby.selectedKey = session.context.dot ? destinationDotKey(session.context.dot) : null;
+      closeDestinationPicker(); showNearbyTargetPicker(nearby, true);
+    }
+    function useAutomaticNearestTarget() {
+      manualRadarTarget = null; radarChoiceMessage = ''; lastRadarTarget = null;
+      if (currentPos) updateHUD(currentPos[0], currentPos[1]);
+      else refreshDestinationUI();
+    }
+    document.getElementById('nearby-targets-open').addEventListener('click', openNearbyTargetPicker);
+    document.getElementById('nearby-targets-close').addEventListener('click', () => nearbyTargetDialog.close());
+    document.getElementById('destination-back').addEventListener('click', returnToNearbyTargets);
+    document.getElementById('radar-automatic').addEventListener('click', useAutomaticNearestTarget);
+    document.getElementById('nearby-targets-automatic').addEventListener('click', () => { if (destinationGPSReady()) useAutomaticNearestTarget(); });
+    document.getElementById('nearby-targets-retry').addEventListener('click', () => { if (nearbyTargetSession) prepareNearbyTargetMap(nearbyTargetSession, true); });
+    nearbyTargetAreaSelect.addEventListener('change', () => {
+      const session = nearbyTargetSession;
+      if (!session) return;
+      session.intent = { ...session.intent, model: nearbyTargetAreaSelect.value, targetKey: null };
+      if (session.intent.source === 'gps') changeTargetArea(session.intent.model);
+      else { planningArea = session.intent.model; refreshDestinationUI(); }
+      renderNearbyTargetList();
+      if (targetModels[session.intent.model].state !== 'ready') prepareNearbyTargetMap(session);
+    });
+    nearbyTargetDialog.addEventListener('close', () => {
+      if (nearbyPendingPlaces) {
+        const next = nearbyPendingPlaces; nearbyPendingPlaces = null;
+        destinationReturnFocus = next.nearby.intent.source === 'gps' ? document.getElementById('nearby-targets-open') : map.getContainer();
+        beginDestinationIntent(next.intent, next.choice, next.nearby);
+      } else if (nearbyTargetSession?.returnFocus?.isConnected) nearbyTargetSession.returnFocus.focus({ preventScroll: true });
+    });
 
     function resetRadarTarget() {
       lastRadarTarget = null;
@@ -2906,11 +3287,12 @@
       const parent = expanded ? row : panel.querySelector('.target-visual');
       if (reading.parentElement !== parent) parent.append(reading);
       row.hidden = !expanded || !(lastRadarTarget && currentPos);
-      const compass = document.getElementById('target-compass');
-      const actionable = expanded && destinationGPSReady() && !!lastRadarTarget && !lastRadarTarget.isHere && !compass.hidden;
-      compass.disabled = !actionable; compass.tabIndex = actionable ? 0 : -1;
-      compass.title = actionable ? 'Places in nearest target' : '';
-      compass.setAttribute('aria-label', 'Places in nearest target');
+      const actionable = expanded && !!destinationGPSReady() && !!lastRadarTarget;
+      if (actionable) row.setAttribute('href', '#destination-dialog'); else row.removeAttribute('href');
+      row.tabIndex = actionable ? 0 : -1; row.setAttribute('aria-disabled', String(!actionable));
+      const placesLabel = lastRadarTarget?.isHere ? 'Places in this dot' : manualRadarTarget ? 'Places in selected target' : 'Places in nearest target';
+      row.title = actionable ? placesLabel : '';
+      row.setAttribute('aria-label', placesLabel + (lastRadarTarget ? ' — ' + destinationDotLabel([lastRadarTarget.i, lastRadarTarget.j], targetArea) : ''));
     }
     function renderRadarDotReference() {
       syncRadarTargetLayout();
@@ -2983,13 +3365,13 @@
       }
       const roundedDistance = Number(nearest.distance.toFixed(1));
       const angle = ((nearest.angle % 360) + 360) % 360;
-      longLabel.textContent = live ? stabilityHeld ? 'Nearby Target Dot:' : 'Nearest Target Dot:' : 'Last known Target Dot:';
+      longLabel.textContent = live ? manualRadarTarget ? 'Selected Target Dot:' : stabilityHeld ? 'Nearby Target Dot:' : 'Nearest Target Dot:' : 'Last known Target Dot:';
       shortLabel.textContent = live ? 'Target Dot:' : 'Last Dot:';
       value.textContent = `${formatNumber(roundedDistance)} km`;
       compass.hidden = false;
       arrow.style.transform = `rotate(${angle}deg)`;
       accessibleText.textContent = live
-        ? `${stabilityHeld ? 'Similar-distance' : 'Nearest'} unconquered target dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees`
+        ? `${manualRadarTarget ? 'Selected' : stabilityHeld ? 'Similar-distance' : 'Nearest'} unconquered target dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees`
         : `Last known target dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees, based on the last usable GPS position`;
     }
 
@@ -3006,12 +3388,19 @@
       const hudDetails = document.getElementById('hud-details');
       hudDetails.classList.remove('hud-location-message');
       if (totalNotesCount === 0) {
+        manualRadarTarget = null; radarChoiceMessage = '';
         resetRadarTarget();
         setTargetSummary(null);
         hudDetails.innerHTML = `<p class="target-note">Load your EBT Notes file to activate the target radar.</p>`;
         return;
       }
-      const result = chooseRadarTarget(findEligibleTargets(lat, lon, dotMap, targetModels[targetArea]), lastRadarTarget);
+      const search = findEligibleTargets(lat, lon, dotMap, targetModels[targetArea], TARGET_SEARCH_KM, true);
+      if (manualRadarTarget && targetModels[targetArea].state === 'ready' &&
+          !search.nearby?.some(candidate => `${candidate.i}_${candidate.j}` === manualRadarTarget.key)) {
+        manualRadarTarget = null; lastRadarTarget = null;
+        radarChoiceMessage = 'Your selected dot is no longer an eligible unconquered target within 150 km. Automatic nearest selection has resumed.';
+      }
+      const result = resolveRadarChoice(search, lastRadarTarget);
       lastRadarResult = result;
       lastRadarTarget = result.primary;
       setTargetSummary(result.primary, result.stabilityHeld);
@@ -3021,38 +3410,16 @@
           : result.status === 'error' ? 'Selected target map unavailable'
           : 'Loading selected target map…';
         document.getElementById('target-accessible-text').textContent = message;
-        hudDetails.innerHTML = `<p class="target-note">${message}</p>`;
+        hudDetails.textContent = message;
         return;
       }
-      const nearest = result.primary;
-      const previousAlternatives = hudDetails.querySelector('.target-alternatives');
-      const alternativesOpen = previousAlternatives?.open;
-      const focused = hudDetails.contains(document.activeElement)
-        ? document.activeElement.closest('button[data-target-i]') : null;
-      const focusedI = focused?.dataset.targetI;
-      const focusedJ = focused?.dataset.targetJ;
-      let extra = nearest.isHere
-        ? '<p class="target-note">You are already in an unconquered target dot.</p>'
-        : result.stabilityHeld
-          ? '<p class="target-note">Similar distance: keeping this target while it is within 10 m of the nearest. Its own distance and bearing are shown above.</p>'
-          : '';
-      if (result.candidates.length > 1) {
-        extra += `<details class="target-alternatives"><summary>${result.candidates.length} equally near targets</summary>`;
-        for (const candidate of result.candidates) {
-          const selected = candidate.i === nearest.i && candidate.j === nearest.j;
-          const bearing = Math.round(((candidate.angle % 360) + 360) % 360) % 360;
-          extra += `<button type="button" data-target-i="${candidate.i}" data-target-j="${candidate.j}" aria-pressed="${selected}">[${candidate.i}, ${candidate.j}] · ${formatNumber(Number(candidate.distance.toFixed(1)))} km · ${bearing}°${selected ? ' · chosen' : ''}</button>`;
-        }
-        extra += '</details>';
-      }
-      hudDetails.innerHTML = extra;
+      let message = result.primary.isHere ? 'You are already in an unconquered target dot.'
+        : manualRadarTarget ? 'Your chosen target stays selected as you move. Use Nearby Target Dots to change it or return to automatic nearest selection.'
+        : result.stabilityHeld ? 'Similar distance: keeping this target while it is within 10 m of the nearest. Its own distance and bearing are shown above.' : '';
+      if (radarChoiceMessage) message += `${message ? ' ' : ''}${radarChoiceMessage}`;
+      hudDetails.replaceChildren();
+      if (message) { const note = document.createElement('p'); note.className = 'target-note'; note.textContent = message; hudDetails.append(note); }
       renderRadarDotReference();
-      const alternatives = hudDetails.querySelector('.target-alternatives');
-      if (alternatives && alternativesOpen) alternatives.open = true;
-      if (focused) {
-        const replacement = alternatives?.querySelector(`[data-target-i="${focusedI}"][data-target-j="${focusedJ}"]`);
-        (replacement || document.querySelector('#hud-panel .panel-toggle')).focus({ preventScroll: true });
-      }
     }
 
     const targetAreaSelect = document.getElementById('target-area');
@@ -3072,20 +3439,7 @@
     }
     targetAreaSelect.addEventListener('change', () => changeTargetArea(targetAreaSelect.value));
     document.getElementById('target-area-retry').addEventListener('click', () => loadTargetModel(targetArea));
-    document.getElementById('hud-details').addEventListener('click', event => {
-      const button = event.target.closest('button[data-target-i]');
-      if (!button || !currentPos || !lastRadarResult?.candidates) return;
-      const candidate = lastRadarResult.candidates.find(item =>
-        item.i === Number(button.dataset.targetI) && item.j === Number(button.dataset.targetJ));
-      if (!candidate) return;
-      lastRadarTarget = candidate;
-      updateHUD(currentPos[0], currentPos[1]);
-      const details = document.querySelector('#hud-details .target-alternatives');
-      if (details) {
-        details.open = true;
-        details.querySelector('button[aria-pressed="true"]')?.focus({ preventScroll: true });
-      }
-    });
+    // Nearby target selection is handled by the dialog above.
 
     // Smart GPS State Machine
     const GPS_PRESENTATION = {
@@ -3456,7 +3810,7 @@ function showAppVersion(worker) {
 }
 
 const readmeBase = document.getElementById('app-version').textContent.includes('-rc')
-  ? 'https://github.com/ShortOkapi/ebt-dot-safari/blob/release-2.2.0/README.md'
+  ? 'https://github.com/ShortOkapi/ebt-dot-safari/blob/release-2.2.1/README.md'
   : 'https://github.com/ShortOkapi/ebt-dot-safari';
 for (const link of document.querySelectorAll('[data-readme-section]')) link.href = readmeBase + '#' + link.dataset.readmeSection;
 

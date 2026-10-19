@@ -3,489 +3,67 @@
   "formatVersion": 1,
   "description": "Preferred display names only. Omit Dot and [row, column]: the app adds them. name applies to both models; optional nameWorldwide and nameEuroUse take precedence. exclude lists dots that should show only their numeric reference.",
   "include": [
-    {
-      "dot": [
-        240,
-        521
-      ],
-      "name": "Europa Island",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        275,
-        533
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Île Blanche"
-    },
-    {
-      "dot": [
-        279,
-        538
-      ],
-      "name": "Glorieuses",
-      "reason": "Miguel corrected the Glorieuses land dot in Target Map revision 57."
-    },
-    {
-      "dot": [
-        329,
-        296
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Ilakana Patatpe"
-    },
-    {
-      "dot": [
-        330,
-        296
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Roche Koutou"
-    },
-    {
-      "dot": [
-        330,
-        297
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Langa Soula Tabiki"
-    },
-    {
-      "dot": [
-        331,
-        296
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Pleiké"
-    },
-    {
-      "dot": [
-        331,
-        298
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Monts Apitiri"
-    },
-    {
-      "dot": [
-        331,
-        299
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Mont Itoupé"
-    },
-    {
-      "dot": [
-        332,
-        299
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Grande Usine"
-    },
-    {
-      "dot": [
-        333,
-        299
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Popote"
-    },
-    {
-      "dot": [
-        334,
-        297
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Dégrad Bois Blanc"
-    },
-    {
-      "dot": [
-        334,
-        298
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Saint-Léon"
-    },
-    {
-      "dot": [
-        334,
-        299
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Rallye"
-    },
-    {
-      "dot": [
-        334,
-        300
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Bita"
-    },
-    {
-      "dot": [
-        376,
-        278
-      ],
-      "name": "La Coche",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        419,
-        383
-      ],
-      "name": "El Hierro Airport",
-      "reason": "Miguel island-name review, 14 October 2026.\nPoint: 27.814069, -17.885130\nSource: maps.google.com\n(OSM's \"El Hierro Airport\" is off the dot)"
-    },
-    {
-      "dot": [
-        419,
-        387
-      ],
-      "name": "Playa del Tasarte",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/way/365304693\nfeature: beach"
-    },
-    {
-      "dot": [
-        422,
-        391
-      ],
-      "name": "Junquillo",
-      "reason": "Miguel island-name review, 14 October 2026.\nPoint: 28.460769, -14.118381\nSource: maps.google.com\nName the dot \"Junquillo\", name the point \"Playa del Junquillo\""
-    },
-    {
-      "dot": [
-        425,
-        393
-      ],
-      "name": "Alegranza Island",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        427,
-        387
-      ],
-      "name": "Ilhéu Alto",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        428,
-        387
-      ],
-      "name": "Ilhéu Preto",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        436,
-        385
-      ],
-      "name": "Funchal - Lido",
-      "reason": "Miguel island-name review, 14 October 2026.\ntwo destinations:\nSource 1: https://osm.org/node/4405969097\nSource 2: https://osm.org/node/3995320549\nspecific postal codes in Funchal + Ponta do Garajau"
-    },
-    {
-      "dot": [
-        445,
-        482
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Gavdopoula"
-    },
-    {
-      "dot": [
-        447,
-        485
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Dia"
-    },
-    {
-      "dot": [
-        448,
-        489
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Astakida"
-    },
-    {
-      "dot": [
-        452,
-        481
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Velopoula"
-    },
-    {
-      "dot": [
-        453,
-        487
-      ],
-      "name": "Voidonisos",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        454,
-        424
-      ],
-      "name": "Isla Hormiga",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        456,
-        485
-      ],
-      "name": "Kalogeroi Islets",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        458,
-        356
-      ],
-      "name": "Ponta dos Capelinhos",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/way/508697744\nfeature: lighthouse\nEBT ID 211849"
-    },
-    {
-      "dot": [
-        459,
-        360
-      ],
-      "name": "Ponta dos Biscoitos",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/node/3441536893\nfeature: locality\nBiscoitos is EBT ID=117857, this is part of it; some postal codes are geolocated here"
-    },
-    {
-      "dot": [
-        459,
-        402
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Praia da Adraga"
-    },
-    {
-      "dot": [
-        460,
-        403
-      ],
-      "name": "Torres Vedras"
-    },
-    {
-      "dot": [
-        461,
-        402
-      ],
-      "name": "Berlengas",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/relation/9755029\nfeature: archipelago\nuse the alt_name Berlengas"
-    },
-    {
-      "dot": [
-        461,
-        425
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Puerto de Sagunto - Muelle Sur"
-    },
-    {
-      "dot": [
-        462,
-        427
-      ],
-      "name": "Illes Columbretes",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/relation/9434769\nfeature: archipelago"
-    },
-    {
-      "dot": [
-        462,
-        481
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Paralia Loutra"
-    },
-    {
-      "dot": [
-        462,
-        482
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Kanistro Cape"
-    },
-    {
-      "dot": [
-        463,
-        426
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Torrenostra"
-    },
-    {
-      "dot": [
-        464,
-        460
-      ],
-      "name": "Isola Licosa",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        467,
-        477
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "nameWorldwide": "Koupríbta / Beshishte",
-      "nameEuroUse": "Koupríbta"
-    },
-    {
-      "dot": [
-        468,
-        479
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "nameWorldwide": "Karkmo mountain hut / Strumica",
-      "nameEuroUse": "Karkmo mountain hut"
-    },
-    {
-      "dot": [
-        469,
-        474
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "nameWorldwide": "Kosovo southermost point / Peshkopi",
-      "nameEuroUse": "Kosovo southermost point"
-    },
-    {
-      "dot": [
-        471,
-        450
-      ],
-      "name": "Isola di Montecristo",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        471,
-        464
-      ],
-      "name": "Palagruža",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/relation/10052315\nfeature: islet\nuse the name Palagruža, instead of Vela Palagruža"
-    },
-    {
-      "dot": [
-        471,
-        477
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Preševo"
-    },
-    {
-      "dot": [
-        473,
-        464
-      ],
-      "name": "Sušac",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        474,
-        437
-      ],
-      "name": "Île du Planier",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        476,
-        412
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Gijón - Muelle Marcelino León"
-    },
-    {
-      "dot": [
-        476,
-        421
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Plage du Métro"
-    },
-    {
-      "dot": [
-        477,
-        465
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "nameWorldwide": "Milišinovac / Glamoč",
-      "nameEuroUse": "Milišinovac"
-    },
-    {
-      "dot": [
-        488,
-        419
-      ],
-      "name": "Île du Pilier",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        490,
-        416
-      ],
-      "name": "Glénan Islands",
-      "reason": "Miguel island-name review, 14 October 2026.\nSource: https://fr.wikipedia.org/wiki/Archipel_des_Gl%C3%A9nan\nThere is an OSM id for the archipelago, https://osm.org/relation/332410, but the 1st place location should be a point in an island. Suggested:\nÎle Saint-Nicolas, https://osm.org/relation/7848444"
-    },
-    {
-      "dot": [
-        498,
-        421
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Pointe du Nez Cabot"
-    },
-    {
-      "dot": [
-        503,
-        402
-      ],
-      "name": "Fastnet Rock",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        504,
-        431
-      ],
-      "name": "Princess Elisabeth Island",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        506,
-        434
-      ],
-      "reason": "Miguel naming review, 12 October 2026.",
-      "name": "Maasvlakte"
-    },
-    {
-      "dot": [
-        532,
-        473
-      ],
-      "name": "Bogskär",
-      "reason": "Miguel island-name review, 14 October 2026."
-    },
-    {
-      "dot": [
-        534,
-        488
-      ],
-      "name": "Vaindloo",
-      "reason": "Miguel island-name review, 14 October 2026."
-    }
+    {"dot": [240, 521], "name": "Europa Island", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [275, 533], "reason": "Miguel naming review, 12 October 2026.", "name": "Île Blanche"},
+    {"dot": [279, 538], "name": "Glorieuses", "reason": "Miguel corrected the Glorieuses land dot in Target Map revision 57."},
+    {"dot": [329, 296], "reason": "Miguel naming review, 12 October 2026.", "name": "Ilakana Patatpe"},
+    {"dot": [330, 296], "reason": "Miguel naming review, 12 October 2026.", "name": "Roche Koutou"},
+    {"dot": [330, 297], "reason": "Miguel naming review, 12 October 2026.", "name": "Langa Soula Tabiki"},
+    {"dot": [331, 296], "reason": "Miguel naming review, 12 October 2026.", "name": "Pleiké"},
+    {"dot": [331, 298], "reason": "Miguel naming review, 12 October 2026.", "name": "Monts Apitiri"},
+    {"dot": [331, 299], "reason": "Miguel naming review, 12 October 2026.", "name": "Mont Itoupé"},
+    {"dot": [332, 299], "reason": "Miguel naming review, 12 October 2026.", "name": "Grande Usine"},
+    {"dot": [333, 299], "reason": "Miguel naming review, 12 October 2026.", "name": "Popote"},
+    {"dot": [334, 297], "reason": "Miguel naming review, 12 October 2026.", "name": "Dégrad Bois Blanc"},
+    {"dot": [334, 298], "reason": "Miguel naming review, 12 October 2026.", "name": "Saint-Léon"},
+    {"dot": [334, 299], "reason": "Miguel naming review, 12 October 2026.", "name": "Rallye"},
+    {"dot": [334, 300], "reason": "Miguel naming review, 12 October 2026.", "name": "Bita"},
+    {"dot": [376, 278], "name": "La Coche", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [419, 383], "name": "El Hierro Airport", "reason": "Miguel island-name review, 14 October 2026.\nPoint: 27.814069, -17.885130\nSource: maps.google.com\n(OSM's \"El Hierro Airport\" is off the dot)"},
+    {"dot": [419, 387], "name": "Playa del Tasarte", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/way/365304693\nfeature: beach"},
+    {"dot": [422, 391], "name": "Junquillo", "reason": "Miguel island-name review, 14 October 2026.\nPoint: 28.460769, -14.118381\nSource: maps.google.com\nName the dot \"Junquillo\", name the point \"Playa del Junquillo\""},
+    {"dot": [425, 393], "name": "Alegranza Island", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [427, 387], "name": "Ilhéu Alto", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [428, 387], "name": "Ilhéu Preto", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [436, 385], "name": "Funchal - Lido", "reason": "Miguel island-name review, 14 October 2026.\ntwo destinations:\nSource 1: https://osm.org/node/4405969097\nSource 2: https://osm.org/node/3995320549\nspecific postal codes in Funchal + Ponta do Garajau"},
+    {"dot": [445, 482], "reason": "Miguel naming review, 12 October 2026.", "name": "Gavdopoula"},
+    {"dot": [447, 485], "reason": "Miguel naming review, 12 October 2026.", "name": "Dia"},
+    {"dot": [448, 489], "reason": "Miguel naming review, 12 October 2026.", "name": "Astakida"},
+    {"dot": [452, 481], "reason": "Miguel naming review, 12 October 2026.", "name": "Velopoula"},
+    {"dot": [453, 487], "name": "Voidonisos", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [454, 424], "name": "Isla Hormiga", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [456, 485], "name": "Kalogeroi Islets", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [458, 356], "name": "Ponta dos Capelinhos", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/way/508697744\nfeature: lighthouse\nEBT ID 211849"},
+    {"dot": [459, 360], "name": "Ponta dos Biscoitos", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/node/3441536893\nfeature: locality\nBiscoitos is EBT ID=117857, this is part of it; some postal codes are geolocated here"},
+    {"dot": [459, 402], "reason": "Miguel naming review, 12 October 2026.", "name": "Praia da Adraga"},
+    {"dot": [460, 403], "name": "Torres Vedras"},
+    {"dot": [461, 402], "name": "Berlengas", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/relation/9755029\nfeature: archipelago\nuse the alt_name Berlengas"},
+    {"dot": [461, 425], "reason": "Miguel naming review, 12 October 2026.", "name": "Puerto de Sagunto - Muelle Sur"},
+    {"dot": [462, 427], "name": "Illes Columbretes", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/relation/9434769\nfeature: archipelago"},
+    {"dot": [462, 481], "reason": "Miguel naming review, 12 October 2026.", "name": "Paralia Loutra"},
+    {"dot": [462, 482], "reason": "Miguel naming review, 12 October 2026.", "name": "Kanistro Cape"},
+    {"dot": [463, 426], "reason": "Miguel naming review, 12 October 2026.", "name": "Torrenostra"},
+    {"dot": [464, 460], "name": "Isola Licosa", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [467, 477], "reason": "Miguel naming review, 12 October 2026.", "nameWorldwide": "Koupríbta / Beshishte", "nameEuroUse": "Koupríbta"},
+    {"dot": [468, 479], "reason": "Miguel naming review, 12 October 2026.", "nameWorldwide": "Karkmo mountain hut / Strumica", "nameEuroUse": "Karkmo mountain hut"},
+    {"dot": [469, 474], "reason": "Miguel naming review, 12 October 2026.", "nameWorldwide": "Kosovo southermost point / Peshkopi", "nameEuroUse": "Kosovo southermost point"},
+    {"dot": [471, 450], "name": "Isola di Montecristo", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [471, 464], "name": "Palagruža", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://osm.org/relation/10052315\nfeature: islet\nuse the name Palagruža, instead of Vela Palagruža"},
+    {"dot": [471, 477], "reason": "Miguel naming review, 12 October 2026.", "name": "Preševo"},
+    {"dot": [473, 464], "name": "Sušac", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [474, 437], "name": "Île du Planier", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [476, 412], "reason": "Miguel naming review, 12 October 2026.", "name": "Gijón - Muelle Marcelino León"},
+    {"dot": [476, 421], "reason": "Miguel naming review, 12 October 2026.", "name": "Plage du Métro"},
+    {"dot": [477, 465], "reason": "Miguel naming review, 12 October 2026.", "nameWorldwide": "Milišinovac / Glamoč", "nameEuroUse": "Milišinovac"},
+    {"dot": [488, 419], "name": "Île du Pilier", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [490, 416], "name": "Glénan Islands", "reason": "Miguel island-name review, 14 October 2026.\nSource: https://fr.wikipedia.org/wiki/Archipel_des_Gl%C3%A9nan\nThere is an OSM id for the archipelago, https://osm.org/relation/332410, but the 1st place location should be a point in an island. Suggested:\nÎle Saint-Nicolas, https://osm.org/relation/7848444"},
+    {"dot": [498, 421], "reason": "Miguel naming review, 12 October 2026.", "name": "Pointe du Nez Cabot"},
+    {"dot": [503, 402], "name": "Fastnet Rock", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [504, 431], "name": "Princess Elisabeth Island", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [506, 434], "reason": "Miguel naming review, 12 October 2026.", "name": "Maasvlakte"},
+    {"dot": [532, 473], "name": "Bogskär", "reason": "Miguel island-name review, 14 October 2026."},
+    {"dot": [534, 488], "name": "Vaindloo", "reason": "Miguel island-name review, 14 October 2026."}
   ],
-  "exclude": []
+  "exclude": [
+  ]
 }
