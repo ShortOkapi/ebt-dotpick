@@ -2,7 +2,7 @@
 
 **Your personal dot hunting assistant.**
 
-Formerly **EBT Dot Safari**.
+<sup>*(Formerly EBT Dot Safari)*</sup>
 
 A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the nearest eligible unconquered dot, inspect places and plan onward from a point you choose.
 
