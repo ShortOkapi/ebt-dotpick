@@ -75,13 +75,13 @@ Do not renumber the grid or substitute an outside-dot town/cell centre when sugg
 
 Manifest updates, name updates and block downloads retain their last usable valid copies on failure. Public data caches are separate from app-version caches. RC1/RC2 records remain readable where supported; missing old name metadata falls back to numeric labels. RC1 also lacks English names and country outlines.
 
-## Notes import and legend candidate (2.3.1-rc.1)
+## Notes import and legend candidate (2.3.1-rc.2)
 
 This candidate keeps the legacy `ebt_cached_profile` key and `user`/`dots` fields, adding the optional non-negative integer `unlocatedNotes`. Old profiles without it remain readable with zero unlocated notes. The displayed total is located plus unlocated notes; only located notes enter dot aggregates. Exactly `0;0` is the EBT missing-coordinate marker. No coordinate-to-dot arithmetic changes for other notes. Correct previously imported marker notes by reimporting the CSV, not by deleting a whole saved dot.
 
 Quoted multiline records and doubled quotes are streamed across byte chunks. Malformed/incomplete records or coordinates reject the import. Replacement is confirmed for a recognised different user, an unreadable saved profile, or a reduction of at least 10% with a minimum of 10 notes or 2 dots. Counts are compared with the complete current total, including unlocated notes. The original profile remains in use through parsing and cancellation. Save failures retain the previous persisted value and expose a retry. Browser draft errors do not delete stored data.
 
-The palette is unchanged. Exactly one note uses colour 1; the maximum uses colour 8 (ties included), except that a maximum of one uses colour 1. Six middle intervals use thresholds `ceil(2 * (maximum / 2) ** (k / 6))`, `k=0..6`, with exact endpoints and a floating-point tolerance at integer boundaries. The same thresholds drive map colours and labels. Duplicate thresholds describe empty classes; they are not forced apart. The first and final swatches are separated by 4 px gaps and have bolder labels.
+The palette is unchanged. Exactly one note uses colour 1; the maximum uses colour 8 (ties included), except that a maximum of one uses colour 1. Six middle intervals use thresholds `ceil(2 * (maximum / 2) ** (k / 6))`, `k=0..6`, with exact endpoints and a floating-point tolerance at integer boundaries. The same thresholds drive map colours and labels. Duplicate thresholds describe empty classes; they are not forced apart. Actual dot counts determine occupied bands: a valid mathematical interval with zero observed dots is also dimmed and has no numeric label. The threshold calculations and map colours do not change merely because a band is unused. Swatches are native buttons with 24 px-high hit targets and 8 px colour strips, hover descriptions, keyboard support and a toggled range/count caption. The first and final swatches are separated by 4 px gaps and have bolder labels. Replacement warnings retain the previous thresholds but name the actual direction of each relevant count change and use singular/plural nouns correctly.
 
 ## Release versions
 
@@ -92,7 +92,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.1**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
+The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.2**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 

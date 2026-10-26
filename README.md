@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 26 October 2026. This guide covers the v2.3.1-rc.1 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 26 October 2026. This guide covers the v2.3.1-rc.2 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -36,11 +36,11 @@ Safari and Chrome on iPhone can show different menus. If you cannot find the fil
 2. Download a fresh EBT Notes CSV, or use one you have already downloaded.
 3. Tap **Load EBT Notes File** and select it.
 
-A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** The candidate warns before replacing a profile with substantially fewer notes or dots, or a recognised different user. Cancel keeps the existing profile. An invalid or incomplete CSV is rejected without replacing the working profile.
+A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** The candidate warns before replacing a profile when note or dot counts fall enough to warrant checking, or the filename identifies a different user. The message names the decreasing count and distinguishes cases with more notes but fewer dots (or the reverse). Cancel keeps the existing profile. An invalid or incomplete CSV is rejected without replacing the working profile.
 
 Notes exported at `0;0` have no assigned EBT coordinates. They remain in the displayed note total but conquer no dot; a separate message reports their number. Latitude zero or longitude zero on its own remains valid. Reimport your original Notes CSV to correct a profile previously affected by `0;0`.
 
-The eight-colour legend reserves the first colour for exactly one note and the last for the maximum number of notes in a dot, including ties. Six logarithmic ranges cover counts from two up to the maximum, exclusive. Small gaps separate the exact-value colours from the ranges. The endpoint numbers are slightly bolder; labels and map colours use the same integer thresholds. Empty ranges in very small profiles are dimmed and unlabelled. The first colour takes precedence when the maximum is one.
+The eight-colour legend reserves the first colour for exactly one note and the last for the maximum number of notes in a dot, including ties. Six logarithmic ranges cover counts from two up to the maximum, exclusive. Small gaps separate the exact-value colours from the ranges. The endpoint numbers are slightly bolder; labels and map colours use the same integer thresholds. Bands containing none of your dots are dimmed and have no numeric label, including the one-note band when no dot has exactly one note. Their hover/tap message says No dots in this band. Logarithmic boundaries stay unchanged: an occupied band's number still describes its lower threshold, not necessarily an observed count. Hover a swatch or tap/click it to see its range and the number of dots in that band below the legend. Tap the same swatch again to hide the detail; keyboard Enter/Space also work. The first colour takes precedence when the maximum is one.
 
 DotPick stores the derived dot counts and user reference locally; it does not retain a permanent connection to your CSV file or automatically download new EBT notes. Load a fresh export whenever you want your latest conquests included. Automatic target map updates, described below, are separate from your personal map.
 

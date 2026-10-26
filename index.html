@@ -543,10 +543,14 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) 4px repeat(6, minmax(0, 1fr)) 4px minmax(0, 1fr);
     }
-    .legend-bar { height: 8px; }
-    .legend-cell { height: 100%; box-shadow: inset 0 0 0 1px #00000012; }
-    .legend-cell:first-child { border-radius: 3px 0 0 3px; }
-    .legend-cell:last-child { border-radius: 0 3px 3px 0; }
+    .legend-bar { height: 24px; }
+    .legend-cell { position: relative; min-width: 0; height: 24px; padding: 0; border: 0; border-radius: 3px; background: transparent; cursor: pointer; touch-action: manipulation; }
+    .legend-cell::before { content: ''; position: absolute; left: 0; right: 0; top: 8px; height: 8px; background: var(--swatch-colour); box-shadow: inset 0 0 0 1px #00000012; }
+    .legend-cell:first-child::before { border-radius: 3px 0 0 3px; }
+    .legend-cell:last-child::before { border-radius: 0 3px 3px 0; }
+    .legend-cell:focus-visible { outline: 2px solid #c2410c; outline-offset: 1px; }
+    .legend-cell[aria-pressed="true"]::before { outline: 2px solid #475569; outline-offset: 1px; }
+    .legend-description { margin: 4px 0 0; font-size: 11px; line-height: 1.4; color: #475569; }
     .legend-grid { font-size: 10px; color: #64748b; margin-top: 4px; font-weight: 400; }
     .legend-extreme { font-weight: 700; }
     .legend-grid > div { min-width: 0; white-space: nowrap; }
@@ -712,16 +716,16 @@
       </div>
 
       <div class="legend-container">
-        <div class="legend-title">Notes per dot</div>
-        <div class="legend-bar" role="img" aria-label="Note counts: exactly one, six logarithmic ranges, then the maximum">
-          <div class="legend-cell" style="grid-column:1; background:#ffeda0"></div>
-          <div class="legend-cell" style="grid-column:3; background:#fed976"></div>
-          <div class="legend-cell" style="grid-column:4; background:#feb24c"></div>
-          <div class="legend-cell" style="grid-column:5; background:#fd8d3c"></div>
-          <div class="legend-cell" style="grid-column:6; background:#fc4e2a"></div>
-          <div class="legend-cell" style="grid-column:7; background:#e31a1c"></div>
-          <div class="legend-cell" style="grid-column:8; background:#bd0026"></div>
-          <div class="legend-cell" style="grid-column:10; background:#800026"></div>
+        <div class="legend-title">Notes per dot <span style="font-weight:400">· tap for ranges</span></div>
+        <div class="legend-bar" role="group" aria-label="Notes per dot legend. Select a colour for its range.">
+          <button class="legend-cell" type="button" style="grid-column:1; --swatch-colour:#ffeda0" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:3; --swatch-colour:#fed976" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:4; --swatch-colour:#feb24c" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:5; --swatch-colour:#fd8d3c" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:6; --swatch-colour:#fc4e2a" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:7; --swatch-colour:#e31a1c" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:8; --swatch-colour:#bd0026" aria-controls="legend-range" aria-pressed="false"></button>
+          <button class="legend-cell" type="button" style="grid-column:10; --swatch-colour:#800026" aria-controls="legend-range" aria-pressed="false"></button>
         </div>
         <div class="legend-grid" aria-hidden="true">
           <div class="legend-extreme" style="grid-column:1; text-align:left" id="lbl-step1">1</div>
@@ -730,6 +734,7 @@
           <div style="grid-column:7; text-align:left" id="lbl-step6">-</div>
           <div class="legend-extreme" style="grid-column:10; text-align:right" id="lbl-step8">-</div>
         </div>
+        <p id="legend-range" class="legend-description" role="status" aria-live="polite" hidden></p>
       </div>
     </div>
   </div>
@@ -930,7 +935,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.1</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.2</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">Formerly EBT Dot Safari.</p>
       <div class="about-share-section">
@@ -1024,6 +1029,8 @@
     let profileRecoveryPending = false;
     let profileStorageAction = null;
     let legendThresholds = [];
+    let legendBands = [];
+    let activeLegendBand = null;
     let currentPos = null;
     let currentUserName = "Anonymous";
     
@@ -1139,37 +1146,66 @@
       });
     }
 
+    function legendBandDescription(band) {
+      const entry = legendBands[band];
+      if (!entry?.dots || !entry.range) return 'No dots in this band.';
+      const [first, last] = entry.range;
+      const range = first === last ? `${formatNumber(first)} ${first === 1 ? 'note' : 'notes'}`
+        : `${formatNumber(first)}–${formatNumber(last)} notes`;
+      return `${range} per dot · ${formatNumber(entry.dots)} ${entry.dots === 1 ? 'dot' : 'dots'}`;
+    }
+
+    function renderLegendDescription() {
+      const detail = document.getElementById('legend-range');
+      detail.hidden = activeLegendBand === null;
+      detail.textContent = activeLegendBand === null ? '' : legendBandDescription(activeLegendBand);
+      document.querySelectorAll('.legend-cell').forEach((cell, band) => {
+        cell.setAttribute('aria-pressed', String(band === activeLegendBand));
+      });
+    }
+
     function updateLegendLabels() {
       const maximum = maxNotesPerDot;
       legendThresholds = buildLegendThresholds(maximum);
-      const hasDots = dotMap.size > 0;
       const ranges = Array.from({ length: 8 }, () => null);
-      if (hasDots) ranges[0] = [1, 1];
+      ranges[0] = [1, 1];
       if (maximum > 2) {
         for (let band = 1; band <= 6; band++) {
           const first = legendThresholds[band - 1], last = legendThresholds[band] - 1;
           if (first <= last) ranges[band] = [first, last];
         }
       }
-      if (hasDots && maximum > 1) ranges[7] = [maximum, maximum];
-      const descriptions = [];
-      document.querySelectorAll('.legend-cell').forEach((cell, index) => {
-        const range = ranges[index];
-        cell.dataset.empty = String(!range);
-        const description = !range ? 'No note counts in this colour'
-          : range[0] === range[1] ? `${formatNumber(range[0])} ${range[0] === 1 ? 'note' : 'notes'}`
-          : `${formatNumber(range[0])}–${formatNumber(range[1])} notes`;
-        cell.title = description;
-        if (range) descriptions.push(description);
-      });
-      document.querySelector('.legend-bar').setAttribute('aria-label',
-        hasDots ? 'Notes per dot. Colours from light to dark: ' + descriptions.join('; ') + '.' : 'Notes per dot: no located notes loaded.');
-      for (const [id, band] of [['lbl-step1', 0], ['lbl-step2', 1], ['lbl-step4', 3], ['lbl-step6', 5], ['lbl-step8', 7]]) {
-        const label = document.getElementById(id), range = ranges[band];
-        label.textContent = range ? formatNumber(range[0]) : band === 0 ? '1' : '–';
-        label.title = range ? document.querySelectorAll('.legend-cell')[band].title : 'This colour has no applicable note counts';
+      if (maximum > 1) ranges[7] = [maximum, maximum];
+      legendBands = ranges.map(range => ({ range, dots: 0 }));
+      for (const count of dotMap.values()) {
+        const band = getDynamicColorIndex(count);
+        if (band >= 0) legendBands[band].dots++;
       }
+      const cells = document.querySelectorAll('.legend-cell');
+      cells.forEach((cell, band) => {
+        const description = legendBandDescription(band);
+        cell.dataset.empty = String(legendBands[band].dots === 0);
+        cell.title = description;
+        cell.setAttribute('aria-label', `Colour ${band + 1}: ${description}`);
+      });
+      for (const [id, band] of [['lbl-step1', 0], ['lbl-step2', 1], ['lbl-step4', 3], ['lbl-step6', 5], ['lbl-step8', 7]]) {
+        const label = document.getElementById(id), entry = legendBands[band];
+        label.textContent = entry.dots && entry.range ? formatNumber(entry.range[0]) : '–';
+        label.title = cells[band].title;
+      }
+      if (dotMap.size === 0) activeLegendBand = null;
+      renderLegendDescription();
     }
+
+    document.querySelectorAll('.legend-cell').forEach((cell, band) => {
+      cell.addEventListener('click', () => {
+        activeLegendBand = activeLegendBand === band ? null : band;
+        renderLegendDescription();
+        fitPanels(document.getElementById('control-panel'));
+        const detail = document.getElementById('legend-range');
+        if (!detail.hidden) detail.scrollIntoView({ block: 'nearest' });
+      });
+    });
 
     function updateMaxCount() {
       maxNotesPerDot = 1;
@@ -1539,6 +1575,10 @@
       if (carry !== '') yield carry;
     }
 
+    function profileCountSummary(notes, dots) {
+      return `${formatNumber(notes)} ${notes === 1 ? 'note' : 'notes'}, ${formatNumber(dots)} ${dots === 1 ? 'dot' : 'dots'}`;
+    }
+
     function confirmProfileReplacement(importedDots, incomingNotes, pendingUserId) {
       const reasons = [];
       if (profileRecoveryPending) reasons.push('The unreadable saved Notes profile will be replaced if this import can be saved.');
@@ -1546,11 +1586,16 @@
         const previousId = currentUserName.match(/^User #(\d+)$/)?.[1];
         if (previousId && pendingUserId && previousId !== pendingUserId) reasons.push('This file belongs to a different EBT user.');
         const noteDrop = totalNotesCount - incomingNotes, dotDrop = dotMap.size - importedDots.size;
-        if (noteDrop >= Math.max(10, Math.ceil(totalNotesCount * .1)) ||
-            dotDrop >= Math.max(2, Math.ceil(dotMap.size * .1))) {
-          reasons.push('This file contains substantially fewer notes or conquered dots. It may be an older or incomplete export.');
+        const fewerNotes = noteDrop >= Math.max(10, Math.ceil(totalNotesCount * .1));
+        const fewerDots = dotDrop >= Math.max(2, Math.ceil(dotMap.size * .1));
+        if (fewerNotes || fewerDots) {
+          const comparison = incomingNotes > totalNotesCount ? 'more notes but fewer conquered dots'
+            : importedDots.size > dotMap.size ? 'fewer notes but more conquered dots'
+            : fewerNotes && fewerDots ? 'fewer notes and fewer conquered dots'
+            : fewerNotes ? 'fewer notes' : 'fewer conquered dots';
+          reasons.push(`The new file has ${comparison}. Check that you selected the intended Notes file.`);
         }
-        if (reasons.length) reasons.push(`Current: ${formatNumber(totalNotesCount)} notes, ${formatNumber(dotMap.size)} dots.\nNew file: ${formatNumber(incomingNotes)} notes, ${formatNumber(importedDots.size)} dots.`);
+        if (reasons.length) reasons.push(`Current: ${profileCountSummary(totalNotesCount, dotMap.size)}.\nNew file: ${profileCountSummary(incomingNotes, importedDots.size)}.`);
       }
       return !reasons.length || confirm(reasons.join('\n\n') + '\n\nReplace your current Notes profile? Cancel keeps the existing profile.');
     }
