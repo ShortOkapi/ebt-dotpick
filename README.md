@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 19 October 2026. This guide covers v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 26 October 2026. This guide covers the v2.3.1-rc.1 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -36,7 +36,11 @@ Safari and Chrome on iPhone can show different menus. If you cannot find the fil
 2. Download a fresh EBT Notes CSV, or use one you have already downloaded.
 3. Tap **Load EBT Notes File** and select it.
 
-A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** If an import fails, the previous map is retained and the app explains the problem.
+A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** The candidate warns before replacing a profile with substantially fewer notes or dots, or a recognised different user. Cancel keeps the existing profile. An invalid or incomplete CSV is rejected without replacing the working profile.
+
+Notes exported at `0;0` have no assigned EBT coordinates. They remain in the displayed note total but conquer no dot; a separate message reports their number. Latitude zero or longitude zero on its own remains valid. Reimport your original Notes CSV to correct a profile previously affected by `0;0`.
+
+The eight-colour legend reserves the first colour for exactly one note and the last for the maximum number of notes in a dot, including ties. Six logarithmic ranges cover counts from two up to the maximum, exclusive. Small gaps separate the exact-value colours from the ranges. The endpoint numbers are slightly bolder; labels and map colours use the same integer thresholds. Empty ranges in very small profiles are dimmed and unlabelled. The first colour takes precedence when the maximum is one.
 
 DotPick stores the derived dot counts and user reference locally; it does not retain a permanent connection to your CSV file or automatically download new EBT notes. Load a fresh export whenever you want your latest conquests included. Automatic target map updates, described below, are separate from your personal map.
 
@@ -119,7 +123,7 @@ After a successful online visit, the app, your derived conquered-dot data and va
 
 Background map imagery may need an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed.
 
-Watch for **Saved Offline** or **Not saved** when importing your personal map. Clearing browser data, private browsing or changing browsers can affect saved data. Keep your downloaded Notes CSV so you can load it again if needed.
+Watch for **Saved Offline** or **Not saved** when importing your personal map. If saving fails, a prominent message explains that the current profile works for this visit only and an older saved map may return next time. **Try saving again** retries without reimporting. A failed save retains the previous saved copy. An unreadable saved profile is reported and retained until you accept a replacement. Clearing browser data, private browsing or changing browsers can affect saved data. Keep your downloaded Notes CSV so you can load it again if needed.
 
 ## Install on your home screen
 

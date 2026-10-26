@@ -539,13 +539,24 @@
 
     .legend-container { margin-top: 10px; }
     .legend-title { font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px; }
-    .legend-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; border: 1px solid #cbd5e1; }
-    .legend-cell { flex: 1; height: 100%; }
-
-    .legend-grid {
-      display: grid; grid-template-columns: repeat(8, 1fr);
-      font-size: 10px; color: #64748b; margin-top: 4px; font-weight: 500;
+    .legend-bar, .legend-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 4px repeat(6, minmax(0, 1fr)) 4px minmax(0, 1fr);
     }
+    .legend-bar { height: 8px; }
+    .legend-cell { height: 100%; box-shadow: inset 0 0 0 1px #00000012; }
+    .legend-cell:first-child { border-radius: 3px 0 0 3px; }
+    .legend-cell:last-child { border-radius: 0 3px 3px 0; }
+    .legend-grid { font-size: 10px; color: #64748b; margin-top: 4px; font-weight: 400; }
+    .legend-extreme { font-weight: 700; }
+    .legend-grid > div { min-width: 0; white-space: nowrap; }
+    #lbl-step4, #lbl-step6 { width: max-content; transform: translateX(-50%); }
+    #lbl-step8 { width: max-content; justify-self: end; }
+    .legend-cell[data-empty="true"] { opacity: .25; }
+    .profile-notice { margin-top: 10px; padding: 10px; border: 1px solid #fecaca; border-radius: 6px; background: #fef2f2; color: #991b1b; font-size: 12px; }
+    .profile-notice p { margin: 0; }
+    .profile-notice button { margin-top: 8px; }
+    #unlocated-notes { margin-top: 4px; color: #92400e; font-size: 12px; }
 
     .csv-help {
       margin-bottom: 8px;
@@ -693,26 +704,31 @@
         <div id="user-display" style="font-weight: 700; color: #c2410c;">No user loaded</div>
         <div id="notes-count" style="color: #64748b;"><b>0</b> notes</div>
         <div id="dots-count" style="color: #64748b;">Grid only (<b>0</b> conquered dots)</div>
+        <div id="unlocated-notes" hidden></div>
+      </div>
+      <div id="profile-notice" class="profile-notice" role="alert" hidden>
+        <p id="profile-notice-text"></p>
+        <button id="profile-save-retry" class="gps-retry" type="button" hidden>Try saving again</button>
       </div>
 
       <div class="legend-container">
         <div class="legend-title">Notes per dot</div>
-        <div class="legend-bar">
-          <div class="legend-cell" style="background:#ffeda0"></div>
-          <div class="legend-cell" style="background:#fed976"></div>
-          <div class="legend-cell" style="background:#feb24c"></div>
-          <div class="legend-cell" style="background:#fd8d3c"></div>
-          <div class="legend-cell" style="background:#fc4e2a"></div>
-          <div class="legend-cell" style="background:#e31a1c"></div>
-          <div class="legend-cell" style="background:#bd0026"></div>
-          <div class="legend-cell" style="background:#800026"></div>
+        <div class="legend-bar" role="img" aria-label="Note counts: exactly one, six logarithmic ranges, then the maximum">
+          <div class="legend-cell" style="grid-column:1; background:#ffeda0"></div>
+          <div class="legend-cell" style="grid-column:3; background:#fed976"></div>
+          <div class="legend-cell" style="grid-column:4; background:#feb24c"></div>
+          <div class="legend-cell" style="grid-column:5; background:#fd8d3c"></div>
+          <div class="legend-cell" style="grid-column:6; background:#fc4e2a"></div>
+          <div class="legend-cell" style="grid-column:7; background:#e31a1c"></div>
+          <div class="legend-cell" style="grid-column:8; background:#bd0026"></div>
+          <div class="legend-cell" style="grid-column:10; background:#800026"></div>
         </div>
-        <div class="legend-grid">
-          <div style="grid-column: 1; text-align: left;" id="lbl-step1">1+</div>
-          <div style="grid-column: 2; text-align: left;" id="lbl-step2">-</div>
-          <div style="grid-column: 4; text-align: left;" id="lbl-step4">-</div>
-          <div style="grid-column: 6; text-align: left;" id="lbl-step6">-</div>
-          <div style="grid-column: 8; text-align: right;" id="lbl-step8">Max</div>
+        <div class="legend-grid" aria-hidden="true">
+          <div class="legend-extreme" style="grid-column:1; text-align:left" id="lbl-step1">1</div>
+          <div style="grid-column:3; text-align:left" id="lbl-step2">-</div>
+          <div style="grid-column:5; text-align:left" id="lbl-step4">-</div>
+          <div style="grid-column:7; text-align:left" id="lbl-step6">-</div>
+          <div class="legend-extreme" style="grid-column:10; text-align:right" id="lbl-step8">-</div>
         </div>
       </div>
     </div>
@@ -914,7 +930,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.0</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.1</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">Formerly EBT Dot Safari.</p>
       <div class="about-share-section">
@@ -1004,6 +1020,10 @@
     let renderRows = new Map();
     let maxNotesPerDot = 1;
     let totalNotesCount = 0;
+    let unlocatedNotesCount = 0;
+    let profileRecoveryPending = false;
+    let profileStorageAction = null;
+    let legendThresholds = [];
     let currentPos = null;
     let currentUserName = "Anonymous";
     
@@ -1105,30 +1125,55 @@
       return num.toLocaleString("en-US").replace(/,/g, '\u202F');
     }
 
-    function updateLegendLabels() {
-      if (maxNotesPerDot <= 1) {
-        document.getElementById('lbl-step1').textContent = '1+';
-        document.getElementById('lbl-step2').textContent = '-';
-        document.getElementById('lbl-step4').textContent = '-';
-        document.getElementById('lbl-step6').textContent = '-';
-        document.getElementById('lbl-step8').textContent = '1';
-        return;
-      }
-      const logM = Math.log(maxNotesPerDot);
-      const val2 = Math.max(2, Math.round(Math.exp((1/7) * logM)));
-      const val4 = Math.max(val2 + 1, Math.round(Math.exp((3/7) * logM)));
-      const val6 = Math.max(val4 + 1, Math.round(Math.exp((5/7) * logM)));
+    // One note and the maximum have exact-value colours. The six middle
+    // colours divide [2, maximum) into equal intervals in logarithmic space.
+    function buildLegendThresholds(maximum) {
+      if (maximum <= 2) return [];
+      const span = Math.log(maximum / 2);
+      return Array.from({ length: 7 }, (_, index) => {
+        if (index === 0) return 2;
+        if (index === 6) return maximum;
+        const value = 2 * Math.exp(span * index / 6);
+        const nearest = Math.round(value);
+        return Math.min(maximum, Math.abs(value - nearest) <= 1e-12 * Math.max(1, value) ? nearest : Math.ceil(value));
+      });
+    }
 
-      document.getElementById('lbl-step1').textContent = '1+';
-      document.getElementById('lbl-step2').textContent = '2+'; 
-      document.getElementById('lbl-step4').textContent = formatNumber(val4);
-      document.getElementById('lbl-step6').textContent = formatNumber(val6);
-      document.getElementById('lbl-step8').textContent = formatNumber(maxNotesPerDot);
+    function updateLegendLabels() {
+      const maximum = maxNotesPerDot;
+      legendThresholds = buildLegendThresholds(maximum);
+      const hasDots = dotMap.size > 0;
+      const ranges = Array.from({ length: 8 }, () => null);
+      if (hasDots) ranges[0] = [1, 1];
+      if (maximum > 2) {
+        for (let band = 1; band <= 6; band++) {
+          const first = legendThresholds[band - 1], last = legendThresholds[band] - 1;
+          if (first <= last) ranges[band] = [first, last];
+        }
+      }
+      if (hasDots && maximum > 1) ranges[7] = [maximum, maximum];
+      const descriptions = [];
+      document.querySelectorAll('.legend-cell').forEach((cell, index) => {
+        const range = ranges[index];
+        cell.dataset.empty = String(!range);
+        const description = !range ? 'No note counts in this colour'
+          : range[0] === range[1] ? `${formatNumber(range[0])} ${range[0] === 1 ? 'note' : 'notes'}`
+          : `${formatNumber(range[0])}–${formatNumber(range[1])} notes`;
+        cell.title = description;
+        if (range) descriptions.push(description);
+      });
+      document.querySelector('.legend-bar').setAttribute('aria-label',
+        hasDots ? 'Notes per dot. Colours from light to dark: ' + descriptions.join('; ') + '.' : 'Notes per dot: no located notes loaded.');
+      for (const [id, band] of [['lbl-step1', 0], ['lbl-step2', 1], ['lbl-step4', 3], ['lbl-step6', 5], ['lbl-step8', 7]]) {
+        const label = document.getElementById(id), range = ranges[band];
+        label.textContent = range ? formatNumber(range[0]) : band === 0 ? '1' : '–';
+        label.title = range ? document.querySelectorAll('.legend-cell')[band].title : 'This colour has no applicable note counts';
+      }
     }
 
     function updateMaxCount() {
       maxNotesPerDot = 1;
-      totalNotesCount = 0;
+      totalNotesCount = unlocatedNotesCount;
       for (const count of dotMap.values()) {
         if (count > maxNotesPerDot) maxNotesPerDot = count;
         totalNotesCount += count;
@@ -1138,10 +1183,12 @@
 
     function getDynamicColorIndex(count) {
       if (!count || count <= 0) return -1;
-      if (maxNotesPerDot <= 1 || count === 1) return 0;
-      const t = Math.log(count) / Math.log(maxNotesPerDot);
-      const index = Math.min(7, Math.floor(t * 8));
-      return Math.max(1, index); 
+      if (count === 1) return 0;
+      if (count === maxNotesPerDot) return 7;
+      for (let band = 1; band <= 6; band++) {
+        if (count < legendThresholds[band]) return band;
+      }
+      return 6;
     }
 
     // Index rendered cells by grid row so each tile examines fewer dots
@@ -1302,63 +1349,106 @@
         `<b>${formatNumber(totalNotesCount)}</b> notes`;
       document.getElementById('dots-count').innerHTML =
         `<b>${formatNumber(dotMap.size)}</b> unique dots conquered`;
+      const unlocated = document.getElementById('unlocated-notes');
+      unlocated.hidden = unlocatedNotesCount === 0;
+      unlocated.textContent = unlocatedNotesCount
+        ? `${formatNumber(unlocatedNotesCount)} ${unlocatedNotesCount === 1 ? 'note has' : 'notes have'} no assigned coordinates; included above, but assigned to no dot.` : '';
 
       const clearButton = document.getElementById('clear-btn');
-      const hasConqueredDots = dotMap.size > 0;
-      const clearDescription = hasConqueredDots
-        ? 'Clear conquered dots'
-        : 'No conquered dots to clear';
-
-      clearButton.disabled = !hasConqueredDots;
+      const hasProfile = totalNotesCount > 0;
+      const clearDescription = hasProfile ? 'Clear imported Notes profile' : 'No imported Notes to clear';
+      clearButton.disabled = !hasProfile;
       clearButton.title = clearDescription;
       clearButton.setAttribute('aria-label', clearDescription);
-      setCsvHelpOpen(!hasConqueredDots);
-      setPanelCollapsed(document.getElementById('control-panel'), hasConqueredDots);
+      setCsvHelpOpen(!hasProfile);
+      setPanelCollapsed(document.getElementById('control-panel'), hasProfile && document.getElementById('profile-notice').hidden);
       ebtGridLayer.redraw();
+      if (currentPos) updateHUD(currentPos[0], currentPos[1]);
+    }
 
-      if (currentPos) {
-        updateHUD(currentPos[0], currentPos[1]);
+    function setProfileNotice(message = '', action = null) {
+      profileStorageAction = action;
+      document.getElementById('profile-notice').hidden = !message;
+      document.getElementById('profile-notice-text').textContent = message;
+      const retry = document.getElementById('profile-save-retry');
+      retry.hidden = !action;
+      retry.textContent = action === 'clear' ? 'Try clearing saved map again' : 'Try saving again';
+      if (message) {
+        const panel = document.getElementById('control-panel');
+        setPanelCollapsed(panel, false);
+        fitPanels(panel);
       }
     }
 
-    function saveToStorage() {
+    function profileIndicator(text, saved, detail = '') {
       const ind = document.getElementById('storage-indicator');
+      ind.textContent = text;
+      ind.style.color = saved ? '#047857' : '#b91c1c';
+      if (detail) ind.title = detail;
+      else ind.removeAttribute('title');
+    }
+
+    function saveToStorage() {
       try {
-        const payload = { user: currentUserName, dots: Object.fromEntries(dotMap) };
+        const payload = { user: currentUserName, dots: Object.fromEntries(dotMap), unlocatedNotes: unlocatedNotesCount };
         localStorage.setItem('ebt_cached_profile', JSON.stringify(payload));
-        ind.textContent = 'Saved Offline';
-        ind.style.color = '#047857';
-        ind.removeAttribute('title');
+        profileRecoveryPending = false;
+        profileIndicator('Saved Offline', true);
+        setProfileNotice();
+        return true;
       } catch (error) {
-        ind.textContent = 'Not saved';
-        ind.style.color = '#b91c1c';
-        ind.title = error?.message || 'Storage unavailable';
+        profileIndicator('Not saved', false, error?.message || 'Storage unavailable');
+        setProfileNotice('Your current Notes profile works for this visit, but could not be saved. When you reopen DotPick, an older saved map may return. Keep your Notes CSV and try saving again before closing.', 'save');
+        return false;
       }
     }
 
     function loadFromStorage() {
+      let raw = null;
       try {
-        const raw = localStorage.getItem('ebt_cached_profile');
-        if (!raw) return false;
+        raw = localStorage.getItem('ebt_cached_profile');
+        if (raw === null) return false;
         const payload = JSON.parse(raw);
-        if (!payload || typeof payload !== 'object' || Array.isArray(payload)) throw new Error('Invalid profile');
-        
-        const storedDots = payload.dots ?? {};
-        if (typeof storedDots !== 'object' || Array.isArray(storedDots)) throw new Error('Invalid dots');
-        
-        const entries = Object.entries(storedDots);
-        if (!entries.every(([key, value]) => /^-?\d+_-?\d+$/.test(key) && Number.isSafeInteger(value) && value > 0)) {
-          throw new Error('Invalid cached dot value');
-        }
-        
-        currentUserName = payload.user || "EBTor";
-        dotMap.clear();
-        for (const [key, value] of entries) dotMap.set(key, value);
-        
+        if (!payload || typeof payload !== 'object' || Array.isArray(payload) ||
+            !payload.dots || typeof payload.dots !== 'object' || Array.isArray(payload.dots) ||
+            payload.user !== undefined && typeof payload.user !== 'string') throw new Error('Invalid profile');
+        const entries = Object.entries(payload.dots), unlocated = payload.unlocatedNotes ?? 0;
+        if (!Number.isSafeInteger(unlocated) || unlocated < 0 ||
+            !entries.every(([key, value]) => /^-?\d+_-?\d+$/.test(key) && Number.isSafeInteger(value) && value > 0) ||
+            !Number.isSafeInteger(entries.reduce((sum, [, count]) => sum + count, unlocated))) throw new Error('Invalid cached counts');
+        // Validation finishes before replacing any usable in-memory profile.
+        dotMap = new Map(entries);
+        unlocatedNotesCount = unlocated;
+        currentUserName = payload.user || 'EBTor';
         refreshUIState();
+        profileIndicator('Saved Offline', true);
         return true;
-      } catch (e) { return false; }
+      } catch (error) {
+        profileRecoveryPending = raw !== null;
+        profileIndicator(profileRecoveryPending ? 'Saved map unreadable' : 'Saving unavailable', false);
+        setProfileNotice(profileRecoveryPending
+          ? 'Your saved Notes profile could not be read. Load your Notes CSV to recover it. The unreadable saved copy has been kept until you accept a replacement.'
+          : 'Browser saving is unavailable. You can still load your Notes CSV and use DotPick for this visit.');
+        return false;
+      }
     }
+
+    function clearSavedProfile() {
+      try {
+        localStorage.removeItem('ebt_cached_profile');
+        profileRecoveryPending = false;
+        profileIndicator('Cleared', true);
+        setProfileNotice();
+      } catch {
+        profileIndicator('Saved copy remains', false);
+        setProfileNotice('This visit is cleared, but your saved map could not be removed and may return when you reopen DotPick.', 'clear');
+      }
+    }
+
+    document.getElementById('profile-save-retry').addEventListener('click', () => {
+      if (profileStorageAction === 'clear') clearSavedProfile();
+      else if (profileStorageAction === 'save' && totalNotesCount > 0) saveToStorage();
+    });
 
     function parseCoordinate(value) {
       if (typeof value !== 'string') return NaN;
@@ -1398,45 +1488,71 @@
       ];
     }
 
-    async function* readCsvLines(file, version, reportProgress) {
+    async function* readCsvRecords(file, version, reportProgress) {
       const decoder = new TextDecoder();
-      let offset = 0;
-      let carry = '';
-
+      let offset = 0, carry = '', cursor = 0;
+      let quoted = false, fieldStart = true, closedQuote = false;
       while (offset < file.size) {
         if (version !== importVersion) return;
-
         const end = Math.min(offset + CSV_CHUNK_BYTES, file.size);
         const bytes = await file.slice(offset, end).arrayBuffer();
         if (version !== importVersion) return;
-
-        carry += decoder.decode(bytes, { stream: true });
-        let lineStart = 0;
-
-        while (true) {
-          const newline = carry.indexOf('\n', lineStart);
-          if (newline === -1) break;
-
-          let line = carry.slice(lineStart, newline);
-          if (line.endsWith('\r')) line = line.slice(0, -1);
-          yield line;
-
-          if (version !== importVersion) return;
-          lineStart = newline + 1;
-        }
-
-        carry = carry.slice(lineStart);
-        if (carry.length > MAX_CSV_LINE_CHARS) {
-          throw new Error('A CSV row is unexpectedly large or line breaks are missing.');
-        }
-
         offset = end;
+        carry += decoder.decode(bytes, { stream: offset < file.size });
+        let recordStart = 0;
+        while (cursor < carry.length) {
+          if (cursor - recordStart > MAX_CSV_LINE_CHARS) throw new Error('A CSV record is unexpectedly large.');
+          const character = carry[cursor];
+          if (quoted) {
+            if (character === '"') {
+              // A quote pair can straddle two byte chunks.
+              if (cursor + 1 === carry.length && offset < file.size) break;
+              if (carry[cursor + 1] === '"') { cursor += 2; continue; }
+              quoted = false; closedQuote = true;
+            }
+          } else if (character === '\n') {
+            let record = carry.slice(recordStart, cursor);
+            if (record.endsWith('\r')) record = record.slice(0, -1);
+            yield record;
+            if (version !== importVersion) return;
+            recordStart = cursor + 1;
+            fieldStart = true; closedQuote = false;
+          } else if (character === ';') {
+            fieldStart = true; closedQuote = false;
+          } else if (character === '"' && fieldStart) {
+            quoted = true; fieldStart = false;
+          } else {
+            if (closedQuote && character !== ' ' && character !== '\t' && character !== '\r') {
+              throw new Error('Unexpected text after a quoted CSV field.');
+            }
+            fieldStart = false;
+          }
+          cursor++;
+        }
+        carry = carry.slice(recordStart);
+        cursor -= recordStart;
+        if (carry.length > MAX_CSV_LINE_CHARS) throw new Error('A CSV record is unexpectedly large or incomplete.');
         reportProgress(offset / file.size);
       }
-
-      carry += decoder.decode();
+      if (quoted) throw new Error('A quoted CSV field is incomplete. Download a fresh Notes file.');
       if (carry.endsWith('\r')) carry = carry.slice(0, -1);
       if (carry !== '') yield carry;
+    }
+
+    function confirmProfileReplacement(importedDots, incomingNotes, pendingUserId) {
+      const reasons = [];
+      if (profileRecoveryPending) reasons.push('The unreadable saved Notes profile will be replaced if this import can be saved.');
+      if (totalNotesCount > 0) {
+        const previousId = currentUserName.match(/^User #(\d+)$/)?.[1];
+        if (previousId && pendingUserId && previousId !== pendingUserId) reasons.push('This file belongs to a different EBT user.');
+        const noteDrop = totalNotesCount - incomingNotes, dotDrop = dotMap.size - importedDots.size;
+        if (noteDrop >= Math.max(10, Math.ceil(totalNotesCount * .1)) ||
+            dotDrop >= Math.max(2, Math.ceil(dotMap.size * .1))) {
+          reasons.push('This file contains substantially fewer notes or conquered dots. It may be an older or incomplete export.');
+        }
+        if (reasons.length) reasons.push(`Current: ${formatNumber(totalNotesCount)} notes, ${formatNumber(dotMap.size)} dots.\nNew file: ${formatNumber(incomingNotes)} notes, ${formatNumber(importedDots.size)} dots.`);
+      }
+      return !reasons.length || confirm(reasons.join('\n\n') + '\n\nReplace your current Notes profile? Cancel keeps the existing profile.');
     }
 
     function yieldToMain() {
@@ -1448,13 +1564,13 @@
     }
 
     function setCsvHelpOpen(open) {
-      const hasConqueredDots = dotMap.size > 0;
-      const showHelp = open || !hasConqueredDots;
+      const hasProfile = totalNotesCount > 0;
+      const showHelp = open || !hasProfile;
       document.getElementById('csv-help').hidden = !showHelp;
       document.getElementById('csv-saving-help').open = false;
 
       const button = document.getElementById('csv-reload-btn');
-      button.hidden = !hasConqueredDots;
+      button.hidden = !hasProfile;
       button.textContent = showHelp ? 'Close instructions' : 'Update my map';
       button.setAttribute('aria-expanded', String(showHelp));
     }
@@ -1503,6 +1619,8 @@
       try {
         const importedDots = new Map();
         let validCoordinates = 0;
+        let unlocatedNotes = 0;
+        let invalidRows = 0;
         let dataRows = 0;
         let sawFirstLine = false;
         let isEbtExport = false;
@@ -1521,7 +1639,7 @@
           notesCount.textContent = `Processing CSV… ${percent}%`;
         };
 
-        for await (const line of readCsvLines(file, version, reportProgress)) {
+        for await (const line of readCsvRecords(file, version, reportProgress)) {
           if (version !== importVersion) return;
 
           if (!sawFirstLine) {
@@ -1539,7 +1657,7 @@
               lonIdx = headers.findIndex(header => /^(?:lon|lng|long|longitude)(?:\b|_)/.test(header));
 
               if (latIdx === -1 || lonIdx === -1) {
-                throw new Error('Latitude/Longitude columns were not found.');
+                throw new Error('Latitude/Longitude columns were not found. Load the original semicolon-separated EBT Notes CSV; a file re-saved with comma separators is not supported.');
               }
             }
 
@@ -1560,11 +1678,11 @@
 
           if (isEbtExport) {
             const coordinates = getEbtCoordinateColumns(line);
-            if (!coordinates) continue;
+            if (!coordinates) { invalidRows++; continue; }
             [latStr, lonStr] = coordinates;
           } else {
             const columns = splitSemicolonRow(line);
-            if (columns.length <= Math.max(latIdx, lonIdx)) continue;
+            if (columns.length <= Math.max(latIdx, lonIdx)) { invalidRows++; continue; }
             latStr = columns[latIdx];
             lonStr = columns[lonIdx];
           }
@@ -1578,21 +1696,28 @@
             Math.abs(lat) <= 90 &&
             Math.abs(lon) <= 180
           ) {
-            const key = `${Math.floor((lat - minLat) / dotH)}_${Math.floor((lon - minLon) / dotW)}`;
-            importedDots.set(key, (importedDots.get(key) || 0) + 1);
-            validCoordinates++;
-          }
+            if (lat === 0 && lon === 0) {
+              unlocatedNotes++;
+            } else {
+              const key = `${Math.floor((lat - minLat) / dotH)}_${Math.floor((lon - minLon) / dotW)}`;
+              importedDots.set(key, (importedDots.get(key) || 0) + 1);
+              validCoordinates++;
+            }
+          } else invalidRows++;
         }
 
         if (version !== importVersion) return;
-        if (!sawFirstLine || dataRows === 0) {
-          throw new Error('The CSV contains no data rows.');
+        if (!sawFirstLine || dataRows === 0) throw new Error('The CSV contains no data rows.');
+        if (invalidRows > 0) throw new Error(`${formatNumber(invalidRows)} data ${invalidRows === 1 ? 'record has' : 'records have'} missing or invalid coordinates. The file may be incomplete. Download a fresh Notes file; your previous map has been kept.`);
+        const incomingNotes = validCoordinates + unlocatedNotes;
+        if (incomingNotes === 0 || !Number.isSafeInteger(incomingNotes)) throw new Error('No usable Notes records were found.');
+        if (!confirmProfileReplacement(importedDots, incomingNotes, pendingUserId)) {
+          refreshUIState();
+          return;
         }
-        if (validCoordinates === 0) {
-          throw new Error('No valid coordinates were found.');
-        }
-
+        if (version !== importVersion) return;
         dotMap = importedDots;
+        unlocatedNotesCount = unlocatedNotes;
         currentUserName = pendingUserName;
         refreshUIState();
         saveToStorage();
@@ -1606,23 +1731,15 @@
     });
 
     document.getElementById('clear-btn').addEventListener('click', function() {
-      if (confirm("Clear all your saved dots from this device?")) {
+      if (confirm('Clear your imported Notes profile and all saved conquered dots from this device?')) {
         importVersion++;
         document.getElementById('stats-container').removeAttribute('aria-busy');
-        
-        let cacheRemoved = true;
-        try { localStorage.removeItem('ebt_cached_profile'); } 
-        catch { cacheRemoved = false; }
-        
-        dotMap.clear();
-        currentUserName = "No user loaded";
+        dotMap = new Map();
+        unlocatedNotesCount = 0;
+        currentUserName = 'No user loaded';
         refreshUIState();
-        document.getElementById('notes-count').innerHTML = "<b>0</b> notes";
-        document.getElementById('dots-count').innerHTML = "Grid only (<b>0</b> conquered dots)";
-        
-        const ind = document.getElementById('storage-indicator');
-        ind.textContent = cacheRemoved ? 'Cleared' : 'Session cleared; saved copy remains';
-        ind.style.color = cacheRemoved ? '#047857' : '#b91c1c';
+        document.getElementById('dots-count').innerHTML = 'Grid only (<b>0</b> conquered dots)';
+        clearSavedProfile();
       }
     });
 
@@ -3945,7 +4062,7 @@
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) { refreshTargetModels(); checkDestinationUpdates(); }
     });
-    loadFromStorage();
+    if (!loadFromStorage()) updateMaxCount();
     resumeApp();
 
     // PWA Service Worker Registration
