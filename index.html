@@ -935,7 +935,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.2</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.3</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">Formerly EBT Dot Safari.</p>
       <div class="about-share-section">
@@ -2092,7 +2092,7 @@
     const DESTINATION_DATA_CACHE = 'ebt-dot-safari-destination-data-v1';
     const DESTINATION_REFRESH_MS = 60 * 60 * 1000;
     const DESTINATION_EDGE_EPS = 1e-8;
-    const destinationData = { manifest: null, inFlight: null, lastAttemptAt: 0, failed: false, blocks: new Map() };
+    const destinationData = { manifest: null, inFlight: null, lastAttemptAt: 0, failed: false, blocks: new Map(), blockLoads: new Map() };
     const destinationDialog = document.getElementById('destination-dialog');
     const destinationAreaDialog = document.getElementById('destination-area-dialog');
     const destinationTargetAreaSelect = document.getElementById('destination-target-area');
@@ -2269,50 +2269,68 @@
       }
       return snapshot;
     }
+    function rememberDestinationBlock(blockKey, entry) {
+      destinationData.blocks.delete(blockKey);
+      destinationData.blocks.set(blockKey, entry);
+      while (destinationData.blocks.size > 6) destinationData.blocks.delete(destinationData.blocks.keys().next().value);
+    }
+    async function loadDestinationBlock(manifest, blockKey) {
+      // Identity includes the checksum and validation policy, not just the folder version.
+      const snapshot = destinationBlockCacheManifest(manifest, blockKey), signature = JSON.stringify(snapshot);
+      if (destinationData.blockLoads.has(signature)) return destinationData.blockLoads.get(signature);
+      const promise = (async () => {
+        let previous = destinationData.blocks.get(blockKey);
+        if (previous) rememberDestinationBlock(blockKey, previous);
+        if (!previous) {
+          try {
+            const saved = await (await caches.open(DESTINATION_DATA_CACHE)).match(destinationCacheKey('block/' + blockKey));
+            if (saved) {
+              const entry = await saved.json();
+              validateDestinationManifest(entry.manifest);
+              entry.data = await validateDestinationBlock(entry.body, entry.manifest, blockKey);
+              entry.signature = JSON.stringify(destinationBlockCacheManifest(entry.manifest, blockKey));
+              previous = entry;
+              if (!destinationData.blocks.has(blockKey)) rememberDestinationBlock(blockKey, entry);
+            }
+          } catch { /* An unreadable saved block does not prevent a fresh download. */ }
+        }
+        if (previous?.signature === signature) return { entry: previous, stale: false };
+        try {
+          const body = await fetchDestinationText(new URL(manifest.blocks[blockKey].file, DESTINATION_ROOT));
+          const data = await validateDestinationBlock(body, snapshot, blockKey);
+          const entry = { manifest: snapshot, signature, body, data };
+          const isCurrent = () => destinationData.manifest?.blocks[blockKey] &&
+            JSON.stringify(destinationBlockCacheManifest(destinationData.manifest, blockKey)) === signature;
+          try {
+            const cache = await caches.open(DESTINATION_DATA_CACHE);
+            if (isCurrent()) await cache.put(destinationCacheKey('block/' + blockKey), new Response(JSON.stringify({ manifest: snapshot, body })));
+          } catch { entry.saveFailed = true; }
+          // A slower request for an older manifest must not replace a newer memory entry.
+          if (isCurrent()) rememberDestinationBlock(blockKey, entry);
+          return { entry, stale: false };
+        } catch {
+          if (previous) {
+            if (destinationData.blocks.get(blockKey) === previous) rememberDestinationBlock(blockKey, previous);
+            return { entry: previous, stale: true };
+          }
+          return null;
+        }
+      })().finally(() => { destinationData.blockLoads.delete(signature); });
+      destinationData.blockLoads.set(signature, promise);
+      return promise;
+    }
     async function loadDestinationCell(dot, model, force = false) {
       const manifest = await refreshDestinationManifest(force), blockKey = `${Math.floor(dot[0] / 8)}_${Math.floor(dot[1] / 8)}`;
       const unavailable = { status: 'unavailable', points: [], boundaries: null, stale: false };
       if (!manifest) return unavailable;
       if (!manifest.coverage.some(cell => destinationDotKey(cell) === destinationDotKey(dot))) return { ...unavailable, status: 'not-covered' };
-      const descriptor = manifest.blocks[blockKey];
-      const resultFor = (data, stale = false, saveFailed = false) => {
-        const cell = data.cells[destinationDotKey(dot)];
-        if (!cell) return unavailable;
-        const points = cell[model === 'euro-use' ? 'e' : 'w'].map(index => cell.p[index]);
-        return { status: cell.q === 'partial' ? 'partial' : points.length ? 'listed' : 'empty', points, allPoints: cell.p, names: cell.n || null, boundaries: data.boundaries || null, stale, saveFailed };
-      };
-      let previous = destinationData.blocks.get(blockKey);
-      if (!previous) {
-        try {
-          const saved = await (await caches.open(DESTINATION_DATA_CACHE)).match(destinationCacheKey('block/' + blockKey));
-          if (saved) {
-            const entry = await saved.json();
-            validateDestinationManifest(entry.manifest);
-            entry.data = await validateDestinationBlock(entry.body, entry.manifest, blockKey);
-            previous = entry;
-          }
-        } catch {}
-      }
-      try {
-        if (previous && previous.manifest.version === manifest.version && previous.manifest.blocks[blockKey].sha256 === descriptor.sha256) {
-          const data = await validateDestinationBlock(previous.body, manifest, blockKey);
-          return resultFor(data, destinationData.failed, previous.saveFailed);
-        }
-        const body = await fetchDestinationText(new URL(descriptor.file, DESTINATION_ROOT));
-        const data = await validateDestinationBlock(body, manifest, blockKey), entry = { manifest: destinationBlockCacheManifest(manifest, blockKey), body, data };
-        try { await (await caches.open(DESTINATION_DATA_CACHE)).put(destinationCacheKey('block/' + blockKey), new Response(JSON.stringify({ manifest: entry.manifest, body }))); }
-        catch { entry.saveFailed = true; }
-        destinationData.blocks.delete(blockKey);
-        destinationData.blocks.set(blockKey, entry);
-        while (destinationData.blocks.size > 6) destinationData.blocks.delete(destinationData.blocks.keys().next().value);
-        return resultFor(data, destinationData.failed, entry.saveFailed);
-      } catch {
-        if (previous) {
-          try { return resultFor(await validateDestinationBlock(previous.body, previous.manifest, blockKey), true, previous.saveFailed); }
-          catch {}
-        }
-        return unavailable;
-      }
+      const loaded = await loadDestinationBlock(manifest, blockKey);
+      if (!loaded) return unavailable;
+      const { entry, stale } = loaded, cell = entry.data.cells[destinationDotKey(dot)];
+      if (!cell) return unavailable;
+      const points = cell[model === 'euro-use' ? 'e' : 'w'].map(index => cell.p[index]);
+      return { status: cell.q === 'partial' ? 'partial' : points.length ? 'listed' : 'empty', points, allPoints: cell.p,
+        names: cell.n || null, boundaries: entry.data.boundaries || null, stale: stale || destinationData.failed, saveFailed: entry.saveFailed };
     }
     // A reviewed, copyable message only. Notes and the live GPS position are not included.
     const feedbackDialog = document.getElementById('feedback-dialog');
@@ -2591,13 +2609,36 @@
       link.textContent = viewOnly ? 'View place in Google Maps ↗' : 'Open route in Google Maps ↗';
       link.setAttribute('aria-label', `${viewOnly ? 'View' : 'Open route to'} ${point.name} in Google Maps`);
     }
+    // Keep keyed button nodes in place so a GPS/name refresh cannot interrupt a tap.
+    function syncDestinationList(list, rows, keyAttribute) {
+      const focused = document.activeElement;
+      const previous = new Map(Array.from(list.children).filter(node => node.dataset[keyAttribute])
+        .map(node => [node.dataset[keyAttribute], node]));
+      rows.forEach((row, index) => {
+        const key = row.dataset[keyAttribute], existing = key && previous.get(key);
+        let node = existing || row;
+        if (existing) {
+          // Refresh the handler too: the same key can appear in a new session or data revision.
+          node.onclick = row.onclick;
+          for (const attribute of Array.from(node.attributes)) {
+            if (!row.hasAttribute(attribute.name)) node.removeAttribute(attribute.name);
+          }
+          for (const attribute of row.attributes) {
+            if (node.getAttribute(attribute.name) !== attribute.value) node.setAttribute(attribute.name, attribute.value);
+          }
+          if (!node.isEqualNode(row)) node.replaceChildren(...row.childNodes);
+        } else if (!key && list.children[index]?.isEqualNode(row)) node = list.children[index];
+        if (list.children[index] !== node) list.insertBefore(node, list.children[index] || null);
+      });
+      while (list.children.length > rows.length) list.lastElementChild.remove();
+      if (list.contains(focused) && document.activeElement !== focused) focused.focus({ preventScroll: true });
+    }
     function renderDestinationPlaces() {
       const session = destinationSession;
       if (!session || session.invalid || !destinationContextMatches()) return;
       document.getElementById('destination-choose-map').setAttribute('aria-pressed', String(!!session.selected?.manual));
       const list = document.getElementById('destination-list'), selectedId = session.selected?.id;
-      const focusedId = list.contains(document.activeElement) ? document.activeElement.dataset.destinationId : null;
-      list.replaceChildren();
+      const rows = [];
       for (const row of session.result?.points || []) {
         const point = destinationPointFromRow(row), button = document.createElement('button'), detail = document.createElement('span');
         button.type = 'button'; button.className = 'destination-place'; button.dataset.destinationId = point.id;
@@ -2607,15 +2648,15 @@
         }
         detail.textContent = [destinationCountry(point.country), destinationDistanceText(point)].filter(Boolean).join(' · ');
         button.append(detail);
-        button.addEventListener('click', () => {
+        button.onclick = () => {
           if (!destinationContextMatches() || !checkDestinationPoint(point.lat, point.lon, session.context.dot).valid) return;
           session.selected = point; renderDestinationPlaces();
           document.getElementById('destination-selection').scrollIntoView({ block: 'nearest' });
           document.getElementById('destination-maps').focus();
-        });
-        list.append(button);
-        if (point.id === focusedId) button.focus({ preventScroll: true });
+        };
+        rows.push(button);
       }
+      syncDestinationList(list, rows, 'destinationId');
       renderDestinationSelection();
     }
     async function requestDestinationPlaces(force = false) {
@@ -2777,34 +2818,37 @@
     }
     function renderDestinationTargets() {
       const session = destinationSession, box = document.getElementById('destination-ties');
-      const focusedKey = box.contains(document.activeElement) ? document.activeElement.dataset.destinationTarget : null;
-      box.replaceChildren();
-      if (!session || session.invalid || session.intent.kind === 'this' || !session.context.target || session.context.target.isHere) return;
+      const rows = [];
+      if (!session || session.invalid || session.intent.kind === 'this' || !session.context.target || session.context.target.isHere) {
+        syncDestinationList(box, rows, 'destinationTarget'); return;
+      }
       const chosen = session.context.target, summary = document.createElement('p');
       summary.className = 'target-note';
       const bearing = Math.round(((chosen.angle % 360) + 360) % 360) % 360;
       const from = destinationNeedsGPS(session.intent) ? 'you' : 'chosen start';
       summary.textContent = `Target dot: ${chosen.distance.toFixed(1)} km · ${bearing}° from ${from}. Place distances below use each arrival point.`;
-      box.append(summary);
-      if (session.nearby || session.searchResult.candidates.length < 2) return;
-      const heading = document.createElement('p'); heading.textContent = `${session.searchResult.candidates.length} equally near target dots — choose one:`; box.append(heading);
+      rows.push(summary);
+      if (session.nearby || session.searchResult.candidates.length < 2) {
+        syncDestinationList(box, rows, 'destinationTarget'); return;
+      }
+      const heading = document.createElement('p'); heading.textContent = `${session.searchResult.candidates.length} equally near target dots — choose one:`; rows.push(heading);
       for (const candidate of session.searchResult.candidates) {
         const button = document.createElement('button'), dot = [candidate.i, candidate.j], key = destinationDotKey(dot);
         button.type = 'button'; button.className = 'destination-tie'; button.dataset.destinationTarget = key;
         button.setAttribute('aria-pressed', String(key === destinationDotKey(session.context.dot)));
         const angle = Math.round(((candidate.angle % 360) + 360) % 360) % 360;
         button.textContent = `${destinationDotLabel(dot, session.intent.model)} · ${candidate.distance.toFixed(1)} km · ${angle}°`;
-        button.addEventListener('click', () => {
+        button.onclick = () => {
           if (destinationSession !== session || !destinationContextMatches() || !inspectDestinationIntent(session.intent).result?.candidates.some(point => `${point.i}_${point.j}` === key)) return;
           const choice = destinationChoiceToRetain();
           if (session.intent.source === 'gps' && lastRadarResult?.candidates.some(point => `${point.i}_${point.j}` === key) && !lastRadarTarget?.isHere) {
             selectManualRadarTarget(key);
           }
           beginDestinationIntent({ ...session.intent, targetKey: key }, choice, session.nearby);
-        });
-        box.append(button);
-        if (key === focusedKey) button.focus({ preventScroll: true });
+        };
+        rows.push(button);
       }
+      syncDestinationList(box, rows, 'destinationTarget');
     }
     function refreshDestinationModelControl() {
       const session = destinationSession, id = session?.intent.model || targetArea, model = targetModels[id];
@@ -3071,7 +3115,7 @@
     document.addEventListener('keydown', event => {
       if (destinationMapChoice && !destinationAreaDialog.open && event.key === 'Escape') { event.preventDefault(); finishDestinationMapChoice(false); }
     });
-    setInterval(() => { if (!document.hidden && (destinationSession || destinationPopup)) refreshDestinationUI(); }, 1000);
+    // GPS/state, profile, target-area, data and foreground events refresh these panels.
     async function checkDestinationUpdates(force = false) {
       await Promise.allSettled([refreshDestinationManifest(force), refreshDotNameOverrides(force)]);
       refreshDestinationUI();
@@ -3497,7 +3541,7 @@
       const session = nearbyTargetSession, intent = session.intent, gpsRadar = intent.source === 'gps';
       const list = document.getElementById('nearby-targets-list');
       const focused = list.contains(document.activeElement) ? document.activeElement.dataset.nearbyTarget : null;
-      list.replaceChildren(); nearbyTargetAreaSelect.value = intent.model;
+      const rows = []; nearbyTargetAreaSelect.value = intent.model;
       document.getElementById('nearby-targets-title').textContent = !destinationNeedsGPS(intent) ? 'Nearby Target Dots From This Dot' : 'Nearby Target Dots';
       document.getElementById('nearby-targets-model-message').textContent = gpsRadar
         ? 'This also changes the live GPS radar’s target area.' : 'This planning area is independent of the live GPS radar.';
@@ -3517,6 +3561,7 @@
       const status = document.getElementById('nearby-targets-status');
       if (result.status !== 'target') {
         status.textContent = result.status === 'profile-changed' ? 'Your Notes changed. Close this panel and start a new nearby-dot search.' : destinationReason(result.status, intent);
+        syncDestinationList(list, rows, 'nearbyTarget');
         if (focused) document.getElementById('nearby-targets-close').focus({ preventScroll: true });
         return;
       }
@@ -3547,11 +3592,11 @@
         }
         button.append(label, createTargetCompass(angle, candidate.isHere));
         button.setAttribute('aria-label', `${destinationDotLabel(dot, intent.model)}, ${steps} dot ${steps === 1 ? 'step' : 'steps'}, approximate straight-line range ${limits.minimum.toFixed(1)} to ${limits.maximum.toFixed(1)} kilometres${candidate.isHere ? ', you are here' : `, bearing ${Math.round(angle) % 360} degrees`}${tag ? ', ' + tag.slice(3) : ''}`);
-        button.addEventListener('click', () => chooseNearbyTarget(session, key));
-        list.append(button);
-        if (focused === key) button.focus({ preventScroll: true });
+        button.onclick = () => chooseNearbyTarget(session, key);
+        rows.push(button);
         requestRadarDotNames(dot, intent.model);
       }
+      syncDestinationList(list, rows, 'nearbyTarget');
       if (focused && !list.querySelector(`[data-nearby-target="${focused}"]`)) document.getElementById('nearby-targets-close').focus({ preventScroll: true });
     }
     function chooseNearbyTarget(session, key) {

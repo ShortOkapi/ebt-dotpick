@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 26 October 2026. This guide covers the v2.3.1-rc.2 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 26 October 2026. This guide covers the v2.3.1-rc.3 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -226,6 +226,8 @@ In Euro-use mode, prepared OSM country outlines check a point locally where avai
 The point check identifies territory, not dry land or access, and may include territorial waters. Near a border or where geographic data is incomplete, the result can remain uncertain. It does not replace checking access and safety.
 
 ### Place data and offline use
+
+Place and nearby-dot buttons stay in place as GPS distances or names update. Place-data requests for the same block share one download and validation; recently used blocks, including saved offline copies, are kept in memory. The public-data cache remains separate from your Notes.
 
 **This dot has no prepared place data yet** means it is outside the current coverage, not that it has no places. **Place data could not be downloaded or read from saved data** means no usable downloaded or cached list is available. **No listed destinations** means the covered dot has an empty list for the chosen target area. You can still choose a point on the map in each case.
 
