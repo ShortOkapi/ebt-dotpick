@@ -75,7 +75,7 @@ Do not renumber the grid or substitute an outside-dot town/cell centre when sugg
 
 Manifest updates, name updates and block downloads retain their last usable valid copies on failure. Public data caches are separate from app-version caches. RC1/RC2 records remain readable where supported; missing old name metadata falls back to numeric labels. RC1 also lacks English names and country outlines.
 
-## Audit fixes candidate (2.3.1-rc.4)
+## Audit fixes candidate (2.3.1-rc.5)
 
 This candidate keeps the legacy `ebt_cached_profile` key and `user`/`dots` fields, adding the optional non-negative integer `unlocatedNotes`. Old profiles without it remain readable with zero unlocated notes. The displayed total is located plus unlocated notes; only located notes enter dot aggregates. Exactly `0;0` is the EBT missing-coordinate marker. No coordinate-to-dot arithmetic changes for other notes. Correct previously imported marker notes by reimporting the CSV, not by deleting a whole saved dot.
 
@@ -93,6 +93,14 @@ Only popup clicks with longitudes outside [-180, 180] are wrapped into the ordin
 
 Generated names and name-request throttles use the source block version/hash, not only its folder version. Loaded cell results carry that identity, including saved fallbacks. A generated name is adopted/displayed only while its source matches the current manifest; preferred names and exclusions still win. Manual-target-expiry guidance uses one 12-second timer that removes its own notice, without polling or recalculating targets. Notes/model/manual/automatic context changes clear the timer and message.
 
+The worker saves required files (version-matched index.html, the bundled Euro-use map/world mask/overrides, and SRI-pinned Leaflet JS/CSS) before activation. Icons, web manifest, preferred names and the place manifest are optional and are attempted individually with bounded downloads. A missed optional file can be cached on a later successful request. Prepared blocks continue to use the separate validated place cache. The root page aliases the same cached HTML as index.html. Cache reads stay in the current shell; unrelated sites, query-based public-data checks and other CDNs are not read through global caches.
+
+Required downloads/puts must all finish before deciding whether install succeeds. A failed required file deletes only the incomplete new shell and leaves the old worker/cache in use. The ready marker is written last; a complete existing release cache cannot be overwritten by reusing its identity. Activation removes only older ebt-dotpick-v shells, preserving Notes, legacy caches and target/place data caches. Same-origin files are downloaded anew; only exact checksum-verified pinned Leaflet bytes can be reused from older DotPick shells. The first visit still requires Leaflet. Requests have a 15-second download limit; required and optional stages are each parallel/bounded.
+
+About reports preparation, retained-copy failures and successful saving, with retry and explicit update-reload actions. There is no automatic page reload. The reload action waits for an import to finish and for unsaved-profile recovery to be resolved. Registration checks bypass the HTTP worker cache, deduplicate concurrent checks and repeat on online/visible-return events with an hourly foreground limit. A fully saved shell still depends on the browser retaining site storage.
+
+tools/check-app-release.cjs and .github/workflows/check-app-release.yml check matching page/worker versions and Leaflet pins, the current candidate README branch, and a changed worker/cache identity whenever the page or worker changes. Pushes and PRs run read-only checks; no release or publication occurs. Wait for Check app release to pass before merging. Both app-version literals remain the release identifiers; a cache suffix change is an alternative for an intentional same-version shell rebuild.
+
 ## Release versions
 
 For the current manual workflow, update **both** literals together:
@@ -102,7 +110,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.4**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
+The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.5**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 

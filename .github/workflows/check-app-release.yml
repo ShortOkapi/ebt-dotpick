@@ -1,0 +1,24 @@
+name: Check app release
+on:
+  push:
+    paths: ['index.html', 'sw.js', 'tools/check-app-release.cjs', '.github/workflows/check-app-release.yml']
+  pull_request:
+    paths: ['index.html', 'sw.js', 'tools/check-app-release.cjs', '.github/workflows/check-app-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Check matching versions, dependencies and cache identity
+        env:
+          RELEASE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node tools/check-app-release.cjs

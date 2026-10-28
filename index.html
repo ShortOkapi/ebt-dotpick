@@ -935,9 +935,14 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.4</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.5</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">Formerly EBT Dot Safari.</p>
+      <p id="offline-app-status" class="target-note" role="status">Preparing the offline app…</p>
+      <div class="btn-group" style="margin-bottom:12px">
+        <button id="offline-app-retry" class="gps-retry" type="button" hidden>Retry offline setup</button>
+        <button id="offline-app-reload" class="gps-retry" type="button" hidden>Reload updated app</button>
+      </div>
       <div class="about-share-section">
         <button id="share-app" class="btn" type="button">Share this app</button>
         <p id="share-status" class="about-share-status" role="status" aria-live="polite" aria-atomic="true"></p>
@@ -4203,6 +4208,7 @@
     resumeApp();
 
     // PWA Service Worker Registration
+// The page and saved worker identify themselves independently.
 function updateVersionTooltips(workerVersion = null) {
   if (typeof workerVersion === 'string') offlineAppVersion = workerVersion;
   const element = document.getElementById('app-version'), version = element.textContent.trim();
@@ -4214,41 +4220,100 @@ function updateVersionTooltips(workerVersion = null) {
   document.getElementById('about-btn').title = detail;
 }
 updateVersionTooltips();
-
 function showAppVersion(worker) {
-  // The visible number identifies this HTML copy, independently of a worker reply.
-  if (!worker) return;
-  const channel = new MessageChannel();
-  const timeoutId = setTimeout(() => channel.port1.close(), 3000);
-  channel.port1.onmessage = event => {
-    clearTimeout(timeoutId);
-    updateVersionTooltips(event.data);
-    channel.port1.close();
-  };
-  worker.postMessage('GET_APP_VERSION', [channel.port2]);
+  if (!worker) return Promise.resolve(null);
+  return new Promise(resolve => {
+    const channel = new MessageChannel();
+    const finish = version => { clearTimeout(timer); channel.port1.close(); resolve(version); };
+    const timer = setTimeout(() => finish(null), 3000);
+    channel.port1.onmessage = event => finish(typeof event.data === 'string' ? event.data : null);
+    try { worker.postMessage('GET_APP_VERSION', [channel.port2]); } catch { finish(null); }
+  });
 }
-
 const readmeBase = document.getElementById('app-version').textContent.includes('-rc')
-  ? 'https://github.com/ShortOkapi/ebt-dotpick/blob/release-2.3.0/README.md'
+  ? 'https://github.com/ShortOkapi/ebt-dotpick/blob/release-2.3.1/README.md'
   : 'https://github.com/ShortOkapi/ebt-dotpick';
 for (const link of document.querySelectorAll('[data-readme-section]')) link.href = readmeBase + '#' + link.dataset.readmeSection;
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('controllerchange', () => showAppVersion(navigator.serviceWorker.controller));
-  window.addEventListener('load', async () => {
-    try {
-      const pageWorker = navigator.serviceWorker.controller;
-      if (pageWorker) showAppVersion(pageWorker);
-
-      await navigator.serviceWorker.register('./sw.js');
-
-      if (!pageWorker) {
-        const registration = await navigator.serviceWorker.ready;
-        showAppVersion(registration.active);
-      }
-    } catch {}
-  });
+let offlineRegistration = null, offlineCheck = null, lastOfflineCheck = 0, offlineUpdateFailed = false, offlineReport = 0;
+const observedOfflineWorkers = new WeakSet(), observedOfflineRegistrations = new WeakSet();
+const originalPageWorker = navigator.serviceWorker?.controller;
+function setOfflineStatus(message, retry = false, reload = false) {
+  document.getElementById('offline-app-status').textContent = message;
+  document.getElementById('offline-app-retry').hidden = !retry;
+  document.getElementById('offline-app-reload').hidden = !reload;
 }
+async function reportOfflineStatus(registration = offlineRegistration) {
+  if (!registration || registration !== offlineRegistration) return;
+  const report = ++offlineReport, active = registration.active, version = await showAppVersion(active);
+  if (registration !== offlineRegistration || report !== offlineReport || registration.active !== active) return;
+  if (version) updateVersionTooltips(version);
+  if (registration.installing || registration.waiting) { setOfflineStatus('Preparing the offline app…'); return; }
+  if (offlineUpdateFailed) {
+    setOfflineStatus(version ? `The update could not be prepared. Saved offline app v${version} is still available.`
+      : 'The offline app could not be saved. You can keep using this page online.', true); return;
+  }
+  if (!version) { setOfflineStatus('The offline app is not ready yet. Keep this page online and retry.', true); return; }
+  const current = document.getElementById('app-version').textContent.trim() === 'v' + version;
+  if (current) setOfflineStatus(`App v${version} was saved for offline use.`);
+  else if (originalPageWorker && active !== originalPageWorker && navigator.serviceWorker.controller === active) {
+    setOfflineStatus(`Updated app v${version} is ready. Reload when convenient.`, false, true);
+  } else setOfflineStatus(`The saved offline app is v${version}; this page is a different version. Retry the update.`, true);
+}
+function observeOfflineWorker(worker, registration) {
+  if (!worker || observedOfflineWorkers.has(worker)) return;
+  observedOfflineWorkers.add(worker);
+  const changed = () => {
+    if (registration !== offlineRegistration) return;
+    if (worker.state === 'redundant') {
+      if (registration.installing && registration.installing !== worker) return;
+      offlineUpdateFailed = true; reportOfflineStatus(registration);
+    } else if (worker.state === 'activated') { offlineUpdateFailed = false; reportOfflineStatus(registration); }
+  };
+  worker.addEventListener('statechange', changed); changed();
+}
+async function checkOfflineApp(force = false) {
+  if (!('serviceWorker' in navigator)) { setOfflineStatus('This browser cannot save the offline app. Online use is still available.'); return; }
+  if (offlineCheck) return offlineCheck;
+  if (!force && Date.now() - lastOfflineCheck < 60 * 60 * 1000) return;
+  lastOfflineCheck = Date.now();
+  offlineCheck = (async () => {
+    try {
+      offlineUpdateFailed = false;
+      const registration = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+      offlineRegistration = registration;
+      if (!observedOfflineRegistrations.has(registration)) {
+        observedOfflineRegistrations.add(registration);
+        registration.addEventListener('updatefound', () => {
+          offlineUpdateFailed = false; setOfflineStatus('Preparing the offline app…');
+          observeOfflineWorker(registration.installing, registration);
+        });
+      }
+      observeOfflineWorker(registration.installing, registration);
+      if (force && registration.active && !registration.installing) await registration.update();
+      await reportOfflineStatus(registration);
+    } catch {
+      offlineUpdateFailed = true;
+      if (offlineRegistration) await reportOfflineStatus();
+      else setOfflineStatus('The offline app could not be saved. You can keep using this page online.', true);
+    }
+  })().finally(() => { offlineCheck = null; });
+  return offlineCheck;
+}
+document.getElementById('offline-app-retry').addEventListener('click', () => checkOfflineApp(true));
+document.getElementById('offline-app-reload').addEventListener('click', () => {
+  if (document.getElementById('stats-container').hasAttribute('aria-busy')) {
+    setOfflineStatus('Finish the Notes import before reloading the updated app.', false, true); return;
+  }
+  if (profileStorageAction) { setOfflineStatus('Save or clear the current profile before reloading. Your current Notes may only be available for this visit.', false, true); return; }
+  window.location.reload();
+});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => reportOfflineStatus());
+  window.addEventListener('load', () => checkOfflineApp(true));
+  window.addEventListener('online', () => checkOfflineApp(true));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkOfflineApp(); });
+} else setOfflineStatus('This browser cannot save the offline app. Online use is still available.');
 
   </script>
 </body>

@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 28 October 2026. This guide covers the v2.3.1-rc.4 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 28 October 2026. This guide covers the v2.3.1-rc.5 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -120,6 +120,12 @@ If an update fails or contains invalid data, the app retains its last valid map.
 ## Offline use and saved data
 
 After a successful online visit, the app, your derived conquered-dot data and validated target maps can remain usable offline, provided the browser retains their local storage. Included target datasets also provide fallback data when available.
+
+Before relying on a new offline copy, open **About** and check its offline-app status. A failed optional icon, manifest or place-name download does not prevent saving the core app. The page, pinned Leaflet files and bundled target maps must be available before an update replaces the previous offline copy. An update can reuse checksum-verified Leaflet files from an older saved copy if the CDN is unavailable; a first-time setup still needs those files.
+
+If preparation fails, About offers **Retry offline setup** and identifies a retained older copy when available. Return online and retry. A prepared update does not reload the map while you are using it: About offers **Reload updated app** when a newer worker takes over an already-open page. Finish imports and resolve any unsaved-profile notice before using that button. Older installed app pages may need an ordinary reload to show these new controls. The app checks again on opening, when connectivity returns, and on a visible return if its hourly check is due.
+
+App releases retain a coordinated offline copy rather than replacing the page on every network request. Release checks verify the page/worker versions, pinned Leaflet files, candidate guide link and a distinct cache identity for changed app code.
 
 Background map imagery may need an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed.
 
