@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 26 October 2026. This guide covers the v2.3.1-rc.3 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 28 October 2026. This guide covers the v2.3.1-rc.4 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -191,6 +191,8 @@ Every map-dot popup offers two actions:
 
 The popup's small **Euro-use area / All land worldwide** switch changes its planning area. Recorded **Foreign land** shows **NOT IN EURO-USE AREA** when Euro-use is selected. Recorded **Unconquerable Euro land** shows **UNCONQUERABLE EURO LAND**, in either model. Conquered-note counts remain visible alongside these notices. **NO LAND HERE** uses an explicit **Water Only** classification or the worldwide mask when no land classification is recorded; Euro-use ineligibility alone never establishes water-only status. The same tag appears in the Places panel for a dot identified as no-land, in either target area and even when the place list is empty or unavailable. An empty place list by itself never establishes no land. The coastline-derived worldwide mask does not remove inland lakes, so automatic detection of every lake-only dot is not provided.
 
+If you pan far enough east or west to see another copy of the world, a dot click uses that location’s ordinary longitude and stored dot ID. Starting Places or Nearby from that popup returns the map to its ordinary copy so the planning outline stays aligned. Ordinary longitudes, including the existing ±180° endpoints, retain their legacy lookup. Radar/onward searches still stop at the ±180° seam; they do not search across it. This is a known limitation near that line.
+
 The popup closes with **Esc**. Its X accepts **Enter** or **Space**, and focus returns to the map. Enter on a popup control performs that control's action; Enter on the focused map itself opens a dot inspection.
 
 Classifications come from Target Map's compact export, including eligible, excluded, foreign, sea and explicitly unreviewed cells. An absent/unreviewed cell is not guessed to be foreign or unconquerable; its Euro-use status remains unreviewed. If classification data is unavailable, the app identifies that limitation. These labels describe the recorded Euro-use classification; the worldwide radar continues to use its separate land model.
@@ -226,6 +228,8 @@ In Euro-use mode, prepared OSM country outlines check a point locally where avai
 The point check identifies territory, not dry land or access, and may include territorial waters. Near a border or where geographic data is incomplete, the result can remain uncertain. It does not replace checking access and safety.
 
 ### Place data and offline use
+
+Automatic dot names are tied to each prepared block’s content hash. After a valid data update, an old automatic label is withheld until the corresponding current name is available; a failed or late older reply cannot pass itself off as a current name. Preferred names and explicit name exclusions retain priority. A notice that automatic radar selection has resumed disappears after about 12 seconds, or sooner when the target context changes.
 
 Place and nearby-dot buttons stay in place as GPS distances or names update. Place-data requests for the same block share one download and validation; recently used blocks, including saved offline copies, are kept in memory. The public-data cache remains separate from your Notes.
 

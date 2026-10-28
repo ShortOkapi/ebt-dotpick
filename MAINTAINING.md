@@ -75,7 +75,7 @@ Do not renumber the grid or substitute an outside-dot town/cell centre when sugg
 
 Manifest updates, name updates and block downloads retain their last usable valid copies on failure. Public data caches are separate from app-version caches. RC1/RC2 records remain readable where supported; missing old name metadata falls back to numeric labels. RC1 also lacks English names and country outlines.
 
-## Audit fixes candidate (2.3.1-rc.3)
+## Audit fixes candidate (2.3.1-rc.4)
 
 This candidate keeps the legacy `ebt_cached_profile` key and `user`/`dots` fields, adding the optional non-negative integer `unlocatedNotes`. Old profiles without it remain readable with zero unlocated notes. The displayed total is located plus unlocated notes; only located notes enter dot aggregates. Exactly `0;0` is the EBT missing-coordinate marker. No coordinate-to-dot arithmetic changes for other notes. Correct previously imported marker notes by reimporting the CSV, not by deleting a whole saved dot.
 
@@ -87,6 +87,12 @@ Place, equally-near-target and nearby-dot lists reconcile keyed buttons in place
 
 Concurrent place requests share a pending block read/download/validation keyed by the complete block validation snapshot (including content hash and policy). Validated restored blocks enter the same six-entry memory cache as downloads. Every use moves an entry to the most-recently-used end. Memory hits reuse the parsed, validated object; disk restores and new downloads still validate fully. A failed update can use the previously validated block with the existing saved-data warning. Pending entries are removed on completion or failure so Retry works. Slower older-manifest downloads cannot replace a newer memory entry. Persistent cache keys and stored block shape are unchanged; no prepared data files change.
 
+Country-outline arrays receive a lazily built WeakMap index of ring bounds. Distant rings and projected segments are skipped before the original ray-crossing and 25 m distance tests. A tiny conservative bound margin prevents rounding from dropping borderline candidates; it does not enlarge the actual 25 m rule. The index holds existing rings, not duplicate vertex arrays, and follows their lifetime. The validated public outlines are treated as immutable.
+
+Only popup clicks with longitudes outside [-180, 180] are wrapped into the ordinary longitude range before the existing dot calculation. The popup remains at the clicked copy; its planning actions recenter the ordinary map copy. In-range coordinates and grid constants are untouched. Radar searches remain clamped at the seam; do not wrap columns modulo 856, since a world is not exactly 856 columns wide.
+
+Generated names and name-request throttles use the source block version/hash, not only its folder version. Loaded cell results carry that identity, including saved fallbacks. A generated name is adopted/displayed only while its source matches the current manifest; preferred names and exclusions still win. Manual-target-expiry guidance uses one 12-second timer that removes its own notice, without polling or recalculating targets. Notes/model/manual/automatic context changes clear the timer and message.
+
 ## Release versions
 
 For the current manual workflow, update **both** literals together:
@@ -96,7 +102,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.3**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
+The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.4**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 

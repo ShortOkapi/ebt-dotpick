@@ -935,7 +935,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.3</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.4</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">Formerly EBT Dot Safari.</p>
       <div class="about-share-section">
@@ -1067,6 +1067,16 @@
     let lastRadarResult = null;
     let manualRadarTarget = null;
     let radarChoiceMessage = '';
+    let radarChoiceMessageTimer = null;
+    function setRadarChoiceMessage(message = '') {
+      clearTimeout(radarChoiceMessageTimer); radarChoiceMessageTimer = null;
+      document.querySelector('[data-radar-choice-message]')?.remove();
+      radarChoiceMessage = message;
+      if (message) radarChoiceMessageTimer = setTimeout(() => {
+        radarChoiceMessage = ''; radarChoiceMessageTimer = null;
+        document.querySelector('[data-radar-choice-message]')?.remove();
+      }, 12000);
+    }
     try {
       const saved = localStorage.getItem(TARGET_AREA_KEY);
       if (Object.hasOwn(targetModels, saved)) targetArea = saved;
@@ -1375,7 +1385,7 @@
 
     function refreshUIState() {
       if (manualRadarTarget?.profile !== dotMap || dotMap.size === 0) manualRadarTarget = null;
-      radarChoiceMessage = '';
+      setRadarChoiceMessage();
       resetRadarTarget();
       updateMaxCount();
       buildRenderRows();
@@ -1925,7 +1935,15 @@
       const savingHelpOpen = document.getElementById('csv-saving-help').open;
       for (const item of panels) setPanelCollapsed(item.panel, true);
       fitPanels();
-      const lat = latlng.lat, lon = latlng.lng, dot = destinationDot(lat, lon), [i, j] = dot;
+      const lat = latlng.lat, lon = latlng.lng >= -180 && latlng.lng <= 180 ? latlng.lng
+        : ((latlng.lng + 180) % 360 + 360) % 360 - 180;
+      const dot = destinationDot(lat, lon), [i, j] = dot;
+      const startFromPopup = action => {
+        if (lon !== latlng.lng) {
+          map.closePopup(); map.setView([lat, lon], map.getZoom(), { animate: false });
+        }
+        action({ lat, lon });
+      };
       const south = (minLat + i * dotH).toFixed(4), north = (minLat + (i + 1) * dotH).toFixed(4);
       const west = (minLon + j * dotW).toFixed(4), east = (minLon + (j + 1) * dotW).toFixed(4);
       const content = document.createElement('div'), heading = document.createElement('strong'), badge = document.createElement('div');
@@ -1946,12 +1964,12 @@
       const areaToggle = document.createElement('button'), startNote = document.createElement('span');
       areaToggle.type = 'button'; areaToggle.className = 'dot-popup-area-toggle'; areaToggle.setAttribute('role', 'switch');
       startNote.textContent = 'Start dot excluded'; hint.append(areaToggle, startNote);
-      button.addEventListener('click', () => openMapDestinationPicker({ lat, lon }, 'this'));
-      other.addEventListener('click', () => openMapNearbyTargetPicker({ lat, lon }));
+      button.addEventListener('click', () => startFromPopup(origin => openMapDestinationPicker(origin, 'this')));
+      other.addEventListener('click', () => startFromPopup(openMapNearbyTargetPicker));
       areaToggle.addEventListener('click', event => {
         event.stopPropagation(); planningArea = planningTargetArea() === 'euro-use' ? 'worldwide' : 'euro-use';
         refreshDestinationUI();
-        loadDestinationCell(dot, planningTargetArea()).then(result => { rememberDotNames(dot, result.names); if (destinationPopup?.popup === popup) { refreshDestinationPopup(); popup.update(); } }).catch(() => {});
+        loadDestinationCell(dot, planningTargetArea()).then(result => { rememberDotNames(dot, result.names, result.nameRevision); if (destinationPopup?.popup === popup) { refreshDestinationPopup(); popup.update(); } }).catch(() => {});
       });
       action.append(button, other, hint); content.append(action);
       const feedbackRow = document.createElement('p'), feedback = document.createElement('button');
@@ -1977,7 +1995,7 @@
         event.preventDefault(); event.stopPropagation(); closeDotPopup();
       });
       loadDestinationCell(dot, planningTargetArea()).then(result => {
-        rememberDotNames(dot, result.names);
+        rememberDotNames(dot, result.names, result.nameRevision);
         if (destinationPopup === state) { refreshDestinationPopup(); popup.update(); }
       }).catch(() => {});
     }
@@ -2330,7 +2348,7 @@
       if (!cell) return unavailable;
       const points = cell[model === 'euro-use' ? 'e' : 'w'].map(index => cell.p[index]);
       return { status: cell.q === 'partial' ? 'partial' : points.length ? 'listed' : 'empty', points, allPoints: cell.p,
-        names: cell.n || null, boundaries: entry.data.boundaries || null, stale: stale || destinationData.failed, saveFailed: entry.saveFailed };
+        names: cell.n || null, nameRevision: destinationNameRevision(dot, entry.manifest), boundaries: entry.data.boundaries || null, stale: stale || destinationData.failed, saveFailed: entry.saveFailed };
     }
     // A reviewed, copyable message only. Notes and the live GPS position are not included.
     const feedbackDialog = document.getElementById('feedback-dialog');
@@ -2443,16 +2461,21 @@
       })().finally(() => { dotNameData.inFlight = null; refreshDestinationUI(); renderMapData(); });
       return dotNameData.inFlight;
     }
-    function rememberDotNames(dot, names) {
-      if (!names) return;
+    function destinationNameRevision(dot, manifest = destinationData.manifest) {
+      const blockKey = `${Math.floor(dot[0] / 8)}_${Math.floor(dot[1] / 8)}`;
+      return `${manifest?.version || 'pending'}:${manifest?.blocks[blockKey]?.sha256 || 'not-covered'}`;
+    }
+    function rememberDotNames(dot, names, revision) {
+      if (!names || revision !== destinationNameRevision(dot)) return;
       const key = destinationDotKey(dot);
-      dotNameData.generated.delete(key); dotNameData.generated.set(key, names);
+      dotNameData.generated.delete(key); dotNameData.generated.set(key, { revision, names });
       while (dotNameData.generated.size > 384) dotNameData.generated.delete(dotNameData.generated.keys().next().value);
     }
     function destinationDotName(dot, model) {
-      const key = destinationDotKey(dot), entry = dotNameData.overrides.get(key);
+      const key = destinationDotKey(dot), entry = dotNameData.overrides.get(key), generated = dotNameData.generated.get(key);
       const preferred = entry?.[model === 'euro-use' ? 'nameEuroUse' : 'nameWorldwide'] || entry?.name;
-      return dotNameData.excluded.has(key) ? null : preferred || dotNameData.generated.get(key)?.[model] || null;
+      return dotNameData.excluded.has(key) ? null : preferred ||
+        (generated?.revision === destinationNameRevision(dot) ? generated.names[model] : null) || null;
     }
     function destinationDotLabel(dot, model) {
       const name = destinationDotName(dot, model);
@@ -2468,13 +2491,13 @@
     function requestRadarDotNames(dot, model) {
       const dotKey = destinationDotKey(dot), entry = dotNameData.overrides.get(dotKey);
       if (dotNameData.excluded.has(dotKey) || entry?.name || entry?.[model === 'euro-use' ? 'nameEuroUse' : 'nameWorldwide']) return;
-      const key = `${destinationData.manifest?.version || 'pending'}:${dotKey}`, now = Date.now();
+      const revision = destinationNameRevision(dot), key = `${revision}:${dotKey}`, now = Date.now();
       if (dotNameData.radarAttempts.has(key) && now - dotNameData.radarAttempts.get(key) < DESTINATION_REFRESH_MS) return;
       dotNameData.radarAttempts.set(key, now);
       while (dotNameData.radarAttempts.size > 128) dotNameData.radarAttempts.delete(dotNameData.radarAttempts.keys().next().value);
       loadDestinationCell(dot, model).then(result => {
-        rememberDotNames(dot, result.names);
-        dotNameData.radarAttempts.set(`${destinationData.manifest?.version || 'pending'}:${dotKey}`, now);
+        rememberDotNames(dot, result.names, result.nameRevision);
+        dotNameData.radarAttempts.set(`${result.nameRevision || revision}:${dotKey}`, now);
         while (dotNameData.radarAttempts.size > 128) dotNameData.radarAttempts.delete(dotNameData.radarAttempts.keys().next().value);
         renderRadarDotReference();
         renderNearbyTargetList();
@@ -2667,7 +2690,7 @@
       const result = await loadDestinationCell(session.context.dot, session.context.model, force);
       if (destinationSession !== session || token !== session.request || !destinationContextMatches()) return;
       session.result = result;
-      rememberDotNames(session.context.dot, result.names);
+      rememberDotNames(session.context.dot, result.names, result.nameRevision);
       const choice = session.retainedChoice || (session.selected && !session.selected.manual ? destinationChoiceToRetain(session) : null);
       if (choice) {
         session.selected = retainedDestination(choice, session.context, result);
@@ -2993,6 +3016,19 @@
       }
       document.getElementById('destination-map-use').disabled = !check.valid;
     }
+    const destinationBoundaryIndexes = new WeakMap();
+    function destinationBoundaryIndex(boundaries) {
+      if (destinationBoundaryIndexes.has(boundaries)) return destinationBoundaryIndexes.get(boundaries);
+      const index = boundaries.map(area => ({ ...area, polygons: area.polygons.map(polygon => polygon.map(ring => {
+        let west = Infinity, east = -Infinity, south = Infinity, north = -Infinity;
+        for (const [lon, lat] of ring) {
+          west = Math.min(west, lon); east = Math.max(east, lon);
+          south = Math.min(south, lat); north = Math.max(north, lat);
+        }
+        return { ring, west, east, south, north };
+      })) }));
+      destinationBoundaryIndexes.set(boundaries, index); return index;
+    }
     function classifyDestinationArea(point, boundaries = destinationSession?.result?.boundaries) {
       const unknown = { status: 'unknown', message: 'Euro-use area could not be checked here.' };
       if (!boundaries) return unknown;
@@ -3000,20 +3036,27 @@
       // A 25 m uncertainty band also covers preparation simplification/rounding.
       const xScale = 111320 * Math.cos(point.lat * Math.PI / 180), yScale = 111320;
       let nearBoundary = false;
-      const inRing = ring => {
+      // Bounds reject distant rings/segments only; the existing ray and 25 m tests decide the result.
+      const limit = 25 + 1e-7, lonMargin = limit / Math.abs(xScale), latMargin = limit / yScale;
+      const inRing = ({ ring, west, east, south, north }) => {
+        if (point.lon < west - lonMargin || point.lon > east + lonMargin ||
+            point.lat < south - latMargin || point.lat > north + latMargin) return false;
         let inside = false;
         for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
           const a = ring[j], b = ring[i];
           if ((a[1] > point.lat) !== (b[1] > point.lat) && point.lon < (b[0] - a[0]) * (point.lat - a[1]) / (b[1] - a[1]) + a[0]) inside = !inside;
+          if (nearBoundary) continue;
           const ax = (a[0] - point.lon) * xScale, ay = (a[1] - point.lat) * yScale;
           const bx = (b[0] - point.lon) * xScale, by = (b[1] - point.lat) * yScale;
+          if (ax > limit && bx > limit || ax < -limit && bx < -limit ||
+              ay > limit && by > limit || ay < -limit && by < -limit) continue;
           const dx = bx - ax, dy = by - ay, length = dx * dx + dy * dy;
           const t = length ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / length)) : 0;
           if (Math.hypot(ax + t * dx, ay + t * dy) <= 25) nearBoundary = true;
         }
         return inside;
       };
-      const matches = boundaries.filter(area => area.polygons.some(polygon => {
+      const matches = destinationBoundaryIndex(boundaries).filter(area => area.polygons.some(polygon => {
         const rings = polygon.map(inRing);
         return rings[0] && !rings.slice(1).some(Boolean);
       }));
@@ -3468,7 +3511,7 @@
       const candidate = radarSearch().nearby?.find(point => `${point.i}_${point.j}` === key);
       if (!candidate) return false;
       manualRadarTarget = { key, profile: dotMap };
-      radarChoiceMessage = '';
+      setRadarChoiceMessage();
       updateHUD(currentPos[0], currentPos[1]);
       return true;
     }
@@ -3617,7 +3660,7 @@
       closeDestinationPicker(); showNearbyTargetPicker(nearby, true);
     }
     function useAutomaticNearestTarget() {
-      manualRadarTarget = null; radarChoiceMessage = ''; lastRadarTarget = null;
+      manualRadarTarget = null; setRadarChoiceMessage(); lastRadarTarget = null;
       if (currentPos) updateHUD(currentPos[0], currentPos[1]);
       else refreshDestinationUI();
     }
@@ -3645,6 +3688,7 @@
     });
 
     function resetRadarTarget() {
+      setRadarChoiceMessage();
       lastRadarTarget = null;
       lastRadarResult = null;
       refreshDestinationUI();
@@ -3760,7 +3804,7 @@
       const hudDetails = document.getElementById('hud-details');
       hudDetails.classList.remove('hud-location-message');
       if (totalNotesCount === 0) {
-        manualRadarTarget = null; radarChoiceMessage = '';
+        manualRadarTarget = null; setRadarChoiceMessage();
         resetRadarTarget();
         setTargetSummary(null);
         hudDetails.innerHTML = `<p class="target-note">Load your EBT Notes file to activate the target radar.</p>`;
@@ -3770,7 +3814,7 @@
       if (manualRadarTarget && targetModels[targetArea].state === 'ready' &&
           !search.nearby?.some(candidate => `${candidate.i}_${candidate.j}` === manualRadarTarget.key)) {
         manualRadarTarget = null; lastRadarTarget = null;
-        radarChoiceMessage = 'Your selected dot is no longer an eligible unconquered target within 150 km. Automatic nearest selection has resumed.';
+        setRadarChoiceMessage('Your selected dot is no longer an eligible unconquered target within 150 km. Automatic nearest selection has resumed.');
       }
       const result = resolveRadarChoice(search, lastRadarTarget);
       lastRadarResult = result;
@@ -3788,9 +3832,12 @@
       let message = result.primary.isHere ? 'You are already in an unconquered target dot.'
         : manualRadarTarget ? 'Your chosen target stays selected as you move. Use Nearby Target Dots to change it or return to automatic nearest selection.'
         : result.stabilityHeld ? 'Similar distance: keeping this target while it is within 10 m of the nearest. Its own distance and bearing are shown above.' : '';
-      if (radarChoiceMessage) message += `${message ? ' ' : ''}${radarChoiceMessage}`;
       hudDetails.replaceChildren();
       if (message) { const note = document.createElement('p'); note.className = 'target-note'; note.textContent = message; hudDetails.append(note); }
+      if (radarChoiceMessage) {
+        const notice = document.createElement('p'); notice.className = 'target-note'; notice.dataset.radarChoiceMessage = '';
+        notice.textContent = radarChoiceMessage; hudDetails.append(notice);
+      }
       renderRadarDotReference();
     }
 

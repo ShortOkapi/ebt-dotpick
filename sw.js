@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.1-rc.3';
+const APP_VERSION = '2.3.1-rc.4';
 const CACHE_PREFIX = 'ebt-dotpick-v';
 // Refresh the installed shell after final polish, keeping the pending release version.
 const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}-shell2`;
