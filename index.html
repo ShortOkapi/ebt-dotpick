@@ -293,24 +293,7 @@
       line-height: 1.4;
     }
     #radar-last-fix-note { color: #92400e; font-weight: 600; }
-    .target-alternatives { margin-top: 8px; }
-    .target-alternatives summary { cursor: pointer; padding: 8px 0; }
-    .target-alternatives button {
-      display: block;
-      width: 100%;
-      min-height: 44px;
-      margin-top: 4px;
-      padding: 6px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      background: #f8fafc;
-      color: #0f172a;
-      font: inherit;
-      text-align: left;
-      cursor: pointer;
-    }
-    .target-alternatives button[aria-pressed="true"] { border-color: #c2410c; }
-    .target-area-control select:focus-visible, .target-alternatives button:focus-visible {
+    .target-area-control select:focus-visible {
       outline: 2px solid #c2410c;
       outline-offset: 2px;
     }
@@ -869,7 +852,7 @@
     </div>
     <button id="destination-retry" class="gps-retry" type="button" hidden>Retry place data</button>
     <section id="destination-selection" aria-label="Selected destination" aria-live="polite" tabindex="-1" hidden></section>
-    <a id="destination-maps" class="btn" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" hidden>Open in Google Maps ↗</a>
+    <a id="destination-maps" class="btn" href="https://www.google.com/maps/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" hidden>Open in Google Maps ↗</a>
     <p class="feedback-row"><button id="destination-feedback" class="feedback-link" type="button" hidden>Feedback</button></p>
     <p class="target-note">Check access and safety. These are suggested points, not verified arrival places.</p>
     <p class="target-note">Place data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a> · ODbL. Additional place data: <a href="https://www.geonames.org/" target="_blank" rel="noopener noreferrer">GeoNames</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.</p>
@@ -935,10 +918,11 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.5</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.6</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
-      <p class="target-note">Formerly EBT Dot Safari.</p>
-      <p id="offline-app-status" class="target-note" role="status">Preparing the offline app…</p>
+      <p class="target-note">(Formerly EBT Dot Safari)</p>
+      <p id="offline-app-status" class="target-note" role="status" aria-atomic="true">Preparing the offline app…</p>
+      <p class="target-note">Background maps may require an internet connection.</p>
       <div class="btn-group" style="margin-bottom:12px">
         <button id="offline-app-retry" class="gps-retry" type="button" hidden>Retry offline setup</button>
         <button id="offline-app-reload" class="gps-retry" type="button" hidden>Reload updated app</button>
@@ -2459,6 +2443,7 @@
           dotNameData.loaded = true;
         }
         try {
+          if (!navigator.onLine) throw new Error('Offline');
           const body = await fetchDestinationText(new URL('./dot-name-overrides.json', window.location.href), true), data = JSON.parse(body);
           const checkedAt = Date.now(); adopt(data, checkedAt, 'network'); dotNameData.failed = false;
           try { await (await caches.open(DESTINATION_DATA_CACHE)).put(destinationCacheKey('dot-name-overrides'), new Response(JSON.stringify({ schema: 1, checkedAt, data }))); } catch {}
@@ -2607,7 +2592,7 @@
     }
     function renderDestinationSelection() {
       const point = destinationSession?.selected, text = document.getElementById('destination-selection'), link = document.getElementById('destination-maps');
-      text.hidden = !point; link.hidden = !point || !!point.areaReview || !destinationContextMatches(); link.removeAttribute('href');
+      text.hidden = !point; link.hidden = !point || !!point.areaReview || !destinationContextMatches(); link.href = 'https://www.google.com/maps/';
       if (!point || !destinationContextMatches()) return;
       text.replaceChildren();
       const label = document.createElement('span'), name = document.createElement('strong'), detail = document.createElement('span');
@@ -2707,12 +2692,12 @@
         : result.status === 'unavailable' ? 'Place data could not be downloaded or read from saved data. Connect and retry, or choose a point on the map.'
         : result.status === 'empty' ? 'No listed destinations in this dot for this target area.'
         : result.status === 'partial' ? 'Some place data is unclassified. The suggestions may be incomplete.' : 'Choose a suggested place or a point on the map.';
-      if (result.stale) message += ' Using saved place data; update unavailable.';
+      if (result.stale) message += navigator.onLine ? ' Using saved place data; update unavailable.' : ' Using saved place data while offline.';
       if (result.saveFailed || destinationData.saveFailed) message += ' This data could not be saved for offline use.';
       if (choice && session.selected) message += ` Previous destination kept: ${session.selected.name}.`;
       if (choice && !session.selected) message += ' The previous destination could not be kept for this target and area. Choose a destination again.';
       document.getElementById('destination-status').textContent = message;
-      document.getElementById('destination-retry').hidden = result.status !== 'unavailable' && !result.stale;
+      document.getElementById('destination-retry').hidden = result.status !== 'unavailable' && (!result.stale || !navigator.onLine);
       renderDestinationHeadings(); renderDestinationTargets(); refreshDestinationOutline();
       renderDestinationPlaces();
       reviewRetainedDestinationArea();
@@ -2741,7 +2726,7 @@
       document.getElementById('destination-list').replaceChildren();
       document.getElementById('destination-selection').hidden = true;
       document.getElementById('destination-maps').hidden = true;
-      document.getElementById('destination-maps').removeAttribute('href');
+      document.getElementById('destination-maps').href = 'https://www.google.com/maps/';
       document.getElementById('destination-retry').hidden = true;
       document.getElementById('destination-choose-map').disabled = true;
       document.getElementById('destination-choose-map').setAttribute('aria-pressed', 'false');
@@ -2920,7 +2905,7 @@
       if (!destinationNeedsGPS(session.intent)) {
         session.foregroundPaused = true; session.returnToList ||= !!destinationMapChoice;
         stopDestinationMapChoice(); document.getElementById('destination-maps').hidden = true;
-        document.getElementById('destination-maps').removeAttribute('href'); return;
+        document.getElementById('destination-maps').href = 'https://www.google.com/maps/'; return;
       }
       if (session.invalid && !session.pendingModel && !session.waitingForGPS) return;
       if (!gpsEnabled || session.intent.source === 'gps' && session.intent.model !== targetArea ||
@@ -3367,6 +3352,7 @@
         : model.state === 'error' ? 'Target map unavailable. Connect and retry.' : 'Loading target map…';
       if (model.state === 'ready') {
         if (model.refreshing) text += ' Checking for map updates…';
+        else if (!navigator.onLine) text += ' Offline. Using saved map.';
         else if (model.updateFailed) text += ' Using saved map; update unavailable.';
         else if (model.checkedAt) text += ' Map checked.';
         if (model.saveFailed) text += ' Latest update could not be saved offline.';
@@ -3374,7 +3360,7 @@
       if (!targetChoiceSaved) text += ' Choice could not be saved on this device.';
       message.textContent = text;
       const retry = document.getElementById('target-area-retry');
-      retry.hidden = model.state !== 'error' && !model.updateFailed;
+      retry.hidden = model.state !== 'error' && (!model.updateFailed || !navigator.onLine);
       retry.textContent = model.state === 'ready' ? 'Retry update' : 'Retry target map';
     }
 
@@ -4200,7 +4186,20 @@
     setInterval(() => {
       if (!document.hidden) { refreshTargetModels(); checkDestinationUpdates(); }
     }, TARGET_REFRESH_MS);
-    window.addEventListener('online', () => { refreshTargetModels(true); checkDestinationUpdates(true); });
+    function refreshConnectionNotices() {
+      refreshTargetAreaControl();
+      const session = destinationSession, result = session?.result;
+      if (!result || session.invalid || session.pendingModel) return;
+      if (result.stale) {
+        const status = document.getElementById('destination-status');
+        const before = navigator.onLine ? 'Using saved place data while offline.' : 'Using saved place data; update unavailable.';
+        const after = navigator.onLine ? 'Using saved place data; update unavailable.' : 'Using saved place data while offline.';
+        if (status.textContent.includes(before)) status.textContent = status.textContent.replace(before, after);
+      }
+      document.getElementById('destination-retry').hidden = result.status !== 'unavailable' && (!result.stale || !navigator.onLine);
+    }
+    window.addEventListener('offline', refreshConnectionNotices);
+    window.addEventListener('online', () => { refreshConnectionNotices(); refreshTargetModels(true); checkDestinationUpdates(true); });
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) { refreshTargetModels(); checkDestinationUpdates(); }
     });
@@ -4236,23 +4235,40 @@ const readmeBase = document.getElementById('app-version').textContent.includes('
 for (const link of document.querySelectorAll('[data-readme-section]')) link.href = readmeBase + '#' + link.dataset.readmeSection;
 
 let offlineRegistration = null, offlineCheck = null, lastOfflineCheck = 0, offlineUpdateFailed = false, offlineReport = 0;
+let offlineRetryCount = 0, offlineRetryAttempt = 0, offlineRetryPending = false;
 const observedOfflineWorkers = new WeakSet(), observedOfflineRegistrations = new WeakSet();
 const originalPageWorker = navigator.serviceWorker?.controller;
-function setOfflineStatus(message, retry = false, reload = false) {
+function setOfflineStatus(message, retry = false, reload = false, busy = false) {
   document.getElementById('offline-app-status').textContent = message;
-  document.getElementById('offline-app-retry').hidden = !retry;
+  const button = document.getElementById('offline-app-retry');
+  button.hidden = !retry; button.disabled = busy;
+  button.textContent = busy ? 'Retrying offline setup…' : 'Retry offline setup';
   document.getElementById('offline-app-reload').hidden = !reload;
+}
+function showOfflinePreparation() {
+  setOfflineStatus(offlineRetryPending ? `Retrying offline setup (retry ${offlineRetryAttempt})…` : 'Preparing the offline app…',
+    offlineRetryPending, false, offlineRetryPending);
+}
+function showOfflineFailure(version = null) {
+  offlineRetryPending = false;
+  if (!navigator.onLine && version && !offlineRetryAttempt) {
+    setOfflineStatus(`Offline. Saved app v${version} is still available. Updates will be checked after reconnection.`); return;
+  }
+  const result = offlineRetryAttempt ? `Offline setup retry ${offlineRetryAttempt} failed.`
+    : version ? 'The update could not be prepared.' : 'The offline app could not be saved.';
+  const explanation = navigator.onLine ? 'Required app files could not all be saved. Check your connection and retry.'
+    : 'The browser is offline. Reconnect and retry.';
+  const retained = version ? `Saved offline app v${version} is still available.` : 'You can keep using this page online.';
+  setOfflineStatus(`${result} ${explanation} ${retained}`, true);
 }
 async function reportOfflineStatus(registration = offlineRegistration) {
   if (!registration || registration !== offlineRegistration) return;
   const report = ++offlineReport, active = registration.active, version = await showAppVersion(active);
   if (registration !== offlineRegistration || report !== offlineReport || registration.active !== active) return;
   if (version) updateVersionTooltips(version);
-  if (registration.installing || registration.waiting) { setOfflineStatus('Preparing the offline app…'); return; }
-  if (offlineUpdateFailed) {
-    setOfflineStatus(version ? `The update could not be prepared. Saved offline app v${version} is still available.`
-      : 'The offline app could not be saved. You can keep using this page online.', true); return;
-  }
+  if (registration.installing || registration.waiting) { showOfflinePreparation(); return; }
+  if (offlineUpdateFailed) { showOfflineFailure(version); return; }
+  offlineRetryPending = false;
   if (!version) { setOfflineStatus('The offline app is not ready yet. Keep this page online and retry.', true); return; }
   const current = document.getElementById('app-version').textContent.trim() === 'v' + version;
   if (current) setOfflineStatus(`App v${version} was saved for offline use.`);
@@ -4272,11 +4288,15 @@ function observeOfflineWorker(worker, registration) {
   };
   worker.addEventListener('statechange', changed); changed();
 }
-async function checkOfflineApp(force = false) {
+async function checkOfflineApp(force = false, retry = false) {
   if (!('serviceWorker' in navigator)) { setOfflineStatus('This browser cannot save the offline app. Online use is still available.'); return; }
   if (offlineCheck) return offlineCheck;
+  if (offlineRetryPending && (offlineRegistration?.installing || offlineRegistration?.waiting)) return reportOfflineStatus();
   if (!force && Date.now() - lastOfflineCheck < 60 * 60 * 1000) return;
   lastOfflineCheck = Date.now();
+  offlineRetryAttempt = retry ? ++offlineRetryCount : 0;
+  offlineRetryPending = retry;
+  if (retry) showOfflinePreparation();
   offlineCheck = (async () => {
     try {
       offlineUpdateFailed = false;
@@ -4285,7 +4305,7 @@ async function checkOfflineApp(force = false) {
       if (!observedOfflineRegistrations.has(registration)) {
         observedOfflineRegistrations.add(registration);
         registration.addEventListener('updatefound', () => {
-          offlineUpdateFailed = false; setOfflineStatus('Preparing the offline app…');
+          offlineUpdateFailed = false; showOfflinePreparation();
           observeOfflineWorker(registration.installing, registration);
         });
       }
@@ -4295,12 +4315,12 @@ async function checkOfflineApp(force = false) {
     } catch {
       offlineUpdateFailed = true;
       if (offlineRegistration) await reportOfflineStatus();
-      else setOfflineStatus('The offline app could not be saved. You can keep using this page online.', true);
+      else showOfflineFailure();
     }
   })().finally(() => { offlineCheck = null; });
   return offlineCheck;
 }
-document.getElementById('offline-app-retry').addEventListener('click', () => checkOfflineApp(true));
+document.getElementById('offline-app-retry').addEventListener('click', () => checkOfflineApp(true, true));
 document.getElementById('offline-app-reload').addEventListener('click', () => {
   if (document.getElementById('stats-container').hasAttribute('aria-busy')) {
     setOfflineStatus('Finish the Notes import before reloading the updated app.', false, true); return;

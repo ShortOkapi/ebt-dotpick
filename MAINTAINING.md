@@ -1,6 +1,6 @@
 # EBT DotPick — maintainer guide
 
-Updated: **26 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
+Updated: **29 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
 
 ## Dot names and destinations are separate
 
@@ -75,7 +75,7 @@ Do not renumber the grid or substitute an outside-dot town/cell centre when sugg
 
 Manifest updates, name updates and block downloads retain their last usable valid copies on failure. Public data caches are separate from app-version caches. RC1/RC2 records remain readable where supported; missing old name metadata falls back to numeric labels. RC1 also lacks English names and country outlines.
 
-## Audit fixes candidate (2.3.1-rc.5)
+## Audit fixes candidate (2.3.1-rc.6)
 
 This candidate keeps the legacy `ebt_cached_profile` key and `user`/`dots` fields, adding the optional non-negative integer `unlocatedNotes`. Old profiles without it remain readable with zero unlocated notes. The displayed total is located plus unlocated notes; only located notes enter dot aggregates. Exactly `0;0` is the EBT missing-coordinate marker. No coordinate-to-dot arithmetic changes for other notes. Correct previously imported marker notes by reimporting the CSV, not by deleting a whole saved dot.
 
@@ -99,7 +99,17 @@ Required downloads/puts must all finish before deciding whether install succeeds
 
 About reports preparation, retained-copy failures and successful saving, with retry and explicit update-reload actions. There is no automatic page reload. The reload action waits for an import to finish and for unsaved-profile recovery to be resolved. Registration checks bypass the HTTP worker cache, deduplicate concurrent checks and repeat on online/visible-return events with an hourly foreground limit. A fully saved shell still depends on the browser retaining site storage.
 
+Explicit offline retries keep a visible disabled action during installation and report a numbered failure result, including retained older app copies. Automatic offline checks with a saved app explain that updates wait for reconnection. Ready target maps and stale place data use offline wording and withhold their update-only retry while navigator.onLine is false; missing data remains a recoverable error. Preferred-name loading still restores saved/bundled data first, but skips its network recheck while the browser reports offline. These notices do not change cache validation or data adoption. Browser connectivity flags are hints; an online request may still fail.
+
+The hidden Maps link has a neutral Google Maps href in its static HTML and when reset. It stays hidden until selection/context review permits its coordinate URL, and the existing click guard revalidates before navigation. Old coordinates are cleared without making a placeholder anchor carry target/rel/referrerpolicy. The unused target-alternatives styles are removed; the live area selector's keyboard-focus outline is preserved.
+
 tools/check-app-release.cjs and .github/workflows/check-app-release.yml check matching page/worker versions and Leaflet pins, the current candidate README branch, and a changed worker/cache identity whenever the page or worker changes. Pushes and PRs run read-only checks; no release or publication occurs. Wait for Check app release to pass before merging. Both app-version literals remain the release identifiers; a cache suffix change is an alternative for an intentional same-version shell rebuild.
+
+## Future place-quality review (agreed 29 October 2026)
+
+Keep the current prepared lists for this reliability release. Ordinary automatic suggestions currently rank settlement type, known population and folded name, with reviewed exceptions taking precedence; only model-specific shortlists reach the app. Missing population and inconsistent population geography can produce poor choices. Loures [459, 403] and its surrounding dots are concrete review cases: do not equate the stored 43,127 with the census settlement figure of 7,533 supplied by Miguel.
+
+The agreed direction is stable automatic suggestions informed by settlement/administrative importance and comparable population data, with reviewable per-dot preferences. Dot names remain independent of destination choices. Review familiar areas incrementally rather than requiring a manual pass over the whole Euro-use area. Do not randomize the shortlist. EBT citymanager/note data, if it becomes available and sufficiently detailed, may supply the main selection basis together with per-dot review; its adequacy is not established and integration is not promised. Ordinary settlements currently use one representative point, not automatic suggestions in every intersected dot. Any future border-spanning destination must have a real validated point inside its offered dot. No Places data or selection policy changes are implemented by this candidate.
 
 ## Release versions
 
@@ -110,7 +120,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.5**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
+The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.6**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 

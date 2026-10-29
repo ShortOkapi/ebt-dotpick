@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 28 October 2026. This guide covers the v2.3.1-rc.5 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 29 October 2026. This guide covers the v2.3.1-rc.6 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -127,7 +127,9 @@ If preparation fails, About offers **Retry offline setup** and identifies a reta
 
 App releases retain a coordinated offline copy rather than replacing the page on every network request. Release checks verify the page/worker versions, pinned Leaflet files, candidate guide link and a distinct cache identity for changed app code.
 
-Background map imagery may need an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed.
+Background maps may require an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed. A grey background can therefore be expected offline even when the saved app, your conquered dots and downloaded planning data are working. Turning GPS off does not turn off the network or clear tiles; after a reload it can leave the map at a different position/zoom requiring other tiles.
+
+**Retry offline setup** keeps its button visible and disabled during the attempt. If another attempt fails, About identifies the failed retry and explains that required app files could not all be saved, or that the browser reports offline. After restoring the connection or a temporarily missing local test file, retry again. Saved target maps and stale place lists remain usable offline; their notices identify saved data without presenting an update retry until the browser is online. Unavailable data still offers recovery guidance.
 
 Watch for **Saved Offline** or **Not saved** when importing your personal map. If saving fails, a prominent message explains that the current profile works for this visit only and an older saved map may return next time. **Try saving again** retries without reimporting. A failed save retains the previous saved copy. An unreadable saved profile is reported and retained until you accept a replacement. Clearing browser data, private browsing or changing browsers can affect saved data. Keep your downloaded Notes CSV so you can load it again if needed.
 
