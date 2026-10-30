@@ -1,6 +1,6 @@
 # EBT DotPick — maintainer guide
 
-Updated: **29 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
+Updated: **30 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
 
 ## Dot names and destinations are separate
 
@@ -75,7 +75,7 @@ Do not renumber the grid or substitute an outside-dot town/cell centre when sugg
 
 Manifest updates, name updates and block downloads retain their last usable valid copies on failure. Public data caches are separate from app-version caches. RC1/RC2 records remain readable where supported; missing old name metadata falls back to numeric labels. RC1 also lacks English names and country outlines.
 
-## Audit fixes candidate (2.3.1-rc.6)
+## Audit fixes candidate (2.3.1-rc.7)
 
 This candidate keeps the legacy `ebt_cached_profile` key and `user`/`dots` fields, adding the optional non-negative integer `unlocatedNotes`. Old profiles without it remain readable with zero unlocated notes. The displayed total is located plus unlocated notes; only located notes enter dot aggregates. Exactly `0;0` is the EBT missing-coordinate marker. No coordinate-to-dot arithmetic changes for other notes. Correct previously imported marker notes by reimporting the CSV, not by deleting a whole saved dot.
 
@@ -105,6 +105,8 @@ The hidden Maps link has a neutral Google Maps href in its static HTML and when 
 
 tools/check-app-release.cjs and .github/workflows/check-app-release.yml check matching page/worker versions and Leaflet pins, the current candidate README branch, and a changed worker/cache identity whenever the page or worker changes. Pushes and PRs run read-only checks; no release or publication occurs. Wait for Check app release to pass before merging. Both app-version literals remain the release identifiers; a cache suffix change is an alternative for an intentional same-version shell rebuild.
 
+The generic background-map connectivity sentence belongs at the end of About → Map data, separate from the offline-app result near the version. DotPick and Target Map use a 600-character display-name limit and ASCII letters/digits/hyphens for a destination folder version of 1–120 characters. Current published data fit these limits. DotPick retains its older format compatibility; Target Map reads only names and does not become a second destination/territory validator.
+
 ## Future place-quality review (agreed 29 October 2026)
 
 Keep the current prepared lists for this reliability release. Ordinary automatic suggestions currently rank settlement type, known population and folded name, with reviewed exceptions taking precedence; only model-specific shortlists reach the app. Missing population and inconsistent population geography can produce poor choices. Loures [459, 403] and its surrounding dots are concrete review cases: do not equate the stored 43,127 with the census settlement figure of 7,533 supplied by Miguel.
@@ -120,7 +122,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.6**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
+The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.7**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 

@@ -918,11 +918,10 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.6</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.7</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">(Formerly EBT Dot Safari)</p>
       <p id="offline-app-status" class="target-note" role="status" aria-atomic="true">Preparing the offline app…</p>
-      <p class="target-note">Background maps may require an internet connection.</p>
       <div class="btn-group" style="margin-bottom:12px">
         <button id="offline-app-retry" class="gps-retry" type="button" hidden>Retry offline setup</button>
         <button id="offline-app-reload" class="gps-retry" type="button" hidden>Reload updated app</button>
@@ -972,7 +971,7 @@
         <section aria-labelledby="about-map-data">
           <h3 id="about-map-data" style="margin:0 0 8px;font-size:14px;color:#0f172a;">Map data</h3>
           <dl id="map-data-list" class="map-data-list"></dl>
-          <p class="target-note">Check times are local. The map revision is independent of the editor version.</p>
+          <p class="target-note">Check times are local. The map revision is independent of the editor version. Background maps may require an internet connection.</p>
         </section>
 
         <section aria-labelledby="about-contribute">
@@ -2143,7 +2142,7 @@
     }
     function validateDestinationManifest(data) {
       if (data?.format !== 'ebt-destinations-manifest' || ![1, 2].includes(data.formatVersion) || data.variant !== 'model-shortlists' ||
-          !/^[a-zA-Z0-9-]+$/.test(data.version || '') || typeof data.policyId !== 'string' || !destinationGridMatches(data.grid) ||
+          typeof data.version !== 'string' || !/^[a-zA-Z0-9-]{1,120}$/.test(data.version) || typeof data.policyId !== 'string' || !destinationGridMatches(data.grid) ||
           !Array.isArray(data.coverage) || !data.blocks || typeof data.blocks !== 'object' || Array.isArray(data.blocks)) throw new Error('Invalid destination manifest');
       const coverage = new Set(), described = new Set();
       for (const dot of data.coverage) {

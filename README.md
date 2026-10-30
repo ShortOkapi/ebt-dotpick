@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 29 October 2026. This guide covers the v2.3.1-rc.6 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 30 October 2026. This guide covers the v2.3.1-rc.7 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -292,6 +292,8 @@ The application code is available under the [MIT licence](LICENSE). The worldwid
 
 The separate [maintainer guide](MAINTAINING.md) explains how to edit dot names, curate or exclude places, update prepared data and set release versions. The user instructions above do not require editing repository files.
 ## Map data and nearby-dot distance ranges
+
+The general reminder that background maps may require an internet connection appears at the end of About → Map data. The separate offline-app status near the version number reports app saving and retry results.
 
 About → Map data identifies the datasets actually loaded by this browser: the Euro-use map revision, worldwide base date, prepared places and preferred dot names. Last successful online checks are separate from failed/latest attempts; bundled or saved data remain usable offline. Target Map's release number identifies the editor software, independently of map-data revisions. Feedback messages include concise public data identifiers and check times so Miguel can reproduce a report. They include no Notes contents or live GPS position.
 
