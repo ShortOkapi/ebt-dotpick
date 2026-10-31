@@ -322,6 +322,10 @@
     #destination-area-dialog .btn-group { gap: 8px; }
     .destination-heading { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 12px; }
     .destination-heading h2 { flex: 1; margin: 4px 0 12px; font-size: 18px; }
+    #destination-dot-summary { margin: -8px 0 12px; }
+    #destination-dot-summary[hidden] { display: none; }
+    .destination-dot-bounds { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 6px 0 0; padding-top: 4px; border-top: 1px solid #ddd; color: #64748b; font-size: 11px; }
+    .destination-dot-bounds span { max-width: 100%; }
     .destination-title-name { display: block; font-weight: 700; }
     .destination-title-id { display: block; margin-top: 4px; font-size: 14px; font-weight: 400; }
     #destination-start, .dot-inspection-popup .dot-popup-start { margin: 12px 0; padding: 10px; border: 1px solid #0284c7; border-radius: 8px; background: #f0f9ff; overflow-wrap: anywhere; }
@@ -823,6 +827,10 @@
       <h2 id="destination-title">Places in this dot</h2>
       <button id="destination-close" class="btn btn-about" type="button" aria-label="Close destinations">✖</button>
     </div>
+    <section id="destination-dot-summary" aria-label="Dot status and limits" hidden>
+      <div id="destination-dot-badge" role="status" aria-live="polite"></div>
+      <p class="destination-dot-bounds"><span id="destination-dot-latitude"></span><span id="destination-dot-longitude"></span></p>
+    </section>
     <div class="target-area-control">
       <label for="destination-target-area">Target area:</label>
       <select id="destination-target-area" aria-describedby="destination-model-message">
@@ -833,7 +841,6 @@
     <p id="destination-model-message" class="target-note">This also changes the radar's target area.</p>
     <button id="destination-target-retry" class="gps-retry" type="button" hidden>Retry target map</button>
     <p id="destination-context"></p>
-    <p id="destination-land-status" role="status" aria-live="polite" hidden><span class="stat-badge no-land">NO LAND HERE</span></p>
     <div id="destination-dot-area-warning" role="status" aria-live="polite" hidden>
       <strong id="destination-dot-area-title"></strong>
       <span id="destination-dot-area-detail"></span>
@@ -918,7 +925,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.7</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.8</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">(Formerly EBT Dot Safari)</p>
       <p id="offline-app-status" class="target-note" role="status" aria-atomic="true">Preparing the offline app…</p>
@@ -1889,18 +1896,33 @@
       return isEligibleDot(dot[0], dot[1], targetModels.worldwide) ? 'land' : 'no-land';
     }
     function createBadge(count, dot = null, model = planningTargetArea()) {
-      const progress = count > 0 ? `<span class="stat-badge conquered">${formatNumber(count)} notes</span>` : '';
+      const progress = count > 0 ? `<span class="stat-badge conquered">${formatNumber(count)} ${count === 1 ? 'note' : 'notes'}</span>` : '';
       const classification = dot && euroDotClassification(dot);
       const review = model==='euro-use'&&classification==='unreviewed'&&targetModels['euro-use'].classifications?.background ? '<span class="stat-badge no-land">EURO-USE STATUS UNREVIEWED</span>' : '';
       if (classification === 'excluded') return progress + '<span class="stat-badge excluded-land">UNCONQUERABLE EURO LAND</span>';
       if (model === 'euro-use' && classification === 'foreign') return progress + '<span class="stat-badge foreign-land">NOT IN EURO-USE AREA</span>';
-      if (classification === 'sea') return progress + '<span class="stat-badge no-land">NO LAND HERE</span>';
+      if (classification === 'sea' || dot && dotLandStatus(dot) === 'no-land') return progress + '<span class="stat-badge no-land">NO LAND HERE</span>' + review;
       if (progress) return progress + review;
       if (dot && dotLandStatus(dot) === 'unknown') return '<span class="stat-badge no-land">LAND DATA UNAVAILABLE</span>' + review;
-      if (dot && dotLandStatus(dot) === 'no-land') return '<span class="stat-badge no-land">NO LAND HERE</span>' + review;
       const unknown = model === 'euro-use' && dot && classification !== 'eligible'
         ? `<span class="stat-badge no-land">EURO-USE STATUS ${classification === 'unreviewed' ? 'UNREVIEWED' : 'UNAVAILABLE'}</span>` : '';
       return '<span class="stat-badge unconquered">UNCONQUERED</span>' + unknown;
+    }
+    function destinationBoundsText(dot) {
+      const [[south, west], [north, east]] = destinationBounds(dot);
+      return [`Lat: ${south.toFixed(4)}° to ${north.toFixed(4)}°`, `Lon: ${west.toFixed(4)}° to ${east.toFixed(4)}°`];
+    }
+    function renderDestinationDotSummary() {
+      const session = destinationSession, dot = session?.context.dot, summary = document.getElementById('destination-dot-summary');
+      summary.hidden = !validDestinationDot(dot);
+      const badge = document.getElementById('destination-dot-badge');
+      const latitude = document.getElementById('destination-dot-latitude'), longitude = document.getElementById('destination-dot-longitude');
+      if (summary.hidden) { badge.replaceChildren(); latitude.textContent = ''; longitude.textContent = ''; return; }
+      const html = createBadge(dotMap.get(destinationDotKey(dot)) || 0, dot, session.intent.model);
+      if (badge.innerHTML !== html) badge.innerHTML = html;
+      const [latText, lonText] = destinationBoundsText(dot);
+      if (latitude.textContent !== latText) latitude.textContent = latText;
+      if (longitude.textContent !== lonText) longitude.textContent = lonText;
     }
     function closeDotPopup() {
       if (!destinationPopup) return;
@@ -1925,20 +1947,18 @@
       fitPanels();
       const lat = latlng.lat, lon = latlng.lng >= -180 && latlng.lng <= 180 ? latlng.lng
         : ((latlng.lng + 180) % 360 + 360) % 360 - 180;
-      const dot = destinationDot(lat, lon), [i, j] = dot;
+      const dot = destinationDot(lat, lon);
       const startFromPopup = action => {
         if (lon !== latlng.lng) {
           map.closePopup(); map.setView([lat, lon], map.getZoom(), { animate: false });
         }
         action({ lat, lon });
       };
-      const south = (minLat + i * dotH).toFixed(4), north = (minLat + (i + 1) * dotH).toFixed(4);
-      const west = (minLon + j * dotW).toFixed(4), east = (minLon + (j + 1) * dotW).toFixed(4);
       const content = document.createElement('div'), heading = document.createElement('strong'), badge = document.createElement('div');
       heading.className = 'dot-popup-heading'; badge.className = 'dot-popup-badge';
       content.append(heading, badge);
       const coordinates = document.createElement('div'); coordinates.style.cssText = 'font-size:11px; color:#666; border-top:1px solid #ddd; padding-top:4px;';
-      coordinates.textContent = `Lat: ${south}° to ${north}° · Lon: ${west}° to ${east}°`;
+      coordinates.textContent = destinationBoundsText(dot).join(' · ');
       const reference = document.createElement('p'); reference.className = 'dot-popup-start';
       const referenceTitle = document.createElement('strong'), referenceCoordinates = document.createElement('span');
       referenceTitle.textContent = 'Chosen start for onward search:';
@@ -2774,7 +2794,7 @@
         if (context.dot) session.nearby.selectedKey = destinationDotKey(context.dot);
       }
       renderDestinationAreaNotice();
-      document.getElementById('destination-land-status').hidden = !context.dot || dotLandStatus(context.dot) !== 'no-land';
+      renderDestinationDotSummary();
       const inspectingThisDot = intent.kind === 'this' || (intent.kind === 'radar' && context.target?.isHere);
       document.getElementById('destination-feedback').hidden = !context.dot || !inspectingThisDot;
       const title = document.getElementById('destination-title');
@@ -2945,6 +2965,7 @@
       renderNearbyTargetList();
       const session = destinationSession;
       if (!session) return;
+      renderDestinationDotSummary();
       if (destinationUsesProfile(session.intent) && session.context.profile !== dotMap) { invalidateDestinationPicker(); return; }
       if (destinationNeedsGPS(session.intent)) {
         if (session.intent.source === 'gps' && session.intent.model !== targetArea || !gpsEnabled || gpsPermissionDenied) { invalidateDestinationPicker(); return; }
