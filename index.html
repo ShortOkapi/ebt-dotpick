@@ -925,7 +925,7 @@
   <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title" aria-hidden="true" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px;">
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
-      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.8</span></h2>
+      <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1-rc.9</span></h2>
       <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
       <p class="target-note">(Formerly EBT Dot Safari)</p>
       <p id="offline-app-status" class="target-note" role="status" aria-atomic="true">Preparing the offline app…</p>
@@ -2532,6 +2532,11 @@
       const base = { source: intent.source, kind: intent.kind, model: intent.model, origin, originDot, profile: destinationUsesProfile(intent) ? dotMap : null };
       if (intent.kind === 'this') return { status: 'target', context: { ...base, dot: originDot }, result: null };
       if (totalNotesCount === 0) return { status: 'no-profile' };
+      // Changing a map Places filter inspects the same dot, even outside that area.
+      // Nearby searches and the live GPS radar still choose eligible targets.
+      if (intent.source === 'map' && validDestinationDot(intent.inspectedDot)) {
+        return { status: 'target', context: { ...base, dot: [...intent.inspectedDot] }, result: null };
+      }
       // Only an onward popup search excludes its start; the GPS action follows the radar.
       const originKey = destinationDotKey(originDot), conquered = intent.kind === 'other'
         ? { has: key => key === originKey || dotMap.has(key) } : dotMap;
@@ -2801,11 +2806,12 @@
       if (context.dot) renderDestinationTitle(title, 'Places in ', context.dot, intent.model);
       else title.textContent = intent.kind === 'this' ? 'Places in this dot' : intent.kind === 'radar' ? 'Places in nearest target' : 'Places in nearest target from this dot';
       const area = intent.model === 'euro-use' ? 'Euro-use area' : 'All land worldwide';
-      const role = intent.kind === 'this' ? 'Inspecting this dot' : context.target?.isHere ? 'Your unconquered target dot'
+      const role = intent.inspectedDot ? 'Inspecting selected dot'
+        : intent.kind === 'this' ? 'Inspecting this dot' : context.target?.isHere ? 'Your unconquered target dot'
         : intent.kind === 'radar' ? 'Live GPS target' : 'Target from this dot; the start dot is excluded';
       let text = `${role} · ${area}.`;
       if (context.dot && intent.source === 'map') {
-        text += intent.kind === 'this' ? ' Blue highlight: inspected dot.' : ' Blue highlight: planned target.';
+        text += intent.kind === 'this' || intent.inspectedDot ? ' Blue highlight: inspected dot.' : ' Blue highlight: planned target.';
         if (lastRadarTarget && destinationDotKey(context.dot) === `${lastRadarTarget.i}_${lastRadarTarget.j}`) text += ' This is also the live radar target.';
       }
       document.getElementById('destination-context').textContent = text;
@@ -2876,7 +2882,7 @@
           if (session.intent.source === 'gps' && lastRadarResult?.candidates.some(point => `${point.i}_${point.j}` === key) && !lastRadarTarget?.isHere) {
             selectManualRadarTarget(key);
           }
-          beginDestinationIntent({ ...session.intent, targetKey: key }, choice, session.nearby);
+          beginDestinationIntent({ ...session.intent, targetKey: key, inspectedDot: null }, choice, session.nearby);
         };
         rows.push(button);
       }
@@ -2888,7 +2894,7 @@
       const independent = session?.intent.source === 'map';
       const message = session && destinationUsesProfile(session.intent) && model.state !== 'ready'
         ? model.state === 'error' ? 'Target map unavailable. Connect and retry.' : 'Loading target map…'
-        : independent ? 'Changes this map inspection or plan. The live GPS target area stays unchanged.' : 'This also changes the GPS radar’s target area and recalculates its target.';
+        : independent ? 'Changes the places filter for this dot. The dot and live GPS target area stay unchanged.' : 'This also changes the GPS radar’s target area and recalculates its target.';
       document.getElementById('destination-model-message').textContent = message + (!independent && !targetChoiceSaved ? ' Choice could not be saved on this device.' : '');
       document.getElementById('destination-target-retry').hidden = !session || !destinationUsesProfile(session.intent) || model.state !== 'error';
     }
@@ -2896,7 +2902,10 @@
       const session = destinationSession;
       if (!session) return;
       const retainedChoice = destinationChoiceToRetain(), model = destinationTargetAreaSelect.value;
-      const intent = { ...session.intent, model, targetKey: null };
+      const inspectedDot = session.intent.source === 'map' && session.intent.kind === 'other'
+        ? session.context.dot || session.intent.inspectedDot : null;
+      const intent = { ...session.intent, model, targetKey: inspectedDot ? destinationDotKey(inspectedDot) : null,
+        inspectedDot: inspectedDot ? [...inspectedDot] : null };
       if (intent.source === 'gps') changeTargetArea(model);
       else planningArea = model;
       beginDestinationIntent(intent, retainedChoice, session.nearby);
@@ -3660,7 +3669,7 @@
       if (session.intent.source === 'gps' && !selectManualRadarTarget(key)) return;
       session.selectedKey = key; session.scrollTop = nearbyTargetDialog.scrollTop;
       const choice = session.placeChoice?.context.dot && destinationDotKey(session.placeChoice.context.dot) === key ? session.placeChoice : null;
-      nearbyPendingPlaces = { intent: { ...session.intent, targetKey: key }, choice, nearby: session };
+      nearbyPendingPlaces = { intent: { ...session.intent, targetKey: key, inspectedDot: null }, choice, nearby: session };
       nearbyTargetDialog.close();
     }
     function returnToNearbyTargets() {
@@ -3684,7 +3693,7 @@
     nearbyTargetAreaSelect.addEventListener('change', () => {
       const session = nearbyTargetSession;
       if (!session) return;
-      session.intent = { ...session.intent, model: nearbyTargetAreaSelect.value, targetKey: null };
+      session.intent = { ...session.intent, model: nearbyTargetAreaSelect.value, targetKey: null, inspectedDot: null };
       if (session.intent.source === 'gps') changeTargetArea(session.intent.model);
       else { planningArea = session.intent.model; refreshDestinationUI(); }
       renderNearbyTargetList();

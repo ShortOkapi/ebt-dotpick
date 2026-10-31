@@ -75,7 +75,7 @@ Do not renumber the grid or substitute an outside-dot town/cell centre when sugg
 
 Manifest updates, name updates and block downloads retain their last usable valid copies on failure. Public data caches are separate from app-version caches. RC1/RC2 records remain readable where supported; missing old name metadata falls back to numeric labels. RC1 also lacks English names and country outlines.
 
-## Audit fixes candidate (2.3.1-rc.8)
+## Audit fixes candidate (2.3.1-rc.9)
 
 This candidate keeps the legacy `ebt_cached_profile` key and `user`/`dots` fields, adding the optional non-negative integer `unlocatedNotes`. Old profiles without it remain readable with zero unlocated notes. The displayed total is located plus unlocated notes; only located notes enter dot aggregates. Exactly `0;0` is the EBT missing-coordinate marker. No coordinate-to-dot arithmetic changes for other notes. Correct previously imported marker notes by reimporting the CSV, not by deleting a whole saved dot.
 
@@ -126,7 +126,7 @@ For the current manual workflow, update **both** literals together:
 
 The HTML version identifies the loaded page. The service-worker version identifies its offline app cache. The About button's hover tooltip includes the page version and identifies a differing worker version when reported. Version text in the feedback report is taken from the HTML; there is no third literal to maintain.
 
-The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.8**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
+The current stable release is **2.3.0**. The current local test candidate is **2.3.1-rc.9**; it is not a published stable release. Keep the page and service-worker versions together for future candidates. Before merging an accepted stable release, set both literals to its final version and commit before merging. Update the candidate README branch link when starting a different release series. Data-folder versions remain independent of the app version.
 
 Test the supplied complete candidate, then download/test the actual release branch ZIP. Confirm the server starts in the folder beside index.html. Keep physical Android/iPhone checks for GPS, installed-PWA use, clipboard, external-app return and narrow screens. Version 2.2.0 retains the existing icon. A redesigned icon is deferred to a later release.
 
@@ -143,3 +143,7 @@ Public branding and links use EBT DotPick and ebt-dotpick. Keep the manifest ide
 The former address needs its supplied small forwarding page and replacement service worker. Renaming a GitHub repository alone does not redirect its Pages site. Keep Android/iPhone installed-app migration checks separate from ordinary browser checks: retaining the manifest ID supports continuity, but phone-specific shortcut/update behaviour still needs confirmation. Keep the old installation until the new address and its conquered dots have been checked.
 
 About data diagnostics use SHA-256 of the validated JSON values to identify snapshots without adding manual revision numbers to every source. Map revisions and prepared-place versions remain authoritative where supplied. Hashes cover the loaded worldwide base/overrides pair and preferred names as well. A missing fingerprint never blocks an otherwise usable dataset. Cached manifest/preferred-name entries now retain successful-check timestamps; older raw entries remain readable.
+
+### Places filters and chosen dots
+
+A target-area change inside a map-origin Places session freezes the inspected dot, including an onward target that is ineligible in the new area. The existing area/point checks still warn and filter destinations. It preserves the chosen start, current profile identity and valid selected point; it does not promote the dot to an eligible target. Returning to the nearby list searches the new area; explicitly choosing another target clears the inspection pin. The GPS-origin Places action continues to follow the live radar and its eligibility checks.

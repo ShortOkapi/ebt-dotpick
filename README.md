@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 30 October 2026. This guide covers the v2.3.1-rc.8 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 31 October 2026. This guide covers the v2.3.1-rc.9 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -29,6 +29,8 @@ Installation is optional: you can use DotPick in your browser or add it to your 
 **iPhone:** the download and saving steps depend on your browser. If offered **Save…**, choose **Files**, a folder and **Save**. If you are looking at an unsaved preview, use its **More…** or **Share** menu, choose **Save to Files**, select a folder and confirm **Save**. Going back from an unsaved preview does not save it. A completed download does not need another save: return to DotPick and choose the saved file.
 
 Safari and Chrome on iPhone can show different menus. If you cannot find the file, open **Help if the file is missing** in DotPick’s download instructions. Choose the most recent file if older downloads have the same or similar names.
+
+When you open a map dot’s Places panel, changing **Target area** keeps that dot open and filters its places. A dot outside the chosen area stays inspectable with a warning. Use **Back to nearby dots** to choose a different eligible target. The live GPS radar still recalculates when its own target area changes.
 
 ## Updating your conquered-dot map
 
