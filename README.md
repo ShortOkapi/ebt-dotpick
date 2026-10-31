@@ -8,7 +8,7 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 31 October 2026. This guide covers the v2.3.1-rc.9 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 31 October 2026. This guide covers the v2.3.1-rc.10 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
 ## How to use
 
@@ -187,6 +187,12 @@ Opening Google Maps sends the selected destination coordinates. An onward plan f
 The Feedback action in a dot popup or **Places in this dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review your message before copying it. Public dataset details are shown separately in a read-only section and included automatically by **Copy message**, with a request to keep them. If automatic copying is unavailable, a complete message is selected for manual copying. Its draft is not saved to browser storage and is cleared when the panel closes.
 
 Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. DotPick does not send it automatically. Forum messages are handled by the forum under its own policies.
+
+## Coordinated world-map correction (2.3.1 candidate)
+
+The bundled target map is **revision 105**, matching Target Map's world-background refresh. It still has **4,171 eligible Euro-use dots**. The unchanged world base and corrected live overrides contain **201,342 worldwide land dots**; the old illustrative exclusion of Antarctic **[10, 10]** is no longer applied. That cell is background Foreign land in Euro-use mode, not an extra eligible Euro-use target. Individual curated decisions still take priority. Your Notes and prepared place lists are unchanged.
+
+Old saved/downloaded copies containing the two retired illustrative overrides are rejected so they cannot undo this correction. A corrected bundled map remains usable. During release-branch testing, public main can still supply the old files: **Using saved map; update unavailable** is then expected. After the releases are merged in order, the corrected public files can be adopted normally. Genuine reviewed overrides remain supported. About → Map data identifies the loaded datasets; map revision and app version are separate.
 
 ## Places, dot names and planning
 

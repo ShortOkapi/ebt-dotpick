@@ -1,9 +1,5 @@
 {
-  "description": "Verified manual overrides to the OSM base mask. 'include' forces dots to be Conquerable (e.g., missing islands). 'exclude' forces dots to be Unconquerable (e.g., inland lakes).",
-  "include": [
-    {"dot": [0, 0], "reason": "Example of adding a missing island"}
-  ],
-  "exclude": [
-    {"dot": [10, 10], "reason": "Example of removing a false inland lake"}
-  ]
+  "description": "Verified manual overrides to the OSM base mask. 'include' adds reviewed land dots; 'exclude' removes reviewed false land dots. Examples belong in documentation, not these live arrays.",
+  "include": [],
+  "exclude": []
 }
