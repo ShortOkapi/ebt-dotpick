@@ -273,18 +273,15 @@
       align-items: center;
       gap: 6px;
       margin-bottom: 4px;
+      flex-wrap: wrap;
+      font-size: 12px;
     }
-    .target-area-control label { flex: 0 0 auto; font-weight: 600; }
-    .target-area-control select {
-      min-width: 0;
-      flex: 1;
-      min-height: 44px;
-      padding: 6px 4px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      background: #fff;
-      color: #0f172a;
-      font: inherit;
+    .target-area-control label, .target-area-label { flex: 0 0 auto; font-weight: 600; }
+    .target-area-toggle {
+      min-width: 0; max-width: 100%; min-height: 44px;
+      padding: 6px 9px; border: 1px solid #7dd3fc; border-radius: 6px;
+      background: #e0f2fe; color: #075985; font: inherit; cursor: pointer;
+      text-align: left; overflow-wrap: anywhere;
     }
     .target-area-status, .target-note {
       margin: 4px 0 10px;
@@ -293,13 +290,9 @@
       line-height: 1.4;
     }
     #radar-last-fix-note { color: #92400e; font-weight: 600; }
-    .target-area-control select:focus-visible {
+    .target-area-toggle:focus-visible {
       outline: 2px solid #c2410c;
       outline-offset: 2px;
-    }
-    @media (max-width: 360px) {
-      .target-area-control { flex-wrap: wrap; }
-      .target-area-control select { flex-basis: 100%; }
     }
 
     /* Destination picker and deliberate map-point choice. */
@@ -424,9 +417,7 @@
     .hud-target-row[href] { cursor: pointer; }
     .hud-target-row[href]:hover .hud-dot-id { text-decoration: underline; }
     .hud-target-row:focus-visible { outline: 2px dashed #0284c7; outline-offset: 3px; }
-    .dot-popup-model-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-    .dot-popup-area-toggle { min-height: 32px; padding: 3px 7px; border: 1px solid #94a3b8; border-radius: 5px; background: #f1f5f9; color: #075985; font: inherit; font-size: 11px; cursor: pointer; }
-    .dot-popup-area-toggle:focus-visible { outline: 2px dashed #0284c7; outline-offset: 2px; }
+    .dot-popup-model-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; font-size: 12px; }
     .no-land { background: #f1f5f9; color: #475569; border: 1px solid #94a3b8; }
     .excluded-land { background: #e2e8f0; color: #334155; border: 1px solid #64748b; }
     .foreign-land { background: #fef2f2; color: #991b1b; border: 1px solid #b91c1c; }
@@ -686,15 +677,15 @@
         <input type="file" id="csv-input" accept=".csv,text/csv" tabindex="-1" />
         <button class="btn btn-about" type="button" id="about-btn" aria-label="About" title="About / Credits">ℹ️</button>
         <button class="btn btn-clear" type="button" id="clear-btn"
-          aria-label="No conquered dots to clear"
-          title="No conquered dots to clear"
+          aria-label="No conquered Dots to clear"
+          title="No conquered Dots to clear"
           disabled>☒</button>
       </div>
 
       <div id="stats-container" class="status-box" role="status" aria-live="polite" aria-atomic="true">
         <div id="user-display" style="font-weight: 700; color: #c2410c;">No user loaded</div>
         <div id="notes-count" style="color: #64748b;"><b>0</b> notes</div>
-        <div id="dots-count" style="color: #64748b;">Grid only (<b>0</b> conquered dots)</div>
+        <div id="dots-count" style="color: #64748b;">Grid only (<b>0</b> conquered Dots)</div>
         <div id="unlocated-notes" hidden></div>
       </div>
       <div id="profile-notice" class="profile-notice" role="alert" hidden>
@@ -703,8 +694,8 @@
       </div>
 
       <div class="legend-container">
-        <div class="legend-title">Notes per dot <span style="font-weight:400">· tap for ranges</span></div>
-        <div class="legend-bar" role="group" aria-label="Notes per dot legend. Select a colour for its range.">
+        <div class="legend-title">Notes per Dot <span style="font-weight:400">· tap for ranges</span></div>
+        <div class="legend-bar" role="group" aria-label="Notes per Dot legend. Select a colour for its range.">
           <button class="legend-cell" type="button" style="grid-column:1; --swatch-colour:#ffeda0" aria-controls="legend-range" aria-pressed="false"></button>
           <button class="legend-cell" type="button" style="grid-column:3; --swatch-colour:#fed976" aria-controls="legend-range" aria-pressed="false"></button>
           <button class="legend-cell" type="button" style="grid-column:4; --swatch-colour:#feb24c" aria-controls="legend-range" aria-pressed="false"></button>
@@ -766,10 +757,7 @@
       </a>
       <div class="target-area-control">
         <label for="target-area">Target area:</label>
-        <select id="target-area" aria-describedby="target-area-message">
-          <option value="worldwide">All land worldwide</option>
-          <option value="euro-use">Euro-use area</option>
-        </select>
+        <button id="target-area" class="target-area-toggle" type="button" role="switch" aria-label="Euro-use area" aria-checked="false" value="worldwide" aria-describedby="target-area-message">All land worldwide ↔</button>
       </div>
       <div class="target-area-status">
         <span id="target-area-message" role="status" aria-live="polite">Loading target map…</span>
@@ -780,7 +768,7 @@
       </div>
       <p id="radar-last-fix-note" class="target-note" role="status" hidden>Based on the last usable GPS position. Waiting for a new fix.</p>
       <button id="nearby-targets-open" class="btn" type="button" aria-haspopup="dialog" disabled>Nearby Target Dots</button>
-      <button id="radar-automatic" class="text-action" type="button" hidden>Use automatic nearest target</button>
+      <button id="radar-automatic" class="text-action" type="button" hidden>Use automatic nearest Target Dot</button>
 
       <div id="gps-status" class="gps-status">
         <span id="gps-message">Requesting GPS...</span>
@@ -793,7 +781,7 @@
 
   <dialog id="gps-off-dialog" aria-labelledby="gps-off-title" aria-describedby="gps-off-description">
     <h2 id="gps-off-title">Turn off GPS in DotPick?</h2>
-    <p id="gps-off-description">Your conquered dots will remain on the map.</p>
+    <p id="gps-off-description">Your conquered Dots will remain on the map.</p>
     <form method="dialog" class="btn-group">
       <button class="btn gps-cancel" type="submit" autofocus>Cancel</button>
       <button id="gps-off-confirm" class="btn" type="submit">Turn off</button>
@@ -803,28 +791,25 @@
   <dialog id="nearby-targets-dialog" aria-labelledby="nearby-targets-title" aria-describedby="nearby-targets-help">
     <div class="destination-heading">
       <h2 id="nearby-targets-title">Nearby Target Dots</h2>
-      <button id="nearby-targets-close" class="btn btn-about" type="button" aria-label="Close nearby target dots">✖</button>
+      <button id="nearby-targets-close" class="btn btn-about" type="button" aria-label="Close nearby Target Dots">✖</button>
     </div>
     <div class="target-area-control">
       <label for="nearby-targets-area">Target area:</label>
-      <select id="nearby-targets-area" aria-describedby="nearby-targets-model-message">
-        <option value="worldwide">All land worldwide</option>
-        <option value="euro-use">Euro-use area</option>
-      </select>
+      <button id="nearby-targets-area" class="target-area-toggle" type="button" role="switch" aria-label="Euro-use area" aria-checked="false" value="worldwide" aria-describedby="nearby-targets-model-message">All land worldwide ↔</button>
     </div>
     <p id="nearby-targets-model-message" class="target-note"></p>
     <button id="nearby-targets-retry" class="gps-retry" type="button" hidden>Retry target map</button>
     <section id="nearby-targets-start" aria-label="Chosen start" hidden></section>
     <p id="nearby-targets-status" role="status" aria-live="polite"></p>
-    <p id="nearby-targets-help" class="target-note">Ordered by geographical proximity. Dot steps include diagonals. The kilometre range is the approximate straight-line distance to the nearest and farthest points of the whole dot, including water. It ignores roads and access. Choose a dot to see its places.</p>
-    <div id="nearby-targets-list" role="group" aria-label="Nearby eligible unconquered dots"></div>
-    <button id="nearby-targets-automatic" class="text-action" type="button" hidden>Use automatic nearest target</button>
+    <p id="nearby-targets-help" class="target-note">Ordered by geographical proximity. Dot steps include diagonals. The kilometre range is the approximate straight-line distance to the nearest and farthest points of the whole Dot, including water. It ignores roads and access. Choose a Dot to see its places.</p>
+    <div id="nearby-targets-list" role="group" aria-label="Nearby eligible unconquered Dots"></div>
+    <button id="nearby-targets-automatic" class="text-action" type="button" hidden>Use automatic nearest Target Dot</button>
   </dialog>
 
   <dialog id="destination-dialog" aria-labelledby="destination-title">
     <button id="destination-back" class="text-action" type="button" hidden>← Back to Nearby Target Dots</button>
     <div class="destination-heading">
-      <h2 id="destination-title">Places in this dot</h2>
+      <h2 id="destination-title">Places in this Dot</h2>
       <button id="destination-close" class="btn btn-about" type="button" aria-label="Close destinations">✖</button>
     </div>
     <section id="destination-dot-summary" aria-label="Dot status and limits" hidden>
@@ -833,10 +818,7 @@
     </section>
     <div class="target-area-control">
       <label for="destination-target-area">Target area:</label>
-      <select id="destination-target-area" aria-describedby="destination-model-message">
-        <option value="worldwide">All land worldwide</option>
-        <option value="euro-use">Euro-use area</option>
-      </select>
+      <button id="destination-target-area" class="target-area-toggle" type="button" role="switch" aria-label="Euro-use area" aria-checked="false" value="worldwide" aria-describedby="destination-model-message">All land worldwide ↔</button>
     </div>
     <p id="destination-model-message" class="target-note">This also changes the radar's target area.</p>
     <button id="destination-target-retry" class="gps-retry" type="button" hidden>Retry target map</button>
@@ -847,14 +829,14 @@
     </div>
     <section id="destination-start" aria-label="Chosen start" hidden></section>
     <p id="destination-name-message" class="target-note" hidden></p>
-    <div id="destination-ties" role="group" aria-label="Target dots at equal distance"></div>
+    <div id="destination-ties" role="group" aria-label="Target Dots at equal distance"></div>
     <p id="destination-status" role="status" aria-live="polite"></p>
     <p id="destination-distance-label">Straight-line distances from you (GPS).</p>
     <div class="destination-choices" role="group" aria-label="Destination choices">
       <div id="destination-list"></div>
       <button id="destination-choose-map" class="destination-place" type="button" aria-pressed="false">
         <strong>Choose your own point on the map</strong>
-        <span>Pick a destination inside this dot.</span>
+        <span>Pick a destination inside this Dot.</span>
       </button>
     </div>
     <button id="destination-retry" class="gps-retry" type="button" hidden>Retry place data</button>
@@ -878,8 +860,8 @@
     <svg viewBox="0 0 44 44"><path d="M22 3V16M22 28V41M3 22H16M28 22H41"/></svg>
   </div>
   <section id="destination-map-panel" class="panel" aria-labelledby="destination-map-title" hidden>
-    <h2 id="destination-map-title">Choose a point in the target dot</h2>
-    <p>Pan or zoom beneath the open crosshair, or tap a point. Red lines mark the target dot.</p>
+    <h2 id="destination-map-title">Choose a point in the Target Dot</h2>
+    <p>Pan or zoom beneath the open crosshair, or tap a point. Red lines mark the Target Dot.</p>
     <p id="destination-map-coordinates"></p>
     <p id="destination-map-status" role="status" aria-live="polite"></p>
     <div id="destination-map-area" role="status" aria-live="polite" hidden>
@@ -895,10 +877,10 @@
 
   <dialog id="feedback-dialog" aria-labelledby="feedback-title">
     <div class="destination-heading">
-      <h2 id="feedback-title">Feedback about this dot</h2>
+      <h2 id="feedback-title">Feedback about this Dot</h2>
       <button id="feedback-close" class="btn" type="button" style="width:auto; background:#475569;">Close</button>
     </div>
-    <p>Suggest a dot name, a listed place, or a correction to conquerability or Euro-use. A short explanation and a source link are useful.</p>
+    <p>Suggest a Dot name, a listed place, or a correction to conquerability or Euro-use. A short explanation and a source link are useful.</p>
     <label for="feedback-text">Your message</label>
     <textarea id="feedback-text" spellcheck="true" maxlength="12000"></textarea>
     <details id="feedback-dataset-details">
@@ -918,7 +900,7 @@
       <textarea id="feedback-manual-text" rows="7" readonly spellcheck="false"></textarea>
     </div>
     <p class="target-note">Nothing is sent by this panel. Review what you include before sending your forum message.</p>
-    <p class="target-note">For Euro-use dot classifications, you can also send a Change Report from <a href="https://shortokapi.github.io/ebt-target-map/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">EBT Target Map ↗</a>.</p>
+    <p class="target-note">For Euro-use Dot classifications, you can also send a Change Report from <a href="https://shortokapi.github.io/ebt-target-map/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">EBT Target Map ↗</a>.</p>
   </dialog>
 
   <!-- About Modal -->
@@ -926,7 +908,7 @@
     <div class="about-dialog">
       <button id="about-close" type="button" aria-label="Close" style="position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; cursor: pointer; color: #64748b;">✖</button>
       <h2 id="about-title" style="margin: 0 0 4px 0; color: #0f172a; font-size: 18px;">EBT DotPick <span id="app-version" style="font-size: 12px; font-weight: 500; color: #64748b;">v2.3.1</span></h2>
-      <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal dot hunting assistant.</p>
+      <p style="margin: 0 0 16px 0; font-size: 13px; color: #64748b; font-style: italic;">Your personal Dot hunting assistant.</p>
       <p class="target-note">(Formerly EBT Dot Safari)</p>
       <p id="offline-app-status" class="target-note" role="status" aria-atomic="true">Preparing the offline app…</p>
       <div class="btn-group" style="margin-bottom:12px">
@@ -949,28 +931,28 @@
       <div style="font-size: 13px; color: #334155; line-height: 1.5; display: flex; flex-direction: column; gap: 16px;">
         <section aria-labelledby="about-target-areas">
           <h3 id="about-target-areas" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Target areas</h3>
-          <p style="margin: 0 0 8px;">Load your EuroBillTracker Notes to see your conquered dots. The radar looks for unconquered dots that are eligible in your selected target area. Choose <b>Target area</b> in the expanded radar panel; your choice is remembered on this device.</p>
+          <p style="margin: 0 0 8px;">Load your EuroBillTracker Notes to see your conquered Dots. The radar looks for unconquered Dots that are eligible in your selected target area. Choose <b>Target area</b> in the expanded radar panel; your choice is remembered on this device.</p>
           <ul style="margin: 0; padding-left: 18px;">
-            <li style="margin-bottom: 6px;"><b>Euro-use area:</b> the Eurozone, other countries and territories using the euro (including Kosovo and Montenegro), and Switzerland. Known unconquerable dots are excluded.</li>
-            <li><b>All land worldwide:</b> dots marked as containing land by OpenStreetMap data and manual corrections. Access, safety and euro availability are not individually verified.</li>
+            <li style="margin-bottom: 6px;"><b>Euro-use area:</b> the Eurozone, other countries and territories using the euro (including Kosovo and Montenegro), and Switzerland. Known unconquerable Dots are excluded.</li>
+            <li><b>All land worldwide:</b> Dots marked as containing land by OpenStreetMap data and manual corrections. Access, safety and euro availability are not individually verified.</li>
           </ul>
         </section>
 
         <section aria-labelledby="about-destinations">
           <h3 id="about-destinations" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Places and planning</h3>
-          <p style="margin: 0 0 8px;">Inspect places in any dot, or find the next target from your GPS position or a point you choose on the map. Select a listed place or <b>Choose your own point on the map</b>, then open Google Maps. Distances are straight-line.</p>
+          <p style="margin: 0 0 8px;">Inspect places in any Dot, or find the next target from your GPS position or a point you choose on the map. Select a listed place or <b>Choose your own point on the map</b>, then open Google Maps. Distances are straight-line.</p>
           <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dotpick#places-dot-names-and-planning" data-readme-section="places-dot-names-and-planning" target="_blank" rel="noopener noreferrer">Places and planning guide ↗</a></p>
         </section>
 
         <section aria-labelledby="about-disclaimer">
           <h3 id="about-disclaimer" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Before you set off</h3>
-          <p style="margin: 0 0 8px;">DotPick cannot guarantee euro banknotes in any eligible dot. We do our best to classify dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.</p>
-          <p style="margin: 0;">No dot is worth entering a dangerous or forbidden area. And if your next conquest appears to require a submarine, please question the map before buying one.</p>
+          <p style="margin: 0 0 8px;">DotPick cannot guarantee euro banknotes in any eligible Dot. We do our best to classify Dots correctly, but maps can contain mistakes and conditions can change. Check access and safety before setting off, and respect local restrictions.</p>
+          <p style="margin: 0;">No Dot is worth entering a dangerous or forbidden area. And if your next conquest appears to require a submarine, please question the map before buying one.</p>
         </section>
 
         <section aria-labelledby="about-privacy">
           <h3 id="about-privacy" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Your data</h3>
-          <p style="margin: 0 0 8px;">Your Notes CSV is processed on your device and is not uploaded by DotPick. A compact dot profile and settings are saved locally. Online maps use external services.</p>
+          <p style="margin: 0 0 8px;">Your Notes CSV is processed on your device and is not uploaded by DotPick. A compact Dot profile and settings are saved locally. Online maps use external services.</p>
           <p style="margin: 0 0 8px;">DotPick does not send your Notes data to Miguel, GitHub or any map provider. Importing your file does not share its contents with them.</p>
           <p style="margin: 0;"><a href="https://github.com/ShortOkapi/ebt-dotpick#privacy" data-readme-section="privacy" target="_blank" rel="noopener noreferrer">Privacy details ↗</a></p>
         </section>
@@ -978,12 +960,12 @@
         <section aria-labelledby="about-map-data">
           <h3 id="about-map-data" style="margin:0 0 8px;font-size:14px;color:#0f172a;">Map data</h3>
           <dl id="map-data-list" class="map-data-list"></dl>
-          <p class="target-note">Check times are local. The map revision is independent of the editor version. Background maps may require an internet connection.</p>
+          <p class="target-note">Check times are local. The map revision is independent of the editor version. Dark dashed edges mark the world seam and the north/south map display limits; the red lines still mark the original Dot grid. Background maps may require an internet connection.</p>
         </section>
 
         <section aria-labelledby="about-contribute">
           <h3 id="about-contribute" style="margin: 0 0 8px; font-size: 14px; color: #0f172a;">Help improve the maps and places</h3>
-          <p style="margin: 0 0 8px;">Use <b>Feedback</b> in a dot popup or places panel, or <a href="https://forum.eurobilltracker.com/ucp.php?i=pm&amp;mode=compose&amp;u=448" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">message Miguel / lmviterbo on the EBT forum ↗</a>. Include the dot’s <b>[i, j]</b> reference and what needs checking.</p>
+          <p style="margin: 0 0 8px;">Use <b>Feedback</b> in a Dot popup or places panel, or <a href="https://forum.eurobilltracker.com/ucp.php?i=pm&amp;mode=compose&amp;u=448" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">message Miguel / lmviterbo on the EBT forum ↗</a>. Include the Dot’s <b>[i, j]</b> reference and what needs checking.</p>
           <p style="margin: 0;">For Euro-use classifications, <a href="https://shortokapi.github.io/ebt-target-map/" target="_blank" rel="noopener noreferrer">EBT Target Map ↗</a> lets you edit a working copy and send a <b>Change Report</b>. Miguel reviews proposed changes before publishing them.</p>
         </section>
 
@@ -993,7 +975,7 @@
             <div>Ferran (<b>Tuscac</b>, from Girona 🇪🇸) was the latest of several EBTors over the past few years to ask for live GPS tracking on their personal Google Dotmaps.</div>
             <div>Miguel Viterbo (<b>lmviterbo</b>, from Lisboa 🇵🇹) created and manages the project, with code generated by <b>Gemini</b>, <b>Claude</b> and <b>ChatGPT</b>.</div>
             <div>Peter Zagler (<b>elpeza</b>, from Linz 🇦🇹) helped audit, optimize and field-test earlier versions, with analysis assistance from <b>Claude</b>.</div>
-            <div>Several dot hunters have provided valuable feedback. Manfred Wolfensberger (<b>Laurentina</b>, from Zürich 🇨🇭) played a key role in improving iPhone use.</div>
+            <div>Several Dot hunters have provided valuable feedback. Manfred Wolfensberger (<b>Laurentina</b>, from Zürich 🇨🇭) played a key role in improving iPhone use.</div>
           </div>
         </section>
 
@@ -1005,7 +987,7 @@
     </div>
   </div>
 
-  <main id="map" aria-label="Interactive dot map. Use arrow keys to pan and press Enter to inspect the centre dot."></main>
+  <main id="map" aria-label="Interactive Dot map. Use arrow keys to pan and press Enter to inspect the centre Dot."></main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
@@ -1052,6 +1034,23 @@
     const TARGET_SEARCH_KM = 150;
     const TARGET_TIE_KM = 0.000001; // 1 mm computational tolerance; compare unrounded distances.
     const TARGET_STABILITY_KM = 0.01; // At most 10 m farther; separate from exact ties.
+    function renderTargetAreaToggle(button, model) {
+      if (!button) return;
+      if (button.value !== model) button.value = model;
+      const euro = model === 'euro-use';
+      const label = (euro ? 'Euro-use area' : 'All land worldwide') + ' ↔';
+      if (button.textContent !== label) button.textContent = label;
+      if (button.getAttribute('aria-checked') !== String(euro)) button.setAttribute('aria-checked', String(euro));
+      const title = 'Switch to ' + (euro ? 'All land worldwide' : 'Euro-use area');
+      if (button.title !== title) button.title = title;
+    }
+    for (const id of ['target-area', 'nearby-targets-area', 'destination-target-area']) {
+      const button = document.getElementById(id);
+      button.addEventListener('click', () => {
+        renderTargetAreaToggle(button, button.value === 'euro-use' ? 'worldwide' : 'euro-use');
+        button.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+    }
     const targetModels = {
       worldwide: { id: 'worldwide', state: 'loading', rows: new Map(), excluded: new Set() },
       'euro-use': { id: 'euro-use', state: 'loading', rows: new Map(), excluded: new Set() }
@@ -1153,11 +1152,11 @@
 
     function legendBandDescription(band) {
       const entry = legendBands[band];
-      if (!entry?.dots || !entry.range) return 'No dots in this band.';
+      if (!entry?.dots || !entry.range) return 'No Dots in this band.';
       const [first, last] = entry.range;
       const range = first === last ? `${formatNumber(first)} ${first === 1 ? 'note' : 'notes'}`
         : `${formatNumber(first)}–${formatNumber(last)} notes`;
-      return `${range} per dot · ${formatNumber(entry.dots)} ${entry.dots === 1 ? 'dot' : 'dots'}`;
+      return `${range} per Dot · ${formatNumber(entry.dots)} ${entry.dots === 1 ? 'Dot' : 'Dots'}`;
     }
 
     function renderLegendDescription() {
@@ -1312,6 +1311,23 @@
             ctx.beginPath(); ctx.moveTo(pTile.x, 0); ctx.lineTo(pTile.x, tileSize.y); ctx.stroke();
           }
         }
+        // Display edges only: the world seam and Mercator cutoffs, not new grid lines.
+        if (coords.z >= 6) {
+          const world = map.getPixelWorldBounds(coords.z);
+          const left = coords.x * tileSize.x, top = coords.y * tileSize.y;
+          ctx.save(); ctx.strokeStyle = '#17354b'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]);
+          for (const x of [world.min.x - left, world.max.x - left]) {
+            if (x < -1e-7 || x > tileSize.x + 1e-7) continue;
+            const edge = Math.max(0, Math.min(tileSize.x, x));
+            ctx.beginPath(); ctx.moveTo(edge, 0); ctx.lineTo(edge, tileSize.y); ctx.stroke();
+          }
+          for (const y of [world.min.y - top, world.max.y - top]) {
+            if (y < -1e-7 || y > tileSize.y + 1e-7) continue;
+            const edge = Math.max(0, Math.min(tileSize.y, y));
+            ctx.beginPath(); ctx.moveTo(0, edge); ctx.lineTo(tileSize.x, edge); ctx.stroke();
+          }
+          ctx.restore();
+        }
         return tile;
       }
     });
@@ -1389,11 +1405,11 @@
       document.getElementById('notes-count').innerHTML =
         `<b>${formatNumber(totalNotesCount)}</b> notes`;
       document.getElementById('dots-count').innerHTML =
-        `<b>${formatNumber(dotMap.size)}</b> unique dots conquered`;
+        `<b>${formatNumber(dotMap.size)}</b> unique Dots conquered`;
       const unlocated = document.getElementById('unlocated-notes');
       unlocated.hidden = unlocatedNotesCount === 0;
       unlocated.textContent = unlocatedNotesCount
-        ? `${formatNumber(unlocatedNotesCount)} ${unlocatedNotesCount === 1 ? 'note has' : 'notes have'} no assigned coordinates; included above, but assigned to no dot.` : '';
+        ? `${formatNumber(unlocatedNotesCount)} ${unlocatedNotesCount === 1 ? 'note has' : 'notes have'} no assigned coordinates; included above, but assigned to no Dot.` : '';
 
       const clearButton = document.getElementById('clear-btn');
       const hasProfile = totalNotesCount > 0;
@@ -1581,7 +1597,7 @@
     }
 
     function profileCountSummary(notes, dots) {
-      return `${formatNumber(notes)} ${notes === 1 ? 'note' : 'notes'}, ${formatNumber(dots)} ${dots === 1 ? 'dot' : 'dots'}`;
+      return `${formatNumber(notes)} ${notes === 1 ? 'note' : 'notes'}, ${formatNumber(dots)} ${dots === 1 ? 'Dot' : 'Dots'}`;
     }
 
     function confirmProfileReplacement(importedDots, incomingNotes, pendingUserId) {
@@ -1594,10 +1610,10 @@
         const fewerNotes = noteDrop >= Math.max(10, Math.ceil(totalNotesCount * .1));
         const fewerDots = dotDrop >= Math.max(2, Math.ceil(dotMap.size * .1));
         if (fewerNotes || fewerDots) {
-          const comparison = incomingNotes > totalNotesCount ? 'more notes but fewer conquered dots'
-            : importedDots.size > dotMap.size ? 'fewer notes but more conquered dots'
-            : fewerNotes && fewerDots ? 'fewer notes and fewer conquered dots'
-            : fewerNotes ? 'fewer notes' : 'fewer conquered dots';
+          const comparison = incomingNotes > totalNotesCount ? 'more notes but fewer conquered Dots'
+            : importedDots.size > dotMap.size ? 'fewer notes but more conquered Dots'
+            : fewerNotes && fewerDots ? 'fewer notes and fewer conquered Dots'
+            : fewerNotes ? 'fewer notes' : 'fewer conquered Dots';
           reasons.push(`The new file has ${comparison}. Check that you selected the intended Notes file.`);
         }
         if (reasons.length) reasons.push(`Current: ${profileCountSummary(totalNotesCount, dotMap.size)}.\nNew file: ${profileCountSummary(incomingNotes, importedDots.size)}.`);
@@ -1781,14 +1797,14 @@
     });
 
     document.getElementById('clear-btn').addEventListener('click', function() {
-      if (confirm('Clear your imported Notes profile and all saved conquered dots from this device?')) {
+      if (confirm('Clear your imported Notes profile and all saved conquered Dots from this device?')) {
         importVersion++;
         document.getElementById('stats-container').removeAttribute('aria-busy');
         dotMap = new Map();
         unlocatedNotesCount = 0;
         currentUserName = 'No user loaded';
         refreshUIState();
-        document.getElementById('dots-count').innerHTML = 'Grid only (<b>0</b> conquered dots)';
+        document.getElementById('dots-count').innerHTML = 'Grid only (<b>0</b> conquered Dots)';
         clearSavedProfile();
       }
     });
@@ -1829,7 +1845,7 @@
 
       const shareData = {
         title: 'EBT DotPick',
-        text: 'EBT DotPick — a live GPS tracking tool and heatmap for EuroBillTracker map dot hunters.',
+        text: 'EBT DotPick — a live GPS tracking tool and heatmap for EuroBillTracker map Dot hunters.',
         url: appShareUrl
       };
 
@@ -1966,12 +1982,14 @@
       reference.append(referenceTitle, ' ', referenceCoordinates);
       content.append(coordinates, reference);
       const action = document.createElement('div'), button = document.createElement('button'), other = document.createElement('button'), hint = document.createElement('p');
-      button.type = 'button'; button.className = 'btn destination-popup-button'; button.textContent = 'Places in this dot';
-      other.type = 'button'; other.className = 'btn destination-popup-button'; other.textContent = 'Nearby Target Dots From This Dot';
+      button.type = 'button'; button.className = 'btn destination-popup-button'; button.textContent = 'Places in this Dot';
+      other.type = 'button'; other.className = 'btn destination-popup-button'; other.textContent = 'Nearby Target Dots from this Dot';
       hint.className = 'target-note dot-popup-model-row';
       const areaToggle = document.createElement('button'), startNote = document.createElement('span');
-      areaToggle.type = 'button'; areaToggle.className = 'dot-popup-area-toggle'; areaToggle.setAttribute('role', 'switch');
-      startNote.textContent = 'Start dot excluded'; hint.append(areaToggle, startNote);
+      areaToggle.type = 'button'; areaToggle.className = 'target-area-toggle'; areaToggle.setAttribute('role', 'switch');
+      areaToggle.setAttribute('aria-label', 'Euro-use area');
+      const areaLabel = document.createElement('span'); areaLabel.className = 'target-area-label'; areaLabel.textContent = 'Target area:';
+      startNote.textContent = 'Start Dot excluded'; startNote.className = 'target-note'; hint.append(areaLabel, areaToggle);
       button.addEventListener('click', () => startFromPopup(origin => openMapDestinationPicker(origin, 'this')));
       other.addEventListener('click', () => startFromPopup(openMapNearbyTargetPicker));
       areaToggle.addEventListener('click', event => {
@@ -1979,7 +1997,7 @@
         refreshDestinationUI();
         loadDestinationCell(dot, planningTargetArea()).then(result => { rememberDotNames(dot, result.names, result.nameRevision); if (destinationPopup?.popup === popup) { refreshDestinationPopup(); popup.update(); } }).catch(() => {});
       });
-      action.append(button, other, hint); content.append(action);
+      action.append(button, other, hint, startNote); content.append(action);
       const feedbackRow = document.createElement('p'), feedback = document.createElement('button');
       feedbackRow.className = 'feedback-row'; feedback.className = 'feedback-link'; feedback.type = 'button'; feedback.textContent = 'Feedback';
       feedback.addEventListener('click', event => { event.stopPropagation(); openDotFeedback(dot, planningTargetArea(), feedback); });
@@ -1997,7 +2015,7 @@
       });
       popup.openOn(map); refreshDestinationUI();
       const close = popup.getElement().querySelector('.leaflet-popup-close-button');
-      close.setAttribute('aria-label', 'Close dot popup');
+      close.setAttribute('aria-label', 'Close Dot popup');
       close.addEventListener('keydown', event => {
         if (event.key !== 'Enter' && event.key !== ' ' && event.key !== 'Spacebar') return;
         event.preventDefault(); event.stopPropagation(); closeDotPopup();
@@ -2049,7 +2067,7 @@
         { label: 'Euro-use map', value: euro.state === 'ready' ? 'Revision ' + euro.mapRevision : 'Not loaded', holder: euro, available: euro.state === 'ready', failed: euro.updateFailed, checking: euro.refreshing },
         { label: 'Worldwide land', value: world.state === 'ready' ? 'Base: ' + baseDate : 'Not loaded', holder: world, available: world.state === 'ready', failed: world.updateFailed, checking: world.refreshing },
         { label: 'Places', value: destinationData.manifest ? destinationData.manifest.version : 'Not loaded', holder: destinationData, available: !!destinationData.manifest, failed: destinationData.failed, checking: !!destinationData.inFlight },
-        { label: 'Preferred dot names', value: dotNameData.dataSignature ? 'Loaded' : 'Not loaded', holder: dotNameData, available: !!dotNameData.dataSignature, failed: dotNameData.failed, checking: !!dotNameData.inFlight }
+        { label: 'Preferred Dot names', value: dotNameData.dataSignature ? 'Loaded' : 'Not loaded', holder: dotNameData, available: !!dotNameData.dataSignature, failed: dotNameData.failed, checking: !!dotNameData.inFlight }
       ];
     }
     function renderMapData() {
@@ -2062,7 +2080,7 @@
         const origin = ({ bundled: 'Bundled copy', saved: 'Saved copy', network: 'Downloaded copy' })[row.holder.dataOrigin];
         checked.textContent = (origin ? origin + ' · ' : '') + (row.holder.dataCheckedAt ? 'Last successful check: ' + dataTime(row.holder.dataCheckedAt) : 'Not checked online yet');
         detail.append(checked);
-        if (row.holder.dataId && (row.label === 'Worldwide land' || row.label === 'Preferred dot names')) {
+        if (row.holder.dataId && (row.label === 'Worldwide land' || row.label === 'Preferred Dot names')) {
           const identity = document.createElement('small'); identity.textContent = 'Data ID: ' + row.holder.dataId.slice(0, 12); detail.append(identity);
         }
         if (row.checking || row.failed) {
@@ -2141,21 +2159,21 @@
     }
     function checkDestinationPoint(lat, lon, dot) {
       if (![lat, lon].every(Number.isFinite) || Math.abs(lat) > 90 || Math.abs(lon) > 180 || !validDestinationDot(dot)) {
-        return { valid: false, message: 'Choose a valid point inside the target dot.' };
+        return { valid: false, message: 'Choose a valid point inside the Target Dot.' };
       }
       const [[south, west], [north, east]] = destinationBounds(dot), eps = DESTINATION_EDGE_EPS;
       const onEdge = (Math.abs(lat - south) <= eps || Math.abs(lat - north) <= eps) && lon >= west - eps && lon <= east + eps ||
         (Math.abs(lon - west) <= eps || Math.abs(lon - east) <= eps) && lat >= south - eps && lat <= north + eps;
-      if (onEdge) return { valid: false, message: 'On the border — move inside the target dot.' };
+      if (onEdge) return { valid: false, message: 'On the border — move inside the Target Dot.' };
       if (lat <= south || lat >= north || lon <= west || lon >= east || destinationDotKey(destinationDot(lat, lon)) !== destinationDotKey(dot)) {
-        return { valid: false, message: 'Outside the target dot — move inside its red border.' };
+        return { valid: false, message: 'Outside the Target Dot — move inside its red border.' };
       }
       const point = { lat: Number(lat.toFixed(6)), lon: Number(lon.toFixed(6)) };
       if (point.lat <= south + eps || point.lat >= north - eps || point.lon <= west + eps || point.lon >= east - eps ||
           destinationDotKey(destinationDot(point.lat, point.lon)) !== destinationDotKey(dot)) {
         return { valid: false, message: 'Too close to the border after rounding — move a little farther inside.' };
       }
-      return { valid: true, point, message: 'Inside the target dot.' };
+      return { valid: true, point, message: 'Inside the Target Dot.' };
     }
     function destinationGridMatches(grid) {
       return grid?.id === 'ebt-dot-safari-legacy-v1' && grid.dotH === dotH && grid.dotW === dotW && grid.minLat === minLat && grid.minLon === minLon;
@@ -2223,7 +2241,7 @@
         if (!value || !Array.isArray(value.p) || value.p.length > 10 || !Array.isArray(value.w) || !Array.isArray(value.e) || !['complete', 'partial'].includes(value.q)) throw new Error('Invalid destination lists');
         if (value.n !== undefined && (!value.n || typeof value.n !== 'object' || Array.isArray(value.n) ||
             Object.keys(value.n).length !== 2 || !['worldwide', 'euro-use'].every(model => Object.hasOwn(value.n, model) &&
-              (value.n[model] === null || typeof value.n[model] === 'string' && !!value.n[model].trim() && value.n[model].length <= 1000)))) throw new Error('Invalid dot names');
+              (value.n[model] === null || typeof value.n[model] === 'string' && !!value.n[model].trim() && value.n[model].length <= 1000)))) throw new Error('Invalid Dot names');
         const ids = new Set(), dot = cell.split('_').map(Number);
         for (const point of value.p) {
           if (!Array.isArray(point) || point.length !== (data.formatVersion === 2 ? 10 : 9) || typeof point[0] !== 'string' || !/^(osm:(node|way|relation):[1-9]\d*|manual:.+)$/.test(point[0]) ||
@@ -2433,16 +2451,16 @@
     function validDotName(name) { return typeof name === 'string' && !!name.trim() && name.length <= 600; }
     function validateDotNameOverrides(data) {
       if (data?.format !== 'ebt-dot-name-overrides' || data.formatVersion !== 1 || !Array.isArray(data.include) || !Array.isArray(data.exclude) ||
-          data.include.length > 50000 || data.exclude.length > 50000) throw new Error('Invalid dot names');
+          data.include.length > 50000 || data.exclude.length > 50000) throw new Error('Invalid Dot names');
       const names = new Map(), excluded = new Set();
       for (const entry of data.include) {
-        if (!entry || !validDestinationDot(entry.dot) || names.has(destinationDotKey(entry.dot))) throw new Error('Invalid or duplicate named dot');
+        if (!entry || !validDestinationDot(entry.dot) || names.has(destinationDotKey(entry.dot))) throw new Error('Invalid or duplicate named Dot');
         const fields = ['name', 'nameWorldwide', 'nameEuroUse'];
-        if (!fields.some(field => validDotName(entry[field])) || fields.some(field => Object.hasOwn(entry, field) && !validDotName(entry[field]))) throw new Error('Invalid dot name');
+        if (!fields.some(field => validDotName(entry[field])) || fields.some(field => Object.hasOwn(entry, field) && !validDotName(entry[field]))) throw new Error('Invalid Dot name');
         names.set(destinationDotKey(entry.dot), { ...entry });
       }
       for (const dot of data.exclude) {
-        if (!validDestinationDot(dot) || excluded.has(destinationDotKey(dot))) throw new Error('Invalid unnamed dot');
+        if (!validDestinationDot(dot) || excluded.has(destinationDotKey(dot))) throw new Error('Invalid unnamed Dot');
         excluded.add(destinationDotKey(dot));
       }
       return { names, excluded };
@@ -2711,10 +2729,10 @@
         session.retainedChoice = null;
       }
       let message = result.status === 'not-covered' ? dotLandStatus(session.context.dot) === 'no-land'
-        ? 'This dot has no prepared place data. You can still inspect it or choose a point on the map.'
-        : 'This dot has no prepared place data yet. This does not mean it has no places. You can choose a point on the map.'
+        ? 'This Dot has no prepared place data. You can still inspect it or choose a point on the map.'
+        : 'This Dot has no prepared place data yet. This does not mean it has no places. You can choose a point on the map.'
         : result.status === 'unavailable' ? 'Place data could not be downloaded or read from saved data. Connect and retry, or choose a point on the map.'
-        : result.status === 'empty' ? 'No listed destinations in this dot for this target area.'
+        : result.status === 'empty' ? 'No listed destinations in this Dot for this target area.'
         : result.status === 'partial' ? 'Some place data is unclassified. The suggestions may be incomplete.' : 'Choose a suggested place or a point on the map.';
       if (result.stale) message += navigator.onLine ? ' Using saved place data; update unavailable.' : ' Using saved place data while offline.';
       if (result.saveFailed || destinationData.saveFailed) message += ' This data could not be saved for offline use.';
@@ -2727,12 +2745,12 @@
       reviewRetainedDestinationArea();
     }
     function destinationReason(status, intent = destinationSession?.intent) {
-      return status === 'no-profile' ? 'Load your EBT Notes file to find an eligible unconquered target. You can inspect places in this dot without it.'
+      return status === 'no-profile' ? 'Load your EBT Notes file to find an eligible unconquered target. You can inspect places in this Dot without it.'
         : status === 'gps' ? 'Waiting for a usable GPS fix. This panel will recover automatically.'
         : status === 'loading' ? 'Loading the selected target map…'
         : status === 'error' ? 'Target map unavailable. Connect and retry.'
         : status === 'invalid-origin' ? 'This location is outside the supported legacy grid.'
-        : intent?.kind === 'other' ? `No other eligible unconquered target within ${TARGET_SEARCH_KM} km. The starting dot is excluded.`
+        : intent?.kind === 'other' ? `No other eligible unconquered target within ${TARGET_SEARCH_KM} km. The starting Dot is excluded.`
         : `No eligible unconquered target within ${TARGET_SEARCH_KM} km.`;
     }
     function openDestinationPicker() {
@@ -2804,14 +2822,14 @@
       document.getElementById('destination-feedback').hidden = !context.dot || !inspectingThisDot;
       const title = document.getElementById('destination-title');
       if (context.dot) renderDestinationTitle(title, 'Places in ', context.dot, intent.model);
-      else title.textContent = intent.kind === 'this' ? 'Places in this dot' : intent.kind === 'radar' ? 'Places in nearest target' : 'Places in nearest target from this dot';
+      else title.textContent = intent.kind === 'this' ? 'Places in this Dot' : intent.kind === 'radar' ? 'Places in nearest Target Dot' : 'Places in nearest Target Dot from this Dot';
       const area = intent.model === 'euro-use' ? 'Euro-use area' : 'All land worldwide';
-      const role = intent.inspectedDot ? 'Inspecting selected dot'
-        : intent.kind === 'this' ? 'Inspecting this dot' : context.target?.isHere ? 'Your unconquered target dot'
-        : intent.kind === 'radar' ? 'Live GPS target' : 'Target from this dot; the start dot is excluded';
+      const role = intent.inspectedDot ? 'Inspecting selected Dot'
+        : intent.kind === 'this' ? 'Inspecting this Dot' : context.target?.isHere ? 'Your unconquered Target Dot'
+        : intent.kind === 'radar' ? 'Live GPS target' : 'Target Dot from this Dot; the start Dot is excluded';
       let text = `${role} · ${area}.`;
       if (context.dot && intent.source === 'map') {
-        text += intent.kind === 'this' || intent.inspectedDot ? ' Blue highlight: inspected dot.' : ' Blue highlight: planned target.';
+        text += intent.kind === 'this' || intent.inspectedDot ? ' Blue highlight: inspected Dot.' : ' Blue highlight: planned target.';
         if (lastRadarTarget && destinationDotKey(context.dot) === `${lastRadarTarget.i}_${lastRadarTarget.j}`) text += ' This is also the live radar target.';
       }
       document.getElementById('destination-context').textContent = text;
@@ -2827,7 +2845,7 @@
       const distanceLabel = document.getElementById('destination-distance-label');
       distanceLabel.textContent = intent.kind === 'this' && !destinationGPSReady() ? 'GPS unavailable — places shown without distances. Maps can show the selected place.'
         : intent.kind === 'other' && !destinationNeedsGPS(intent) ? 'Straight-line distances from chosen start.' : 'Straight-line distances from you (GPS).';
-      document.getElementById('destination-name-message').textContent = dotNameData.failed ? 'Preferred dot names could not be updated; saved or automatic names are used when available.' : '';
+      document.getElementById('destination-name-message').textContent = dotNameData.failed ? 'Preferred Dot names could not be updated; saved or automatic names are used when available.' : '';
       document.getElementById('destination-name-message').hidden = !dotNameData.failed;
       if (destinationMapChoice && context.dot) renderDestinationTitle(document.getElementById('destination-map-title'), 'Choose a point in ', context.dot, intent.model);
     }
@@ -2841,17 +2859,17 @@
       warning.dataset.state = model.state === 'ready' ? 'outside' : 'unknown';
       if (classification === 'excluded') {
         title.textContent = '⚠ Unconquerable Euro land';
-        detail.textContent = 'The Euro-use land in this dot is classified as unconquerable in Target Map. You can still inspect its places and choose a point.';
+        detail.textContent = 'The Euro-use land in this Dot is classified as unconquerable in Target Map. You can still inspect its places and choose a point.';
       } else if (classification === 'foreign') {
         title.textContent = '⚠ Outside the Euro-use area';
-        detail.textContent = 'Target Map classifies this dot as Foreign land. The Euro-use filter is active; you can inspect the dot or change Target area.';
+        detail.textContent = 'Target Map classifies this Dot as Foreign land. The Euro-use filter is active; you can inspect the Dot or change Target area.';
       } else if (model.state !== 'ready') {
         title.textContent = '⚠ Euro-use target check unavailable';
-        detail.textContent = 'The Euro-use target map is not ready, so this dot’s status could not be checked. You can still inspect it and choose a point.';
+        detail.textContent = 'The Euro-use target map is not ready, so this Dot’s status could not be checked. You can still inspect it and choose a point.';
       } else {
         title.textContent = '⚠ Not in the Euro-use target map';
-        detail.textContent = classification === 'sea' ? 'Target Map classifies this dot as Water Only, so it is not a Euro-use land target.'
-          : 'This dot has no eligible Euro-use classification in the available map. Its classification is unreviewed or unavailable; absence alone does not establish foreign land or unconquerability.';
+        detail.textContent = classification === 'sea' ? 'Target Map classifies this Dot as Water Only, so it is not a Euro-use land target.'
+          : 'This Dot has no eligible Euro-use classification in the available map. Its classification is unreviewed or unavailable; absence alone does not establish foreign land or unconquerability.';
       }
     }
     function renderDestinationTargets() {
@@ -2864,12 +2882,12 @@
       summary.className = 'target-note';
       const bearing = Math.round(((chosen.angle % 360) + 360) % 360) % 360;
       const from = destinationNeedsGPS(session.intent) ? 'you' : 'chosen start';
-      summary.textContent = `Target dot: ${chosen.distance.toFixed(1)} km · ${bearing}° from ${from}. Place distances below use each arrival point.`;
+      summary.textContent = `Target Dot: ${chosen.distance.toFixed(1)} km · ${bearing}° from ${from}. Place distances below use each arrival point.`;
       rows.push(summary);
       if (session.nearby || session.searchResult.candidates.length < 2) {
         syncDestinationList(box, rows, 'destinationTarget'); return;
       }
-      const heading = document.createElement('p'); heading.textContent = `${session.searchResult.candidates.length} equally near target dots — choose one:`; rows.push(heading);
+      const heading = document.createElement('p'); heading.textContent = `${session.searchResult.candidates.length} equally near Target Dots — choose one:`; rows.push(heading);
       for (const candidate of session.searchResult.candidates) {
         const button = document.createElement('button'), dot = [candidate.i, candidate.j], key = destinationDotKey(dot);
         button.type = 'button'; button.className = 'destination-tie'; button.dataset.destinationTarget = key;
@@ -2890,11 +2908,11 @@
     }
     function refreshDestinationModelControl() {
       const session = destinationSession, id = session?.intent.model || targetArea, model = targetModels[id];
-      destinationTargetAreaSelect.value = id;
+      renderTargetAreaToggle(destinationTargetAreaSelect, id);
       const independent = session?.intent.source === 'map';
       const message = session && destinationUsesProfile(session.intent) && model.state !== 'ready'
         ? model.state === 'error' ? 'Target map unavailable. Connect and retry.' : 'Loading target map…'
-        : independent ? 'Changes the places filter for this dot. The dot and live GPS target area stay unchanged.' : 'This also changes the GPS radar’s target area and recalculates its target.';
+        : independent ? 'Changes the places filter for this Dot. The Dot and live GPS target area stay unchanged.' : 'This also changes the GPS radar’s target area and recalculates its target.';
       document.getElementById('destination-model-message').textContent = message + (!independent && !targetChoiceSaved ? ' Choice could not be saved on this device.' : '');
       document.getElementById('destination-target-retry').hidden = !session || !destinationUsesProfile(session.intent) || model.state !== 'error';
     }
@@ -2959,12 +2977,9 @@
       popup.referenceCoordinates.textContent = fromGPS ? '' : `${popup.origin.lat.toFixed(6)}, ${popup.origin.lon.toFixed(6)}`;
       popup.button.disabled = !validDestinationDot(popup.dot);
       popup.other.disabled = !result.context;
-      popup.other.textContent = fromGPS ? 'Nearby Target Dots' : 'Nearby Target Dots From This Dot';
-      popup.areaToggle.textContent = (model === 'euro-use' ? 'Euro-use area' : 'All land worldwide') + ' ↔';
-      popup.areaToggle.setAttribute('aria-checked', String(model === 'euro-use'));
-      popup.areaToggle.setAttribute('aria-label', 'Euro-use area');
-      popup.areaToggle.title = `Switch to ${model === 'euro-use' ? 'All land worldwide' : 'Euro-use area'}`;
-      popup.startNote.textContent = result.context ? 'Start dot excluded' : destinationReason(result.status, intent);
+      popup.other.textContent = fromGPS ? 'Nearby Target Dots' : 'Nearby Target Dots from this Dot';
+      renderTargetAreaToggle(popup.areaToggle, model);
+      popup.startNote.textContent = result.context ? 'Start Dot excluded' : destinationReason(result.status, intent);
     }
     function refreshDestinationUI() {
       refreshDestinationModelControl(); refreshRadarPresentation(); refreshDestinationPopup();
@@ -3275,7 +3290,7 @@
           const dot = entry?.dot;
           if (!Array.isArray(dot) || dot.length !== 2 || !dot.every(Number.isSafeInteger) ||
               dot[0] < 0 || dot[0] > 641 || dot[1] < -3 || dot[1] > 853) {
-            throw new Error('Invalid land-override dot');
+            throw new Error('Invalid land-override Dot');
           }
           const [i, j] = dot;
           if (kind === 'exclude') excluded.add(`${i}_${j}`);
@@ -3613,8 +3628,8 @@
       const session = nearbyTargetSession, intent = session.intent, gpsRadar = intent.source === 'gps';
       const list = document.getElementById('nearby-targets-list');
       const focused = list.contains(document.activeElement) ? document.activeElement.dataset.nearbyTarget : null;
-      const rows = []; nearbyTargetAreaSelect.value = intent.model;
-      document.getElementById('nearby-targets-title').textContent = !destinationNeedsGPS(intent) ? 'Nearby Target Dots From This Dot' : 'Nearby Target Dots';
+      const rows = []; renderTargetAreaToggle(nearbyTargetAreaSelect, intent.model);
+      document.getElementById('nearby-targets-title').textContent = !destinationNeedsGPS(intent) ? 'Nearby Target Dots from this Dot' : 'Nearby Target Dots';
       document.getElementById('nearby-targets-model-message').textContent = gpsRadar
         ? 'This also changes the live GPS radar’s target area.' : 'This planning area is independent of the live GPS radar.';
       const result = nearbyTargetQuery(session), model = targetModels[intent.model];
@@ -3632,7 +3647,7 @@
       }
       const status = document.getElementById('nearby-targets-status');
       if (result.status !== 'target') {
-        status.textContent = result.status === 'profile-changed' ? 'Your Notes changed. Close this panel and start a new nearby-dot search.' : destinationReason(result.status, intent);
+        status.textContent = result.status === 'profile-changed' ? 'Your Notes changed. Close this panel and start a new nearby Target Dot search.' : destinationReason(result.status, intent);
         syncDestinationList(list, rows, 'nearbyTarget');
         if (focused) document.getElementById('nearby-targets-close').focus({ preventScroll: true });
         return;
@@ -3641,7 +3656,7 @@
       const activeKey = gpsRadar ? lastRadarTarget && `${lastRadarTarget.i}_${lastRadarTarget.j}` : session.selectedKey;
       const options = nearbyRadarOptions(result, activeKey), area = intent.model === 'euro-use' ? 'Euro-use area' : 'All land worldwide';
       const from = destinationNeedsGPS(intent) ? 'From your GPS position' : 'From chosen start';
-      status.textContent = `${area} · ${from}${intent.kind === 'other' ? ' · Start dot excluded' : ''} · Nearest point within ${TARGET_SEARCH_KM} km. Showing ${options.length} nearby dots, including ties and any chosen target.`;
+      status.textContent = `${area} · ${from}${intent.kind === 'other' ? ' · Start Dot excluded' : ''} · Nearest point within ${TARGET_SEARCH_KM} km. Showing ${options.length} nearby Target Dots, including ties and any chosen Target Dot.`;
       for (const candidate of options) {
         const dot = [candidate.i, candidate.j], key = destinationDotKey(dot);
         const button = document.createElement('button'), label = document.createElement('span'), name = document.createElement('span'), detail = document.createElement('span');
@@ -3656,14 +3671,14 @@
         const tag = selected ? gpsRadar ? ' · Active target' : ' · Chosen target' : '';
         const limits = targetDotDistanceLimits(candidate, result.origin);
         const range = `${limits.minimum.toFixed(1)}–${limits.maximum.toFixed(1)} km`;
-        detail.textContent = `${steps} dot ${steps === 1 ? 'step' : 'steps'} · ${range}`;
+        detail.textContent = `${steps} Dot ${steps === 1 ? 'step' : 'steps'} · ${range}`;
         label.append(name, detail);
         if (candidate.isHere || selected) {
           const state = document.createElement('span'); state.className = 'nearby-target-state';
           state.textContent = (candidate.isHere ? 'You are here' : '') + (tag ? (candidate.isHere ? tag : tag.slice(3)) : ''); label.append(state);
         }
         button.append(label, createTargetCompass(angle, candidate.isHere));
-        button.setAttribute('aria-label', `${destinationDotLabel(dot, intent.model)}, ${steps} dot ${steps === 1 ? 'step' : 'steps'}, approximate straight-line range ${limits.minimum.toFixed(1)} to ${limits.maximum.toFixed(1)} kilometres${candidate.isHere ? ', you are here' : `, bearing ${Math.round(angle) % 360} degrees`}${tag ? ', ' + tag.slice(3) : ''}`);
+        button.setAttribute('aria-label', `${destinationDotLabel(dot, intent.model)}, ${steps} Dot ${steps === 1 ? 'step' : 'steps'}, approximate straight-line range ${limits.minimum.toFixed(1)} to ${limits.maximum.toFixed(1)} kilometres${candidate.isHere ? ', you are here' : `, bearing ${Math.round(angle) % 360} degrees`}${tag ? ', ' + tag.slice(3) : ''}`);
         button.onclick = () => chooseNearbyTarget(session, key);
         rows.push(button);
         requestRadarDotNames(dot, intent.model);
@@ -3735,7 +3750,7 @@
       const actionable = expanded && !!destinationGPSReady() && !!lastRadarTarget;
       if (actionable) row.setAttribute('href', '#destination-dialog'); else row.removeAttribute('href');
       row.tabIndex = actionable ? 0 : -1; row.setAttribute('aria-disabled', String(!actionable));
-      const placesLabel = lastRadarTarget?.isHere ? 'Places in this dot' : manualRadarTarget ? 'Places in selected target' : 'Places in nearest target';
+      const placesLabel = lastRadarTarget?.isHere ? 'Places in this Dot' : manualRadarTarget ? 'Places in selected Target Dot' : 'Places in nearest Target Dot';
       row.title = actionable ? placesLabel : '';
       row.setAttribute('aria-label', placesLabel + (lastRadarTarget ? ' — ' + destinationDotLabel([lastRadarTarget.i, lastRadarTarget.j], targetArea) : ''));
     }
@@ -3800,12 +3815,12 @@
         return;
       }
       if (nearest.isHere) {
-        longLabel.textContent = live ? 'Unconquered dot' : 'Last known dot';
-        shortLabel.textContent = live ? 'Unconquered' : 'Last dot';
+        longLabel.textContent = live ? 'Unconquered Dot' : 'Last known Dot';
+        shortLabel.textContent = live ? 'Unconquered' : 'Last Dot';
         value.textContent = '🎯';
         compass.hidden = true;
-        accessibleText.textContent = live ? `You are already in eligible unconquered target dot ${nearest.i}, ${nearest.j}`
-          : `Last known unconquered dot ${nearest.i}, ${nearest.j}, based on the last usable GPS position`;
+        accessibleText.textContent = live ? `You are already in eligible unconquered Target Dot ${nearest.i}, ${nearest.j}`
+          : `Last known unconquered Dot ${nearest.i}, ${nearest.j}, based on the last usable GPS position`;
         return;
       }
       const roundedDistance = Number(nearest.distance.toFixed(1));
@@ -3816,8 +3831,8 @@
       compass.hidden = false;
       arrow.style.transform = `rotate(${angle}deg)`;
       accessibleText.textContent = live
-        ? `${manualRadarTarget ? 'Selected' : stabilityHeld ? 'Similar-distance' : 'Nearest'} unconquered target dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees`
-        : `Last known target dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees, based on the last usable GPS position`;
+        ? `${manualRadarTarget ? 'Selected' : stabilityHeld ? 'Similar-distance' : 'Nearest'} unconquered Target Dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees`
+        : `Last known Target Dot ${nearest.i}, ${nearest.j}, ${roundedDistance} kilometres away, bearing ${Math.round(angle)} degrees, based on the last usable GPS position`;
     }
 
     function showLocationMessage(message) {
@@ -3843,7 +3858,7 @@
       if (manualRadarTarget && targetModels[targetArea].state === 'ready' &&
           !search.nearby?.some(candidate => `${candidate.i}_${candidate.j}` === manualRadarTarget.key)) {
         manualRadarTarget = null; lastRadarTarget = null;
-        setRadarChoiceMessage('Your selected dot is no longer an eligible unconquered target within 150 km. Automatic nearest selection has resumed.');
+        setRadarChoiceMessage('Your selected Dot is no longer an eligible unconquered target within 150 km. Automatic nearest selection has resumed.');
       }
       const result = resolveRadarChoice(search, lastRadarTarget);
       lastRadarResult = result;
@@ -3858,7 +3873,7 @@
         hudDetails.textContent = message;
         return;
       }
-      let message = result.primary.isHere ? 'You are already in an unconquered target dot.'
+      let message = result.primary.isHere ? 'You are already in an unconquered Target Dot.'
         : manualRadarTarget ? 'Your chosen target stays selected as you move. Use Nearby Target Dots to change it or return to automatic nearest selection.'
         : result.stabilityHeld ? 'Similar distance: keeping this target while it is within 10 m of the nearest. Its own distance and bearing are shown above.' : '';
       hudDetails.replaceChildren();
@@ -3871,12 +3886,12 @@
     }
 
     const targetAreaSelect = document.getElementById('target-area');
-    targetAreaSelect.value = targetArea;
+    renderTargetAreaToggle(targetAreaSelect, targetArea);
     function changeTargetArea(id) {
       if (!Object.hasOwn(targetModels, id)) return;
       targetArea = id;
-      targetAreaSelect.value = targetArea;
-      destinationTargetAreaSelect.value = targetArea;
+      renderTargetAreaToggle(targetAreaSelect, targetArea);
+      renderTargetAreaToggle(destinationTargetAreaSelect, targetArea);
       try {
         localStorage.setItem(TARGET_AREA_KEY, targetArea);
         targetChoiceSaved = true;
@@ -3964,7 +3979,7 @@
         marker = null;
       }
       setGPSState('off', 'GPS off. Tap GPS ⚪ to turn it on.');
-      showLocationMessage('Turn on GPS to see your current dot\nand nearest target.');
+      showLocationMessage('Turn on GPS to see your current Dot\nand nearest target.');
     }
 
     function setGPSEnabled(enabled) {
@@ -4077,7 +4092,7 @@
               );
 
               showLocationMessage(
-                'Location is needed to calculate your current dot and nearest unconquered dot.'
+                'Location is needed to calculate your current Dot and nearest unconquered Dot.'
               );
 
               return;

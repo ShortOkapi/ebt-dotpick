@@ -119,6 +119,12 @@ Keep the current prepared lists for this reliability release. Ordinary automatic
 
 The agreed direction is stable automatic suggestions informed by settlement/administrative importance and comparable population data, with reviewable per-dot preferences. Dot names remain independent of destination choices. Review familiar areas incrementally rather than requiring a manual pass over the whole Euro-use area. Do not randomize the shortlist. EBT citymanager/note data, if it becomes available and sufficiently detailed, may supply the main selection basis together with per-dot review; its adequacy is not established and integration is not promised. Ordinary settlements currently use one representative point, not automatic suggestions in every intersected dot. Any future border-spanning destination must have a real validated point inside its offered dot. No Places data or ranking-policy changes are implemented by this release.
 
+## Control and display-edge consistency
+
+The three panel area controls and the Dot popup use the same blue two-state switch. Its stable accessible name is Euro-use area, with aria-checked true for Euro-use and false for worldwide. Native button Space/Enter/click activates the existing change handler; the current GPS/map-origin scope, selection retention and point checks remain. UI headings/messages use Dot and Target Dot as terms, with sentence case elsewhere. Existing IDs, JSON keys and saved values are unchanged.
+
+All three map renderers mark the canonical pixel-world edges with dark dashed strokes at zoom 6+. These show ±180° and the Mercator display cutoffs, not replacement geographic grid lines. Repeated worlds retain their canonical IDs; the original red boundaries, partial rows and data are unchanged. This final unpublished visual pass uses app shell4 so earlier local v2.3.1 shells cannot mask it.
+
 ## Release versions
 
 For the current manual workflow, update **both** literals together:

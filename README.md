@@ -69,7 +69,7 @@ The radar gives an approximate straight-line distance and a bearing from north. 
 
 ## Target areas
 
-Expand the radar panel and use the labelled **Target area** selector. Your choice is remembered on this device, and changing it immediately recalculates the target using the current accepted GPS position.
+Use the consistent **Target area: [All land worldwide ↔] / [Euro-use area ↔]** blue switch in the expanded radar, Places, Nearby Target Dots and Dot popups. Tap it once to change area; keyboard Space/Enter also work. Expand the radar panel to access its switch. The radar’s choice is remembered on this device, and changing its switch immediately recalculates the target using the current accepted GPS position. Map-origin inspection and planning retain their separate area, as described below.
 
 | Target area | What qualifies | What to bear in mind |
 | --- | --- | --- |
@@ -78,7 +78,7 @@ Expand the radar panel and use the labelled **Target area** selector. Your choic
 
 A coastal or island dot qualifies when the selected map marks qualifying land anywhere within it. The displayed distance is to the grid cell, so the nearest point of that cell may itself be water or inaccessible.
 
-The **OSM / Esri** choices in the map layers control change the background imagery. They do not change target eligibility.
+The **OSM / Esri** choices in the map layers control change the background imagery. They do not change target eligibility. At close zoom, dark dashed lines mark the ±180° world seam and the map’s north/south display cutoffs near 85.0511° latitude. They distinguish the clipped edge cells from ordinary red grid boundaries without moving or renumbering any Dot.
 
 ### Target selection and radar messages
 
@@ -98,13 +98,13 @@ An unavailable result clears the previous target rather than keeping its guidanc
 
 ### Choosing a nearby target dot
 
-Expand the GPS panel and tap **Nearby Target Dots**. Its **Target area** selector also changes the live radar's saved area. Choose a card to make that dot the active radar target and open its places. The list normally offers the five geographically closest eligible unconquered dots within **150 km**, including extra ties and the active target when necessary. Each card has the same 24-pixel compass as the GPS display, with a fixed N and a centred rotating arrow.
+Expand the GPS panel and tap **Nearby Target Dots**. Its **Target area** switch also changes the live radar's saved area. Choose a card to make that dot the active radar target and open its places. The list normally offers the five geographically closest eligible unconquered dots within **150 km**, including extra ties and the active target when necessary. Each card has the same 24-pixel compass as the GPS display, with a fixed N and a centred rotating arrow.
 
 Cards show **dot steps**: a move to a neighbouring cell, including diagonals. Steps ignore sea, roads, access and travel time. Ordering still uses unrounded geographical distance to each cell, so it need not follow step counts. Place lists continue to show kilometres to arrival points.
 
-The main radar keeps one target and its own kilometre distance and compass. An explicit choice is labelled **Selected Target Dot**. It survives ordinary GPS updates, leaving/returning to the app and area changes while still eligible and in range. On arrival the target row opens places in your current dot. **Use automatic nearest target**, shown as a link beneath the main GPS action when a target is chosen, restores automatic guidance. Reopening/reloading the page, replacing/clearing Notes, conquest or an incompatible eligibility/range change returns to automatic selection. A failed Notes import keeps the valid profile and choice. The choice lasts only for this visit.
+The main radar keeps one target and its own kilometre distance and compass. An explicit choice is labelled **Selected Target Dot**. It survives ordinary GPS updates, leaving/returning to the app and area changes while still eligible and in range. On arrival the target row opens places in your current dot. **Use automatic nearest Target Dot**, shown as a link beneath the main GPS action when a target is chosen, restores automatic guidance. Reopening/reloading the page, replacing/clearing Notes, conquest or an incompatible eligibility/range change returns to automatic selection. A failed Notes import keeps the valid profile and choice. The choice lasts only for this visit.
 
-Map popups also offer **Nearby Target Dots**, or **Nearby Target Dots From This Dot** for a remote start. These onward lists exclude the starting dot and use a planning area independent of the GPS radar. A fixed **Chosen start** and its six-decimal coordinates remain visible. A compact area switch in the popup changes that planning area. Selecting an onward dot leaves the live radar's target unchanged.
+Map popups also offer **Nearby Target Dots**, or **Nearby Target Dots from this Dot** for a remote start. These onward lists exclude the starting dot and use a planning area independent of the GPS radar. A fixed **Chosen start** and its six-decimal coordinates remain visible. A compact area switch in the popup changes that planning area. Selecting an onward dot leaves the live radar's target unchanged.
 
 When a places panel was opened from a nearby selector, **Back to Nearby Target Dots** returns to the same search origin and area. The chosen dot and a valid chosen destination can be retained when you reopen its places. A plan from a fixed map point keeps that point as the Google Maps route origin. GPS-dependent searches wait for a fresh fix after location loss or app return.
 
@@ -194,7 +194,7 @@ Opening Google Maps sends the selected destination coordinates. An onward plan f
 
 ### Feedback
 
-The Feedback action in a dot popup or **Places in this dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review your message before copying it. Public dataset details are shown separately in a read-only section and included automatically by **Copy message**, with a request to keep them. If automatic copying is unavailable, a complete message is selected for manual copying. Its draft is not saved to browser storage and is cleared when the panel closes.
+The Feedback action in a dot popup or **Places in this Dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review your message before copying it. Public dataset details are shown separately in a read-only section and included automatically by **Copy message**, with a request to keep them. If automatic copying is unavailable, a complete message is selected for manual copying. Its draft is not saved to browser storage and is cleared when the panel closes.
 
 Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. DotPick does not send it automatically. Forum messages are handled by the forum under its own policies.
 
@@ -208,12 +208,12 @@ Old saved/downloaded copies containing the two retired illustrative overrides ar
 
 Prepared place and dot-name data currently focuses on the Euro-use area. In worldwide mode, covered mixed dots also include places on foreign land. Names and place lists are reviewed and updated over time, independently of app releases. Where a list is empty, incomplete or unavailable, **Choose your own point on the map** lets you select a destination yourself.
 
-In the expanded GPS panel, the **entire dot-name/ID, distance and compass row** opens places in the active radar dot. It is a keyboard-accessible link, including when you are already in an eligible unconquered dot. **Nearby Target Dots** is the main action button; it opens alternative choices. When a target was chosen deliberately, **Use automatic nearest target** appears as a link below it. The collapsed header keeps its compact display and expand behaviour. Long names wrap while distance and compass stay together; only the name and distance are bold.
+In the expanded GPS panel, the **entire dot-name/ID, distance and compass row** opens places in the active radar dot. It is a keyboard-accessible link, including when you are already in an eligible unconquered dot. **Nearby Target Dots** is the main action button; it opens alternative choices. When a target was chosen deliberately, **Use automatic nearest Target Dot** appears as a link below it. The collapsed header keeps its compact display and expand behaviour. Long names wrap while distance and compass stay together; only the name and distance are bold.
 
 Every map-dot popup offers two actions:
 
-- **Places in this dot** inspects that dot, including a conquered or ineligible dot. Inspection works without Notes or GPS. The selected area filters its places, not whether the dot can be inspected. A dot recorded as Unconquerable Euro land has its own prominent warning in either model. A recorded Foreign-land dot shows an outside-Euro-use warning when Euro-use is selected. If no classification is available, a general target-map notice explains the uncertainty. Inspection and deliberate point choice remain available.
-- **Nearby Target Dots** searches onward from your accepted GPS position when you are in that dot. **Nearby Target Dots From This Dot** uses the exact clicked point for another dot. These lists exclude the starting dot, require your Notes and search within 150 km. Their area choice is separate from the live radar.
+- **Places in this Dot** inspects that dot, including a conquered or ineligible dot. Inspection works without Notes or GPS. The selected area filters its places, not whether the dot can be inspected. A dot recorded as Unconquerable Euro land has its own prominent warning in either model. A recorded Foreign-land dot shows an outside-Euro-use warning when Euro-use is selected. If no classification is available, a general target-map notice explains the uncertainty. Inspection and deliberate point choice remain available.
+- **Nearby Target Dots** searches onward from your accepted GPS position when you are in that dot. **Nearby Target Dots from this Dot** uses the exact clicked point for another dot. These lists exclude the starting dot, require your Notes and search within 150 km. Their area choice is separate from the live radar.
 
 The popup's small **Euro-use area / All land worldwide** switch changes its planning area. Recorded **Foreign land** shows **NOT IN EURO-USE AREA** when Euro-use is selected. Recorded **Unconquerable Euro land** shows **UNCONQUERABLE EURO LAND**, in either model. Conquered-note counts remain visible alongside these notices. **NO LAND HERE** uses an explicit **Water Only** classification or the worldwide mask when no land classification is recorded; Euro-use ineligibility alone never establishes water-only status. The same tag appears in the Places panel for a dot identified as no-land, in either target area and even when the place list is empty or unavailable. An empty place list by itself never establishes no land. The coastline-derived worldwide mask does not remove inland lakes, so automatic detection of every lake-only dot is not provided.
 
@@ -227,7 +227,7 @@ Opening a dot popup temporarily collapses the controls and GPS panels to make ro
 
 The GPS places area selector also changes the live radar's saved target area. Temporary GPS loss or leaving the app pauses its navigation; a fresh fix recovers the panel and rechecks its selection. A popup onward search which starts at your GPS position also waits for a fresh fix, but its target-area choice stays independent of the live radar.
 
-**Places in this dot** is inspection. Its list and selected place show straight-line distances **from you** when GPS is usable, even when you inspect a distant dot. Its Maps route uses your location. Without usable GPS, distances are omitted and the selected-place action becomes **View place in Google Maps**. Inspection and its selection remain usable; a fresh fix restores distances and the route action automatically.
+**Places in this Dot** is inspection. Its list and selected place show straight-line distances **from you** when GPS is usable, even when you inspect a distant dot. Its Maps route uses your location. Without usable GPS, distances are omitted and the selected-place action becomes **View place in Google Maps**. Inspection and its selection remain usable; a fresh fix restores distances and the route action automatically.
 
 An onward plan from another dot shows a prominent **Chosen start** box with the exact clicked point's dot and six-decimal coordinates. List and selected-place distances explicitly say **from chosen start**. Its Maps route sends that fixed origin, even if you move or turn GPS off. Map inspections and onward plans have an area selector independent of the live GPS radar; that planning choice lasts for this visit. Returning to a map plan restores its choices when they still apply. Changing Notes invalidates a personal target plan; simple dot inspection remains usable.
 
@@ -243,7 +243,7 @@ A chosen destination survives an area change when it remains in the same inspect
 
 ### Corrections to names and places
 
-Names and place lists can be corrected over time. Use **Feedback** in the dot popup or **Places in this dot** to suggest a change. The reviewed names include, e.g., Praia da Adraga, Berlengas, or El Hierro Airport. A preferred dot name does not automatically select a destination.
+Names and place lists can be corrected over time. Use **Feedback** in the dot popup or **Places in this Dot** to suggest a change. The reviewed names include, e.g., Praia da Adraga, Berlengas, or El Hierro Airport. A preferred dot name does not automatically select a destination.
 
 ### Choose on the map
 
@@ -277,7 +277,7 @@ No dot is worth entering a dangerous or forbidden area. And if your next conques
 
 ## Feedback and map corrections
 
-Use the small **Feedback** action in any dot popup or **Places in this dot** to report an unsuitable dot name, a missing/incorrect place, conquerability or Euro-use classification. Feedback is omitted from nearest-target and onward-planning panels. To report one of those target dots, click that dot on the map and use its popup or **Places in this dot**.
+Use the small **Feedback** action in any dot popup or **Places in this Dot** to report an unsuitable dot name, a missing/incorrect place, conquerability or Euro-use classification. Feedback is omitted from nearest-target and onward-planning panels. To report one of those target dots, click that dot on the map and use its popup or **Places in this Dot**.
 
 Write a short correction and, if possible, a supporting link. Use **Copy message**, then **Message Miguel** to open [a private message to **Miguel / lmviterbo** on the EBT forum](https://forum.eurobilltracker.com/ucp.php?i=pm&mode=compose&u=448). Sign in, paste your copied text into the message and send it. A forum account is required. There is no separate public email form or automatic submission from DotPick.
 
