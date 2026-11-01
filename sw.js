@@ -1,6 +1,6 @@
 const APP_VERSION = '2.3.1';
 const CACHE_PREFIX = 'ebt-dotpick-v';
-const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}-shell4`;
+const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}-shell5`;
 const APP_ROOT = new URL('./', self.location.href);
 const SHELL_URL = new URL('index.html', APP_ROOT).href;
 const READY_URL = new URL('.offline-shell-ready', APP_ROOT).href;

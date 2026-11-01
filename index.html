@@ -1945,6 +1945,14 @@
       map.closePopup(); map.getContainer().focus({ preventScroll: true });
     }
 
+    function updateDotPopup(popup) {
+      const focused = document.activeElement;
+      const keepFocus = popup.getElement()?.contains(focused);
+      // Leaflet reinserts popup content while measuring it, which drops keyboard focus.
+      popup.update();
+      if (keepFocus && focused.isConnected && document.activeElement !== focused) focused.focus({ preventScroll: true });
+    }
+
     function sizeDotPopup(popup) {
       const rect = map.getContainer().getBoundingClientRect(), controls = document.getElementById('control-panel'), hud = document.getElementById('hud-panel');
       const top = controls.hidden ? 8 : Math.max(8, controls.getBoundingClientRect().bottom - rect.top + 8);
@@ -1995,7 +2003,7 @@
       areaToggle.addEventListener('click', event => {
         event.stopPropagation(); planningArea = planningTargetArea() === 'euro-use' ? 'worldwide' : 'euro-use';
         refreshDestinationUI();
-        loadDestinationCell(dot, planningTargetArea()).then(result => { rememberDotNames(dot, result.names, result.nameRevision); if (destinationPopup?.popup === popup) { refreshDestinationPopup(); popup.update(); } }).catch(() => {});
+        loadDestinationCell(dot, planningTargetArea()).then(result => { rememberDotNames(dot, result.names, result.nameRevision); if (destinationPopup?.popup === popup) { refreshDestinationPopup(); updateDotPopup(popup); } }).catch(() => {});
       });
       action.append(button, other, hint, startNote); content.append(action);
       const feedbackRow = document.createElement('p'), feedback = document.createElement('button');
@@ -2022,7 +2030,7 @@
       });
       loadDestinationCell(dot, planningTargetArea()).then(result => {
         rememberDotNames(dot, result.names, result.nameRevision);
-        if (destinationPopup === state) { refreshDestinationPopup(); popup.update(); }
+        if (destinationPopup === state) { refreshDestinationPopup(); updateDotPopup(popup); }
       }).catch(() => {});
     }
     map.on('click', event => openDotPopup(event.latlng));
@@ -2034,7 +2042,7 @@
     map.on('resize', () => {
       if (!destinationPopup) return;
       const popup = destinationPopup.popup;
-      sizeDotPopup(popup); popup.update();
+      sizeDotPopup(popup); updateDotPopup(popup);
     });
 
     // Prepared destinations are public data. No Notes or GPS coordinates enter requests.
