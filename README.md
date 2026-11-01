@@ -8,7 +8,17 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 31 October 2026. This guide covers the v2.3.1-rc.10 test candidate; the current stable release remains v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 1 November 2026. This guide covers **v2.3.1**, the reliability update following v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+
+## Changes in 2.3.1
+
+- Import full/censored Notes exports with quoted comments reliably. Warn before replacing a substantially smaller or different profile, and make saving failures visible with a retry.
+- Keep notes without assigned EBT coordinates in the total without conquering an ocean dot. Reimport an older affected CSV to correct its derived map.
+- Make legend labels and colours agree, hide numbers for unused bands, and show band details on hover or tap.
+- Keep Places/Nearby controls stable during refreshes, share pending place downloads and reduce country-boundary work during point selection.
+- Repeat dot status and limits in Places, and keep a chosen map dot open when changing its Places area filter.
+- Improve offline setup/recovery and release-version checks. Saved Notes and downloaded public data remain usable; background map tiles may still need a connection.
+- Align bundled Euro-use revision 105 and corrected worldwide overrides, preserving reviewed decisions and the legacy grid.
 
 ## How to use
 
@@ -38,7 +48,7 @@ When you open a map dot’s Places panel, changing **Target area** keeps that do
 2. Download a fresh EBT Notes CSV, or use one you have already downloaded.
 3. Tap **Load EBT Notes File** and select it.
 
-A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** The candidate warns before replacing a profile when note or dot counts fall enough to warrant checking, or the filename identifies a different user. The message names the decreasing count and distinguishes cases with more notes but fewer dots (or the reverse). Cancel keeps the existing profile. An invalid or incomplete CSV is rejected without replacing the working profile.
+A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** DotPick warns before replacing a profile when note or dot counts fall enough to warrant checking, or the filename identifies a different user. The message names the decreasing count and distinguishes cases with more notes but fewer dots (or the reverse). Cancel keeps the existing profile. An invalid or incomplete CSV is rejected without replacing the working profile.
 
 Notes exported at `0;0` have no assigned EBT coordinates. They remain in the displayed note total but conquer no dot; a separate message reports their number. Latitude zero or longitude zero on its own remains valid. Reimport your original Notes CSV to correct a profile previously affected by `0;0`.
 
@@ -127,7 +137,7 @@ Before relying on a new offline copy, open **About** and check its offline-app s
 
 If preparation fails, About offers **Retry offline setup** and identifies a retained older copy when available. Return online and retry. A prepared update does not reload the map while you are using it: About offers **Reload updated app** when a newer worker takes over an already-open page. Finish imports and resolve any unsaved-profile notice before using that button. Older installed app pages may need an ordinary reload to show these new controls. The app checks again on opening, when connectivity returns, and on a visible return if its hourly check is due.
 
-App releases retain a coordinated offline copy rather than replacing the page on every network request. Release checks verify the page/worker versions, pinned Leaflet files, candidate guide link and a distinct cache identity for changed app code.
+App releases retain a coordinated offline copy rather than replacing the page on every network request. Release checks verify the page/worker versions, pinned Leaflet files, release-branch guide link for test candidates and a distinct cache identity for changed app code.
 
 Background maps may require an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed. A grey background can therefore be expected offline even when the saved app, your conquered dots and downloaded planning data are working. Turning GPS off does not turn off the network or clear tiles; after a reload it can leave the map at a different position/zoom requiring other tiles.
 
@@ -188,11 +198,11 @@ The Feedback action in a dot popup or **Places in this dot** prepares a message 
 
 Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. DotPick does not send it automatically. Forum messages are handled by the forum under its own policies.
 
-## Coordinated world-map correction (2.3.1 candidate)
+## Coordinated world-map correction (2.3.1)
 
 The bundled target map is **revision 105**, matching Target Map's world-background refresh. It still has **4,171 eligible Euro-use dots**. The unchanged world base and corrected live overrides contain **201,342 worldwide land dots**; the old illustrative exclusion of Antarctic **[10, 10]** is no longer applied. That cell is background Foreign land in Euro-use mode, not an extra eligible Euro-use target. Individual curated decisions still take priority. Your Notes and prepared place lists are unchanged.
 
-Old saved/downloaded copies containing the two retired illustrative overrides are rejected so they cannot undo this correction. A corrected bundled map remains usable. During release-branch testing, public main can still supply the old files: **Using saved map; update unavailable** is then expected. After the releases are merged in order, the corrected public files can be adopted normally. Genuine reviewed overrides remain supported. About → Map data identifies the loaded datasets; map revision and app version are separate.
+Old saved/downloaded copies containing the two retired illustrative overrides are rejected so they cannot undo this correction. A corrected bundled map remains usable. Genuine reviewed overrides and valid newer map revisions remain supported. A failed or obsolete public update leaves the usable map in place. About → Map data identifies the loaded datasets; map revision and app version are separate.
 
 ## Places, dot names and planning
 
