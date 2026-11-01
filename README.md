@@ -8,7 +8,17 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 19 October 2026. This guide covers v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 1 November 2026. This guide covers **v2.3.1**, the reliability update following v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+
+## Changes in 2.3.1
+
+- Import full/censored Notes exports with quoted comments reliably. Warn before replacing a substantially smaller or different profile, and make saving failures visible with a retry.
+- Keep notes without assigned EBT coordinates in the total without conquering an ocean dot. Reimport an older affected CSV to correct its derived map.
+- Make legend labels and colours agree, hide numbers for unused bands, and show band details on hover or tap.
+- Keep Places/Nearby controls stable during refreshes, share pending place downloads and reduce country-boundary work during point selection.
+- Repeat dot status and limits in Places, and keep a chosen map dot open when changing its Places area filter.
+- Improve offline setup/recovery and release-version checks. Saved Notes and downloaded public data remain usable; background map tiles may still need a connection.
+- Align bundled Euro-use revision 105 and corrected worldwide overrides, preserving reviewed decisions and the legacy grid.
 
 ## How to use
 
@@ -30,13 +40,19 @@ Installation is optional: you can use DotPick in your browser or add it to your 
 
 Safari and Chrome on iPhone can show different menus. If you cannot find the file, open **Help if the file is missing** in DotPick’s download instructions. Choose the most recent file if older downloads have the same or similar names.
 
+When you open a map dot’s Places panel, changing **Target area** keeps that dot open and filters its places. A dot outside the chosen area stays inspectable with a warning. Use **Back to nearby dots** to choose a different eligible target. The live GPS radar still recalculates when its own target area changes.
+
 ## Updating your conquered-dot map
 
 1. Expand the controls panel if it is collapsed and tap **Update my map** to reopen the download and load instructions.
 2. Download a fresh EBT Notes CSV, or use one you have already downloaded.
 3. Tap **Load EBT Notes File** and select it.
 
-A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** If an import fails, the previous map is retained and the app explains the problem.
+A successful import replaces the previous conquered-dot map and recalculates the radar. **You do not need to clear your old map first.** DotPick warns before replacing a profile when note or dot counts fall enough to warrant checking, or the filename identifies a different user. The message names the decreasing count and distinguishes cases with more notes but fewer dots (or the reverse). Cancel keeps the existing profile. An invalid or incomplete CSV is rejected without replacing the working profile.
+
+Notes exported at `0;0` have no assigned EBT coordinates. They remain in the displayed note total but conquer no dot; a separate message reports their number. Latitude zero or longitude zero on its own remains valid. Reimport your original Notes CSV to correct a profile previously affected by `0;0`.
+
+The eight-colour legend reserves the first colour for exactly one note and the last for the maximum number of notes in a dot, including ties. Six logarithmic ranges cover counts from two up to the maximum, exclusive. Small gaps separate the exact-value colours from the ranges. The endpoint numbers are slightly bolder; labels and map colours use the same integer thresholds. Bands containing none of your dots are dimmed and have no numeric label, including the one-note band when no dot has exactly one note. Their hover/tap message says No dots in this band. Logarithmic boundaries stay unchanged: an occupied band's number still describes its lower threshold, not necessarily an observed count. Hover a swatch or tap/click it to see its range and the number of dots in that band below the legend. Tap the same swatch again to hide the detail; keyboard Enter/Space also work. The first colour takes precedence when the maximum is one.
 
 DotPick stores the derived dot counts and user reference locally; it does not retain a permanent connection to your CSV file or automatically download new EBT notes. Load a fresh export whenever you want your latest conquests included. Automatic target map updates, described below, are separate from your personal map.
 
@@ -53,7 +69,7 @@ The radar gives an approximate straight-line distance and a bearing from north. 
 
 ## Target areas
 
-Expand the radar panel and use the labelled **Target area** selector. Your choice is remembered on this device, and changing it immediately recalculates the target using the current accepted GPS position.
+Use the consistent **Target area: [All land worldwide ↔] / [Euro-use area ↔]** blue switch in the expanded radar, Places, Nearby Target Dots and Dot popups. Tap it once to change area; keyboard Space/Enter also work. Expand the radar panel to access its switch. The radar’s choice is remembered on this device, and changing its switch immediately recalculates the target using the current accepted GPS position. Map-origin inspection and planning retain their separate area, as described below.
 
 | Target area | What qualifies | What to bear in mind |
 | --- | --- | --- |
@@ -62,7 +78,7 @@ Expand the radar panel and use the labelled **Target area** selector. Your choic
 
 A coastal or island dot qualifies when the selected map marks qualifying land anywhere within it. The displayed distance is to the grid cell, so the nearest point of that cell may itself be water or inaccessible.
 
-The **OSM / Esri** choices in the map layers control change the background imagery. They do not change target eligibility.
+The **OSM / Esri** choices in the map layers control change the background imagery. They do not change target eligibility. At close zoom, dark dashed lines mark the ±180° world seam and the map’s north/south display cutoffs near 85.0511° latitude. They distinguish the clipped edge cells from ordinary red grid boundaries without moving or renumbering any Dot.
 
 ### Target selection and radar messages
 
@@ -82,13 +98,13 @@ An unavailable result clears the previous target rather than keeping its guidanc
 
 ### Choosing a nearby target dot
 
-Expand the GPS panel and tap **Nearby Target Dots**. Its **Target area** selector also changes the live radar's saved area. Choose a card to make that dot the active radar target and open its places. The list normally offers the five geographically closest eligible unconquered dots within **150 km**, including extra ties and the active target when necessary. Each card has the same 24-pixel compass as the GPS display, with a fixed N and a centred rotating arrow.
+Expand the GPS panel and tap **Nearby Target Dots**. Its **Target area** switch also changes the live radar's saved area. Choose a card to make that dot the active radar target and open its places. The list normally offers the five geographically closest eligible unconquered dots within **150 km**, including extra ties and the active target when necessary. Each card has the same 24-pixel compass as the GPS display, with a fixed N and a centred rotating arrow.
 
 Cards show **dot steps**: a move to a neighbouring cell, including diagonals. Steps ignore sea, roads, access and travel time. Ordering still uses unrounded geographical distance to each cell, so it need not follow step counts. Place lists continue to show kilometres to arrival points.
 
-The main radar keeps one target and its own kilometre distance and compass. An explicit choice is labelled **Selected Target Dot**. It survives ordinary GPS updates, leaving/returning to the app and area changes while still eligible and in range. On arrival the target row opens places in your current dot. **Use automatic nearest target**, shown as a link beneath the main GPS action when a target is chosen, restores automatic guidance. Reopening/reloading the page, replacing/clearing Notes, conquest or an incompatible eligibility/range change returns to automatic selection. A failed Notes import keeps the valid profile and choice. The choice lasts only for this visit.
+The main radar keeps one target and its own kilometre distance and compass. An explicit choice is labelled **Selected Target Dot**. It survives ordinary GPS updates, leaving/returning to the app and area changes while still eligible and in range. On arrival the target row opens places in your current dot. **Use automatic nearest Target Dot**, shown as a link beneath the main GPS action when a target is chosen, restores automatic guidance. Reopening/reloading the page, replacing/clearing Notes, conquest or an incompatible eligibility/range change returns to automatic selection. A failed Notes import keeps the valid profile and choice. The choice lasts only for this visit.
 
-Map popups also offer **Nearby Target Dots**, or **Nearby Target Dots From This Dot** for a remote start. These onward lists exclude the starting dot and use a planning area independent of the GPS radar. A fixed **Chosen start** and its six-decimal coordinates remain visible. A compact area switch in the popup changes that planning area. Selecting an onward dot leaves the live radar's target unchanged.
+Map popups also offer **Nearby Target Dots**, or **Nearby Target Dots from this Dot** for a remote start. These onward lists exclude the starting dot and use a planning area independent of the GPS radar. A fixed **Chosen start** and its six-decimal coordinates remain visible. A compact area switch in the popup changes that planning area. Selecting an onward dot leaves the live radar's target unchanged.
 
 When a places panel was opened from a nearby selector, **Back to Nearby Target Dots** returns to the same search origin and area. The chosen dot and a valid chosen destination can be retained when you reopen its places. A plan from a fixed map point keeps that point as the Google Maps route origin. GPS-dependent searches wait for a fresh fix after location loss or app return.
 
@@ -117,9 +133,17 @@ If an update fails or contains invalid data, the app retains its last valid map.
 
 After a successful online visit, the app, your derived conquered-dot data and validated target maps can remain usable offline, provided the browser retains their local storage. Included target datasets also provide fallback data when available.
 
-Background map imagery may need an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed.
+Before relying on a new offline copy, open **About** and check its offline-app status. A failed optional icon, manifest or place-name download does not prevent saving the core app. The page, pinned Leaflet files and bundled target maps must be available before an update replaces the previous offline copy. An update can reuse checksum-verified Leaflet files from an older saved copy if the CDN is unavailable; a first-time setup still needs those files.
 
-Watch for **Saved Offline** or **Not saved** when importing your personal map. Clearing browser data, private browsing or changing browsers can affect saved data. Keep your downloaded Notes CSV so you can load it again if needed.
+If preparation fails, About offers **Retry offline setup** and identifies a retained older copy when available. Return online and retry. A prepared update does not reload the map while you are using it: About offers **Reload updated app** when a newer worker takes over an already-open page. Finish imports and resolve any unsaved-profile notice before using that button. Older installed app pages may need an ordinary reload to show these new controls. The app checks again on opening, when connectivity returns, and on a visible return if its hourly check is due.
+
+App releases retain a coordinated offline copy rather than replacing the page on every network request. Release checks verify the page/worker versions, pinned Leaflet files, release-branch guide link for test candidates and a distinct cache identity for changed app code.
+
+Background maps may require an internet connection. Previously viewed tiles may be cached by the browser, but this is not a complete downloadable offline map and their continued availability is not guaranteed. A grey background can therefore be expected offline even when the saved app, your conquered dots and downloaded planning data are working. Turning GPS off does not turn off the network or clear tiles; after a reload it can leave the map at a different position/zoom requiring other tiles.
+
+**Retry offline setup** keeps its button visible and disabled during the attempt. If another attempt fails, About identifies the failed retry and explains that required app files could not all be saved, or that the browser reports offline. After restoring the connection or a temporarily missing local test file, retry again. Saved target maps and stale place lists remain usable offline; their notices identify saved data without presenting an update retry until the browser is online. Unavailable data still offers recovery guidance.
+
+Watch for **Saved Offline** or **Not saved** when importing your personal map. If saving fails, a prominent message explains that the current profile works for this visit only and an older saved map may return next time. **Try saving again** retries without reimporting. A failed save retains the previous saved copy. An unreadable saved profile is reported and retained until you accept a replacement. Clearing browser data, private browsing or changing browsers can affect saved data. Keep your downloaded Notes CSV so you can load it again if needed.
 
 ## Install on your home screen
 
@@ -170,22 +194,30 @@ Opening Google Maps sends the selected destination coordinates. An onward plan f
 
 ### Feedback
 
-The Feedback action in a dot popup or **Places in this dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review your message before copying it. Public dataset details are shown separately in a read-only section and included automatically by **Copy message**, with a request to keep them. If automatic copying is unavailable, a complete message is selected for manual copying. Its draft is not saved to browser storage and is cleared when the panel closes.
+The Feedback action in a dot popup or **Places in this Dot** prepares a message containing that dot's reference/name, target area and app version. It does not add your Notes, note counts, live GPS position or planning origin. You can edit and review your message before copying it. Public dataset details are shown separately in a read-only section and included automatically by **Copy message**, with a request to keep them. If automatic copying is unavailable, a complete message is selected for manual copying. Its draft is not saved to browser storage and is cleared when the panel closes.
 
 Use **Copy message**, then **Message Miguel**. Copying writes the reviewed text to your device's clipboard. The second button opens the EBT forum; sign in, paste the text into your private message and send it there. DotPick does not send it automatically. Forum messages are handled by the forum under its own policies.
+
+## Coordinated world-map correction (2.3.1)
+
+The bundled target map is **revision 105**, matching Target Map's world-background refresh. It still has **4,171 eligible Euro-use dots**. The unchanged world base and corrected live overrides contain **201,342 worldwide land dots**; the old illustrative exclusion of Antarctic **[10, 10]** is no longer applied. That cell is background Foreign land in Euro-use mode, not an extra eligible Euro-use target. Individual curated decisions still take priority. Your Notes and prepared place lists are unchanged.
+
+Old saved/downloaded copies containing the two retired illustrative overrides are rejected so they cannot undo this correction. A corrected bundled map remains usable. Genuine reviewed overrides and valid newer map revisions remain supported. A failed or obsolete public update leaves the usable map in place. About → Map data identifies the loaded datasets; map revision and app version are separate.
 
 ## Places, dot names and planning
 
 Prepared place and dot-name data currently focuses on the Euro-use area. In worldwide mode, covered mixed dots also include places on foreign land. Names and place lists are reviewed and updated over time, independently of app releases. Where a list is empty, incomplete or unavailable, **Choose your own point on the map** lets you select a destination yourself.
 
-In the expanded GPS panel, the **entire dot-name/ID, distance and compass row** opens places in the active radar dot. It is a keyboard-accessible link, including when you are already in an eligible unconquered dot. **Nearby Target Dots** is the main action button; it opens alternative choices. When a target was chosen deliberately, **Use automatic nearest target** appears as a link below it. The collapsed header keeps its compact display and expand behaviour. Long names wrap while distance and compass stay together; only the name and distance are bold.
+In the expanded GPS panel, the **entire dot-name/ID, distance and compass row** opens places in the active radar dot. It is a keyboard-accessible link, including when you are already in an eligible unconquered dot. **Nearby Target Dots** is the main action button; it opens alternative choices. When a target was chosen deliberately, **Use automatic nearest Target Dot** appears as a link below it. The collapsed header keeps its compact display and expand behaviour. Long names wrap while distance and compass stay together; only the name and distance are bold.
 
 Every map-dot popup offers two actions:
 
-- **Places in this dot** inspects that dot, including a conquered or ineligible dot. Inspection works without Notes or GPS. The selected area filters its places, not whether the dot can be inspected. A dot recorded as Unconquerable Euro land has its own prominent warning in either model. A recorded Foreign-land dot shows an outside-Euro-use warning when Euro-use is selected. If no classification is available, a general target-map notice explains the uncertainty. Inspection and deliberate point choice remain available.
-- **Nearby Target Dots** searches onward from your accepted GPS position when you are in that dot. **Nearby Target Dots From This Dot** uses the exact clicked point for another dot. These lists exclude the starting dot, require your Notes and search within 150 km. Their area choice is separate from the live radar.
+- **Places in this Dot** inspects that dot, including a conquered or ineligible dot. Inspection works without Notes or GPS. The selected area filters its places, not whether the dot can be inspected. A dot recorded as Unconquerable Euro land has its own prominent warning in either model. A recorded Foreign-land dot shows an outside-Euro-use warning when Euro-use is selected. If no classification is available, a general target-map notice explains the uncertainty. Inspection and deliberate point choice remain available.
+- **Nearby Target Dots** searches onward from your accepted GPS position when you are in that dot. **Nearby Target Dots from this Dot** uses the exact clicked point for another dot. These lists exclude the starting dot, require your Notes and search within 150 km. Their area choice is separate from the live radar.
 
 The popup's small **Euro-use area / All land worldwide** switch changes its planning area. Recorded **Foreign land** shows **NOT IN EURO-USE AREA** when Euro-use is selected. Recorded **Unconquerable Euro land** shows **UNCONQUERABLE EURO LAND**, in either model. Conquered-note counts remain visible alongside these notices. **NO LAND HERE** uses an explicit **Water Only** classification or the worldwide mask when no land classification is recorded; Euro-use ineligibility alone never establishes water-only status. The same tag appears in the Places panel for a dot identified as no-land, in either target area and even when the place list is empty or unavailable. An empty place list by itself never establishes no land. The coastline-derived worldwide mask does not remove inland lakes, so automatic detection of every lake-only dot is not provided.
+
+If you pan far enough east or west to see another copy of the world, a dot click uses that location’s ordinary longitude and stored dot ID. Starting Places or Nearby from that popup returns the map to its ordinary copy so the planning outline stays aligned. Ordinary longitudes, including the existing ±180° endpoints, retain their legacy lookup. Radar/onward searches still stop at the ±180° seam; they do not search across it. This is a known limitation near that line.
 
 The popup closes with **Esc**. Its X accepts **Enter** or **Space**, and focus returns to the map. Enter on a popup control performs that control's action; Enter on the focused map itself opens a dot inspection.
 
@@ -195,11 +227,13 @@ Opening a dot popup temporarily collapses the controls and GPS panels to make ro
 
 The GPS places area selector also changes the live radar's saved target area. Temporary GPS loss or leaving the app pauses its navigation; a fresh fix recovers the panel and rechecks its selection. A popup onward search which starts at your GPS position also waits for a fresh fix, but its target-area choice stays independent of the live radar.
 
-**Places in this dot** is inspection. Its list and selected place show straight-line distances **from you** when GPS is usable, even when you inspect a distant dot. Its Maps route uses your location. Without usable GPS, distances are omitted and the selected-place action becomes **View place in Google Maps**. Inspection and its selection remain usable; a fresh fix restores distances and the route action automatically.
+**Places in this Dot** is inspection. Its list and selected place show straight-line distances **from you** when GPS is usable, even when you inspect a distant dot. Its Maps route uses your location. Without usable GPS, distances are omitted and the selected-place action becomes **View place in Google Maps**. Inspection and its selection remain usable; a fresh fix restores distances and the route action automatically.
 
 An onward plan from another dot shows a prominent **Chosen start** box with the exact clicked point's dot and six-decimal coordinates. List and selected-place distances explicitly say **from chosen start**. Its Maps route sends that fixed origin, even if you move or turn GPS off. Map inspections and onward plans have an area selector independent of the live GPS radar; that planning choice lasts for this visit. Returning to a map plan restores its choices when they still apply. Changing Notes invalidates a personal target plan; simple dot inspection remains usable.
 
 The places heading identifies the whole dot: **Places in Torres Vedras Dot** on the top row, with `[460, 403]` on a separate, normal-weight row. Dot names are convenient display labels, not official EBT identifiers or automatic arrival selections. When the first worldwide representative is foreign, a mixed dot can show the Euro-use and foreign representatives, for example **Lemos / Pustec Dot [466, 475]**; Euro-use mode shows **Lemos Dot [466, 475]**. If its first worldwide representative is Euro-use, the worldwide name has one place. Preferred names can override these generated labels. Default representatives are selected from the full classified pools before taking each model's top five places. Names use English when supplied by OSM, otherwise the local name. Unnamed or unavailable data falls back to **Dot [row, column]**. The IDs, grid bounds and eligibility remain unchanged.
+
+Below the Places heading and dot ID, the panel repeats the popup’s status badges and latitude/longitude limits for the dot being inspected or targeted. Limits are displayed to four decimals and can wrap onto separate lines on narrow screens. They use the same unrounded grid calculation as the popup; selected destinations and Maps handoffs still use six decimals. The status reflects the selected target area and current conquered-note count. Detailed classification warnings remain below the area selector.
 
 Choose a suggested place or the final **Choose your own point on the map** card, then check the prominent **Selected destination** box before opening Maps. That card uses the same layout when a list is empty or unavailable. It gains the selected border only after you confirm a manual point; cancelling map choice with **Cancel** or **Esc** retains the previous destination and returns focus to that choice. A blue dashed keyboard-focus outline is distinct from the orange selected border. The list shows an English second line beneath a local name when OSM supplies one. Each available distance explicitly says **from you** or **from chosen start**. Target-dot distance is measured to the cell; place distance is measured to the arrival point. Neither is a road distance. Fixed onward plans send both origin and destination at six decimals. GPS routes send the selected destination and let Maps use your location. Inspection without GPS sends a coordinate search. Dot labels are never used as Maps destinations. Google Maps can display its own address or nearby-place label for the coordinate you sent; that wording may differ from the selected place's name in DotPick. A coordinate handoff does not supply a custom Google Maps label. Equally near targets can be selected in the places panel. A map choice does not change the live radar's chosen dot.
 
@@ -209,7 +243,7 @@ A chosen destination survives an area change when it remains in the same inspect
 
 ### Corrections to names and places
 
-Names and place lists can be corrected over time. Use **Feedback** in the dot popup or **Places in this dot** to suggest a change. The reviewed names include, e.g., Praia da Adraga, Berlengas, or El Hierro Airport. A preferred dot name does not automatically select a destination.
+Names and place lists can be corrected over time. Use **Feedback** in the dot popup or **Places in this Dot** to suggest a change. The reviewed names include, e.g., Praia da Adraga, Berlengas, or El Hierro Airport. A preferred dot name does not automatically select a destination.
 
 ### Choose on the map
 
@@ -222,6 +256,10 @@ In Euro-use mode, prepared OSM country outlines check a point locally where avai
 The point check identifies territory, not dry land or access, and may include territorial waters. Near a border or where geographic data is incomplete, the result can remain uncertain. It does not replace checking access and safety.
 
 ### Place data and offline use
+
+Automatic dot names are tied to each prepared block’s content hash. After a valid data update, an old automatic label is withheld until the corresponding current name is available; a failed or late older reply cannot pass itself off as a current name. Preferred names and explicit name exclusions retain priority. A notice that automatic radar selection has resumed disappears after about 12 seconds, or sooner when the target context changes.
+
+Place and nearby-dot buttons stay in place as GPS distances or names update. Place-data requests for the same block share one download and validation; recently used blocks, including saved offline copies, are kept in memory. The public-data cache remains separate from your Notes.
 
 **This dot has no prepared place data yet** means it is outside the current coverage, not that it has no places. **Place data could not be downloaded or read from saved data** means no usable downloaded or cached list is available. **No listed destinations** means the covered dot has an empty list for the chosen target area. You can still choose a point on the map in each case.
 
@@ -239,7 +277,7 @@ No dot is worth entering a dangerous or forbidden area. And if your next conques
 
 ## Feedback and map corrections
 
-Use the small **Feedback** action in any dot popup or **Places in this dot** to report an unsuitable dot name, a missing/incorrect place, conquerability or Euro-use classification. Feedback is omitted from nearest-target and onward-planning panels. To report one of those target dots, click that dot on the map and use its popup or **Places in this dot**.
+Use the small **Feedback** action in any dot popup or **Places in this Dot** to report an unsuitable dot name, a missing/incorrect place, conquerability or Euro-use classification. Feedback is omitted from nearest-target and onward-planning panels. To report one of those target dots, click that dot on the map and use its popup or **Places in this Dot**.
 
 Write a short correction and, if possible, a supporting link. Use **Copy message**, then **Message Miguel** to open [a private message to **Miguel / lmviterbo** on the EBT forum](https://forum.eurobilltracker.com/ucp.php?i=pm&mode=compose&u=448). Sign in, paste your copied text into the message and send it. A forum account is required. There is no separate public email form or automatic submission from DotPick.
 
@@ -274,6 +312,8 @@ The application code is available under the [MIT licence](LICENSE). The worldwid
 
 The separate [maintainer guide](MAINTAINING.md) explains how to edit dot names, curate or exclude places, update prepared data and set release versions. The user instructions above do not require editing repository files.
 ## Map data and nearby-dot distance ranges
+
+The general reminder that background maps may require an internet connection appears at the end of About → Map data. The separate offline-app status near the version number reports app saving and retry results.
 
 About → Map data identifies the datasets actually loaded by this browser: the Euro-use map revision, worldwide base date, prepared places and preferred dot names. Last successful online checks are separate from failed/latest attempts; bundled or saved data remain usable offline. Target Map's release number identifies the editor software, independently of map-data revisions. Feedback messages include concise public data identifiers and check times so Miguel can reproduce a report. They include no Notes contents or live GPS position.
 
