@@ -1,4 +1,4 @@
-const APP_VERSION = '2.3.2-rc.1';
+const APP_VERSION = '2.3.2';
 const CACHE_PREFIX = 'ebt-dotpick-v';
 const CACHE_NAME = `${CACHE_PREFIX}${APP_VERSION}-shell1`;
 const APP_ROOT = new URL('./', self.location.href);

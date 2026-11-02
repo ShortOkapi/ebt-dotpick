@@ -8,9 +8,9 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 2 November 2026. This guide covers **v2.3.2-rc.1**, a GPS recovery test candidate following v2.3.1. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 2 November 2026. This guide covers **v2.3.2**, the GPS recovery patch following v2.3.1. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
 
-## GPS recovery candidate 2.3.2-rc.1
+## Changes in 2.3.2
 
 - An unavailable GPS icon opens explanatory options with Retry GPS and Turn off in DotPick; the expanded panel also offers a direct retry.
 - A return to the app or a permission-change notification can restart GPS when the browser reports that access is granted. Denied or undecided permission does not cause repeated automatic requests; a manual retry remains available.
