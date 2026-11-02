@@ -8,7 +8,13 @@ A mobile map for EuroBillTracker dot hunters: see your conquered dots, find the 
 
 [Open EBT DotPick](https://shortokapi.github.io/ebt-dotpick/) · [Releases and changes](https://github.com/ShortOkapi/ebt-dotpick/releases)
 
-**Guide updated:** 1 November 2026. This guide covers **v2.3.1**, the reliability update following v2.3.0. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+**Guide updated:** 2 November 2026. This guide covers **v2.3.2-rc.1**, a GPS recovery test candidate following v2.3.1. Target areas are available from v2.1.0; places and planning from v2.2.0. Phone and browser menu wording may vary.
+
+## GPS recovery candidate 2.3.2-rc.1
+
+- An unavailable GPS icon opens explanatory options with Retry GPS and Turn off in DotPick; the expanded panel also offers a direct retry.
+- A return to the app or a permission-change notification can restart GPS when the browser reports that access is granted. Denied or undecided permission does not cause repeated automatic requests; a manual retry remains available.
+- Keep the existing accuracy/freshness filters. Acquiring a usable fix can still take time, especially after location services were disabled.
 
 ## Changes in 2.3.1
 
@@ -60,8 +66,8 @@ The **Clear conquered dots** button (☒) removes your saved personal dot map af
 
 ## GPS and the radar
 
-- Tap the **GPS status button** on the right of the radar header to turn GPS off or on. Turning it off asks for confirmation and leaves your conquered dots visible.
-- If permission is denied, allow location access in your browser or installed app settings, then return and retry GPS. Your phone’s location services also need to be enabled. A waiting message means the app has not yet accepted a usable position.
+- Tap the **GPS status button** on the right of the radar header to turn GPS off or on. Turning it off asks for confirmation and leaves your conquered dots visible. If GPS is unavailable, the icon instead opens explanatory options with **Retry GPS** and **Turn off in DotPick**.
+- If access is blocked or location services are off, enable the phone’s location services and allow this site/browser to use your location. Return to DotPick or tap **Retry GPS** in the expanded radar/options dialog; closing the app is not required to retry. Automatic recovery depends on the browser reporting granted permission. If permission is denied or still undecided, DotPick waits for your explicit retry. A waiting message means it has not yet accepted a usable position.
 - Use **Locate me** (the crosshair button) to centre the map on your position. Moving the map to inspect another area does not change the GPS position used by the radar.
 - For live tracking, keep DotPick visible with the screen awake. Tracking resumes when you return to it; wait for an active GPS status before relying on a new reading. While GPS is waiting after a usable fix, the retained reading is labelled **Last known target** and the expanded panel explains that it uses the last position. The target halo is dimmed. A fresh accepted fix restores the live reading.
 
