@@ -1,6 +1,14 @@
 # EBT DotPick — maintainer guide
 
-Updated: **30 October 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
+Updated: **2 November 2026**. This file is for project maintenance. Visitors can use the [user guide](README.md).
+
+## GPS access recovery
+
+`gpsEnabled` records the user's intent to use GPS; it does not mean that Android location services, browser/site permission or a fresh fix are available. A geolocation access-denied error can reflect an OS-level block even when browser permission is granted.
+
+After access denial, stop the old watch and invalidate its callbacks. Keep a direct Retry GPS action, show unavailable-specific options, and retain an explicit way to turn GPS off in DotPick. On foreground return or a supported permission-change event, only a `granted` permission may restart a denied watch automatically. A missing/unsupported permission API, query failure, `denied` or `prompt` state must retain the manual retry without creating prompt loops. Guard asynchronous recovery against a later GPS-off choice, hidden page, newer watch or duplicate resume event.
+
+Keep the 1,000 m accuracy / 15 s age filters and existing watch options. A 20-second reacquisition is not by itself an application failure; the app must not use a stale/weak fix to make recovery appear immediate. Test the actual Android location-services toggle separately from mocked browser permission states.
 
 ## Dot names and destinations are separate
 
